@@ -29,7 +29,7 @@ namespace Scripts
 			while (!postRequest.isDone) await Task.Delay(10);
 
 			Debug.Log($"Request result: {postRequest.result}");
-
+			
 			// TODO: If result is not success we get string (not T object) and method below throws an error
 			return JsonConvert.DeserializeObject<T>(postRequest.downloadHandler.text);
 			
