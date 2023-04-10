@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using System.Text;
 using System.Threading.Tasks;
@@ -5,12 +6,14 @@ using Newtonsoft.Json;
 using UnityEngine.Networking;
 using System.Collections;
 using System.Collections.Generic;
+using GameControllers;
 using JetBrains.Annotations;
+using SharedLibrary.Responses;
 
 namespace Scripts
 {
 
-	public class HttpClient
+	public static class HttpClient
 	{
 		public static async Task<T> Get<T>(string endpoint)
 		{
