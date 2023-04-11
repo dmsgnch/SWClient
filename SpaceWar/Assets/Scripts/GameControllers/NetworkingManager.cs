@@ -19,16 +19,19 @@ namespace Scripts.RegisterLoginScripts
 
         private const string BaseURL = @"https://localhost:7148/";
 
-        [SerializeField] private GameObject infoPanelParent;
+        private GameObject _infoPanelParent;
 
         void Start()
         {
             instance = this;
         }
 
-        protected IEnumerator Routine_SendDataToServer<T>(string subStringForConnection, string jsonData)
+        protected IEnumerator Routine_SendDataToServer<T>(string subStringForConnection, 
+            string jsonData, GameObject infoPanelParent) 
             where T : IResponse
         {
+            _infoPanelParent = infoPanelParent;
+            
             using UnityWebRequest request = new UnityWebRequest($"{BaseURL}{subStringForConnection}", "POST");
             request.SetRequestHeader("Content-Type", "application/json");
 
@@ -96,7 +99,7 @@ namespace Scripts.RegisterLoginScripts
 
             foreach (string message in operationInfo)
             {
-                infoPanelParent.GetComponent<InformationPanelController>().CreateMessage(msgType, message);
+                _infoPanelParent.GetComponent<InformationPanelController>().CreateMessage(msgType, message);
             }
         }
     }

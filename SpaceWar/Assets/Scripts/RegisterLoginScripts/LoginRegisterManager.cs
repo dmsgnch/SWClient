@@ -24,6 +24,8 @@ public class LoginRegisterManager : NetworkingManager
     private const string ConnectionStrRegister = "Authentication/Register";
     private const string ConnectionStrLogin = "Authentication/Login";
 
+    [SerializeField] private GameObject parentObject;
+
     public void OnLoginButtonClick()
     {
         var data = new LoginRequest()
@@ -33,7 +35,8 @@ public class LoginRegisterManager : NetworkingManager
         };
 
         StartCoroutine(
-            Routine_SendDataToServer<AuthenticationResponse>(ConnectionStrLogin, JsonConvert.SerializeObject(data)));
+            Routine_SendDataToServer<AuthenticationResponse>(ConnectionStrLogin, 
+                JsonConvert.SerializeObject(data), parentObject ));
     }
 
     public void OnRegisterButtonClick()
@@ -46,6 +49,7 @@ public class LoginRegisterManager : NetworkingManager
         };
 
         StartCoroutine(
-            Routine_SendDataToServer<AuthenticationResponse>(ConnectionStrRegister, JsonConvert.SerializeObject(data)));
+            Routine_SendDataToServer<AuthenticationResponse>(ConnectionStrRegister, 
+                JsonConvert.SerializeObject(data), parentObject));
     }
 }
