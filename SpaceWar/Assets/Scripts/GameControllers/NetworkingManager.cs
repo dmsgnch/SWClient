@@ -3,6 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
 using GameControllers;
 using Newtonsoft.Json;
 using SharedLibrary.Responses;
@@ -20,6 +22,10 @@ namespace Scripts.RegisterLoginScripts
         private const string BaseURL = @"https://localhost:7148/";
 
         private GameObject _infoPanelParent;
+        
+        protected delegate void SuccessResultAction();
+
+        private SuccessResultAction _action;
 
         void Start()
         {
@@ -27,10 +33,11 @@ namespace Scripts.RegisterLoginScripts
         }
 
         protected IEnumerator Routine_SendDataToServer<T>(string subStringForConnection, 
-            string jsonData, GameObject infoPanelParent) 
+            string jsonData, GameObject infoPanelParent, SuccessResultAction action = null) 
             where T : IResponse
         {
             _infoPanelParent = infoPanelParent;
+            _action = action;
             
             using UnityWebRequest request = new UnityWebRequest($"{BaseURL}{subStringForConnection}", "POST");
             request.SetRequestHeader("Content-Type", "application/json");
@@ -43,7 +50,7 @@ namespace Scripts.RegisterLoginScripts
 
             T response = JsonConvert.DeserializeObject<T>(request.downloadHandler.text);
 
-            ProcessResponse(request, response);
+            ProcessResponse<T>(request, response, action);
         }
 
         /*
@@ -57,14 +64,15 @@ namespace Scripts.RegisterLoginScripts
          
          */
 
-        private void ProcessResponse<T>(UnityWebRequest request, T response) where T : IResponse
+        private void ProcessResponse<T>(UnityWebRequest request, T response, SuccessResultAction action) where T : IResponse
         {
             switch (request.result)
             {
                 case UnityWebRequest.Result.Success:
                     CreateInfoPanels(MessageType.INFO, response.Info);
-
-                    Debug.Log("User has been successfully created");
+                    
+                    Thread.Sleep(3 * 10^3);
+                    _action?.Invoke();
                     break;
 
                 case UnityWebRequest.Result.ConnectionError:
@@ -72,8 +80,7 @@ namespace Scripts.RegisterLoginScripts
                     {
                         "Failed to establish a connection to the server. Please try again later.",
                     });
-
-                    Debug.Log("Problems connecting to the server");
+                    
                     break;
 
                 case UnityWebRequest.Result.ProtocolError:
@@ -84,8 +91,6 @@ namespace Scripts.RegisterLoginScripts
                             {
                                 "Server Interaction Problems"
                             });
-
-                    Debug.Log("Server Interaction Problems");
 
                     break;
                 default:
