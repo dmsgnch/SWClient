@@ -120,7 +120,7 @@ MonoBehaviour:
   m_MinSize: {x: 300, y: 200}
   m_MaxSize: {x: 24288, y: 16192}
   vertical: 0
-  controlID: 94
+  controlID: 113
 --- !u!114 &6
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -145,7 +145,7 @@ MonoBehaviour:
   m_MinSize: {x: 100, y: 200}
   m_MaxSize: {x: 8096, y: 16192}
   vertical: 1
-  controlID: 99
+  controlID: 120
 --- !u!114 &7
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -223,7 +223,7 @@ MonoBehaviour:
   m_MinSize: {x: 100, y: 200}
   m_MaxSize: {x: 8096, y: 16192}
   vertical: 1
-  controlID: 69
+  controlID: 63
 --- !u!114 &10
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -362,7 +362,7 @@ MonoBehaviour:
     m_VAllowExceedBaseRangeMax: 1
     m_ScaleWithWindow: 0
     m_HSlider: 0
-    m_VSlider: 0
+    m_VSlider: 1
     m_IgnoreScrollWheelUntilClicked: 0
     m_EnableMouseInput: 1
     m_EnableSliderZoomHorizontal: 0
@@ -375,20 +375,20 @@ MonoBehaviour:
       y: 21
       width: 977
       height: 304
-    m_Scale: {x: 0.28148147, y: 0.28148147}
-    m_Translation: {x: 488.5, y: 152}
+    m_Scale: {x: 0.30092594, y: 0.30092594}
+    m_Translation: {x: 488.5, y: 152.00002}
     m_MarginLeft: 0
     m_MarginRight: 0
     m_MarginTop: 0
     m_MarginBottom: 0
     m_LastShownAreaInsideMargins:
       serializedVersion: 2
-      x: -1735.4606
-      y: -540
-      width: 3470.9211
-      height: 1080
+      x: -1623.323
+      y: -505.10773
+      width: 3246.646
+      height: 1010.21533
     m_MinimalGUI: 1
-  m_defaultScale: 0.28148147
+  m_defaultScale: 0.30092594
   m_LastWindowPixelSize: {x: 977, y: 325}
   m_ClearInEditMode: 1
   m_NoCameraWarning: 1
@@ -621,9 +621,9 @@ MonoBehaviour:
   m_PlayAudio: 0
   m_AudioPlay: 0
   m_Position:
-    m_Target: {x: 764.8644, y: 783.2473, z: 457.6097}
+    m_Target: {x: 1304.0928, y: 572.2676, z: 201.10687}
     speed: 2
-    m_Value: {x: 764.8644, y: 783.2473, z: 457.6097}
+    m_Value: {x: 1304.0928, y: 572.2676, z: 201.10687}
   m_RenderMode: 0
   m_CameraMode:
     drawMode: 0
@@ -670,13 +670,13 @@ MonoBehaviour:
     m_GridAxis: 1
     m_gridOpacity: 0.5
   m_Rotation:
-    m_Target: {x: 0.050410915, y: 0.34249955, z: 0.018406926, w: -0.93799764}
+    m_Target: {x: -0.21119235, y: -0.4040739, z: 0.096453205, w: -0.8847933}
     speed: 2
-    m_Value: {x: 0.050382603, y: 0.34390178, z: 0.018482285, w: -0.93747085}
+    m_Value: {x: -0.21251501, y: -0.40392062, z: 0.0970573, w: -0.8844577}
   m_Size:
-    m_Target: 68.9525
+    m_Target: 704.18976
     speed: 2
-    m_Value: 68.9525
+    m_Value: 704.18976
   m_Ortho:
     m_Target: 0
     speed: 2
@@ -764,7 +764,7 @@ MonoBehaviour:
       scrollPos: {x: 0, y: 0}
       m_SelectedIDs: 
       m_LastClickedID: 0
-      m_ExpandedIDs: dcceffff20cfffffb8e5ffff3ce6ffff8eedffff36fbffff7e5800003e590000e6620000
+      m_ExpandedIDs: 92f3ffff42f8ffff82f9ffff34fbffff5c5a00001c5b0000
       m_RenameOverlay:
         m_UserAcceptedRename: 0
         m_Name: 
@@ -830,22 +830,22 @@ MonoBehaviour:
     m_SkipHidden: 0
     m_SearchArea: 1
     m_Folders:
-    - Assets/Scenes
+    - Assets
     m_Globs: []
     m_OriginalText: 
   m_ViewMode: 1
-  m_StartGridSize: 64
+  m_StartGridSize: 16
   m_LastFolders:
-  - Assets/Scenes
-  m_LastFoldersGridSize: -1
+  - Assets
+  m_LastFoldersGridSize: 16
   m_LastProjectPath: C:\Users\Dimchik\source\repos\RiderProjects\SpaceWarProject\GameClient\SpaceWar
   m_LockTracker:
     m_IsLocked: 0
   m_FolderTreeState:
-    scrollPos: {x: 0, y: 73}
-    m_SelectedIDs: d4590000
-    m_LastClickedID: 22996
-    m_ExpandedIDs: 00000000c2590000c4590000c65900003c6200004062000000ca9a3b
+    scrollPos: {x: 0, y: 41}
+    m_SelectedIDs: 44590000
+    m_LastClickedID: 22852
+    m_ExpandedIDs: 0000000044590000485900004a5900004c5900005c590000c25b000000ca9a3b
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -873,7 +873,7 @@ MonoBehaviour:
     scrollPos: {x: 0, y: 0}
     m_SelectedIDs: 
     m_LastClickedID: 0
-    m_ExpandedIDs: 00000000c2590000c4590000c6590000
+    m_ExpandedIDs: 000000004459000046590000485900004a5900004c5900004e590000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -926,7 +926,7 @@ MonoBehaviour:
       m_ResourceFile: 
     m_NewAssetIndexInList: -1
     m_ScrollPosition: {x: 0, y: 0}
-    m_GridSize: 64
+    m_GridSize: 16
   m_SkipHiddenPackages: 0
   m_DirectoriesAreaWidth: 139
 --- !u!114 &18
