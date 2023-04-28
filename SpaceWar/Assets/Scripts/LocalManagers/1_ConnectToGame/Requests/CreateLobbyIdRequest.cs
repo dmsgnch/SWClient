@@ -35,7 +35,7 @@ namespace LocalManagers.ConnectToGame.Requests
             RestRequestForm<CreateLobbyResponse> requestForm =
                 new RestRequestForm<CreateLobbyResponse>(ConnectionEndpoint,
                     RequestType.POST, parentCanvasObject, new CreateLobbyIdRequest.GetLobbyResponseHandler(), 
-                    JsonConvert.SerializeObject(request), AccessToken);
+                    AccessToken, JsonConvert.SerializeObject(request));
             
            var result = StartCoroutine(Routine_SendDataToServer<CreateLobbyResponse>(requestForm));
         }

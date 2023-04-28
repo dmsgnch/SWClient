@@ -21,6 +21,12 @@ namespace LocalManagers.RegisterLoginScripts.Requests
         
         [SerializeField] private GameObject parentCanvasObject;
         
+        void Start()
+        {
+            Button btn = gameObject.GetComponent<Button>();
+            btn.onClick.AddListener(OnLoginButtonClick);
+        }
+        
         public void OnLoginButtonClick()
         {
             var data = new LoginRequest()
