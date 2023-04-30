@@ -40,9 +40,9 @@ namespace Components
             }
             foreach(GameObject i in infoPanels)
             {
-               i.transform.localPosition = i.transform.localPosition - new Vector3(0,50,0);
+               i.transform.localPosition -= new Vector3(0,50,0);
             }
-            Debug.Log(infoPanels.Count);
+          //  Debug.Log(infoPanels.Count);
         }
         public enum MessageType
         {
