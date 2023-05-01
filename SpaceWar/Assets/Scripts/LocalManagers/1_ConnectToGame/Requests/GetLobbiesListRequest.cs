@@ -48,7 +48,7 @@ namespace LocalManagers.ConnectToGame.Requests
                 new RestRequestForm<GetAllLobbiesResponse>(ConnectionEndpoint,
                     RequestType.GET, parentCanvasObject, new GetAllLobbiesResponseHandler(), token: AccessToken);
 
-            var result = StartCoroutine(Routine_SendDataToServer<GetAllLobbiesResponse>(requestForm));
+            var result = StartCoroutine(Routine_SendDataToServer(requestForm));
         }
 
         static void DisplayLobbiesList(IList<Lobby> lobbies)

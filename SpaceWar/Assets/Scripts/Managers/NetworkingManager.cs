@@ -7,7 +7,7 @@ using SharedLibrary.Responses.Abstract;
 using UnityEngine.Networking;
 using Components;
 using SharedLibrary.Models;
-
+using UnityEngine;
 
 namespace Scripts.RegisterLoginScripts
 {
@@ -21,8 +21,41 @@ namespace Scripts.RegisterLoginScripts
 
         public static string LobbyName { get; set; }
 
+        private string _selectedLobbyId { get; set; }
+        public string SelectedLobbyId 
+        {
+            get => _selectedLobbyId;
+            set
+            {
+                _selectedLobbyId = value;
+                Debug.Log($"lobby with id \"{_selectedLobbyId}\" was selected");
+            }
+        }
+
+        private string _heroname;
+        public string HeroName 
+        {
+            get => _heroname;
+            set
+            {
+                _heroname = value;
+            }
+        }
+
+        private string _lobbyToCreateName;
+        public string LobbyToCreateName 
+        {
+            get => _lobbyToCreateName;
+            set
+            {
+                _lobbyToCreateName = value;
+            } 
+        }
+
+
+
         #region SignalR
-        
+
         // public HubConnection HubConnection { get; set; }
         //
         // private void Start()
@@ -37,11 +70,11 @@ namespace Scripts.RegisterLoginScripts
         //         var newMessage = $"{user}: {message}";
         //     });
         // }
-        
+
         #endregion
 
         #region REST
-        
+
         protected IEnumerator Routine_SendDataToServer<T>(RestRequestForm<T> requestForm)
             where T : ResponseBase
         {

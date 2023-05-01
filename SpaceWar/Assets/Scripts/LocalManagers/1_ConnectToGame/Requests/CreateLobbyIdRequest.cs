@@ -51,7 +51,7 @@ namespace LocalManagers.ConnectToGame.Requests
                 if (requestForm.Result is not CreateLobbyResponse) throw new ArgumentException(); 
                 CreateLobbyResponse response = requestForm.Result as CreateLobbyResponse;
 
-                LobbyId = response.LobbyId;
+                LobbyId = response.Lobby.Id;
                 
                 ChangeActiveObjects.Instance.SwapActivity("cnvs_LobbiesList", "cnvs_Lobby");
             }
