@@ -18,6 +18,12 @@ namespace LocalManagers.RegisterLoginScripts.Requests
         private const string ConnectionEndpoint = "Authentication/Register";
         
         [SerializeField] private GameObject parentCanvasObject;
+
+        void Start()
+        {
+            Button btn = gameObject.GetComponent<Button>();
+            btn.onClick.AddListener(OnRegisterButtonClick);
+        }
         
         public void OnRegisterButtonClick()
         {

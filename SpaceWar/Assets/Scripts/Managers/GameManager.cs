@@ -12,7 +12,8 @@ public class GameManager : StaticInstance<GameManager> {
     public GameState State { get; private set; }
 
     // Kick the game off with the first state
-    void Start() => ChangeState(GameState.Starting);
+    
+    //void Start() => ChangeState(GameState.Starting);
 
     public void ChangeState(GameState newState) {
         OnBeforeStateChanged?.Invoke(newState);
@@ -32,6 +33,7 @@ public class GameManager : StaticInstance<GameManager> {
                 HandleHeroTurn();
                 break;
             case GameState.EnemyTurn:
+                
                 break;
             case GameState.Win:
                 break;
