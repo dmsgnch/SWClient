@@ -7,13 +7,13 @@ namespace LocalManagers.ConnectToGame
 {
     public class LobbyExit : MonoBehaviour
     {
-        [SerializeField] private GameObject lobbyPanel;
-        [SerializeField] private GameObject connectToGamePanel;
+        [SerializeField] private GameObject lobbyCanvas;
+        [SerializeField] private GameObject connectToGameCanvas;
     
         public void GoToGameConnection()
         {
-            lobbyPanel.SetActive(false);
-            connectToGamePanel.SetActive(true);
+            lobbyCanvas.SetActive(false);
+            connectToGameCanvas.SetActive(true);
         }
     }
 }
