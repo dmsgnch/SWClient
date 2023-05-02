@@ -7,21 +7,20 @@ namespace LocalManagers.ConnectToGame
     /// <summary>
     /// class that controls the display of players list in lobby
     /// </summary>
-    public class PlayersListManager : StaticInstance<PlayersListManager>
+    public class PlayersListController : StaticInstance<PlayersListController>
     {
-        [SerializeField] private GameObject _playersPanel;
         [SerializeField] private GameObject _playerPrefab;
 
         public void UpdatePlayersList(Lobby lobby)
         {
-            foreach(Transform child in _playersPanel.transform)
+            foreach(Transform child in gameObject.transform)
             {
                 Destroy(child.gameObject);
             }
             
             foreach (var lobbyInfo in lobby.LobbyInfos)
             {
-                var lobbyView = Instantiate(_playerPrefab.transform.GetChild(0).gameObject, _playersPanel.transform);
+                var lobbyView = Instantiate(_playerPrefab.transform.GetChild(0).gameObject, gameObject.transform);
                 lobbyView.transform.GetChild(0).GetComponent<Text>().text = lobbyInfo.User.Username;
                 lobbyView.transform.GetChild(1).GetComponent<Image>().color = Color.blue;
             }
