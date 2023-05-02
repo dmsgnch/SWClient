@@ -21,8 +21,6 @@ namespace LocalManagers.ConnectToGame.Requests
     {
         private const string ConnectionEndpoint = "GetAll";
 
-        [SerializeField] private GameObject parentCanvasObject;
-
         void OnEnable()
         {
             CreateLobby();
@@ -34,7 +32,7 @@ namespace LocalManagers.ConnectToGame.Requests
             
             RestRequestForm<CreateLobbyResponse> requestForm =
                 new RestRequestForm<CreateLobbyResponse>(ConnectionEndpoint,
-                    RequestType.POST, parentCanvasObject, new CreateLobbyIdRequest.GetLobbyResponseHandler(), 
+                    RequestType.POST, new CreateLobbyIdRequest.GetLobbyResponseHandler(), 
                     AccessToken, JsonConvert.SerializeObject(request));
             
            var result = StartCoroutine(Routine_SendDataToServer<CreateLobbyResponse>(requestForm));
@@ -51,7 +49,7 @@ namespace LocalManagers.ConnectToGame.Requests
                 if (requestForm.Result is not CreateLobbyResponse) throw new ArgumentException(); 
                 CreateLobbyResponse response = requestForm.Result as CreateLobbyResponse;
 
-                LobbyId = response.Lobby.Id;
+                NetworkingManager.Instance.LobbyId = response.Lobby.Id;
                 
                 ChangeActiveObjects.Instance.SwapActivity("cnvs_LobbiesList", "cnvs_Lobby");
             }

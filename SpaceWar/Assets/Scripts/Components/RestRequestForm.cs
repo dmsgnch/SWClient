@@ -12,7 +12,6 @@ namespace Components
     {
         public string EndPoint { get; }
         public RequestType RequestType { get; }
-        public GameObject InformationPanelCanvas { get; set; }
         public IResponseHandler ResponseHandler { get; }
         
         [CanBeNull] public string Token { get; set; }
@@ -21,14 +20,12 @@ namespace Components
 
         public RestRequestForm(string endPoint,
             RequestType requestType,
-            GameObject infoPanelCanvas,
             IResponseHandler handler,
             [CanBeNull] string token = null,
             [CanBeNull] string data = null)
         {
             EndPoint = endPoint;
             RequestType = requestType;
-            InformationPanelCanvas = infoPanelCanvas;
             ResponseHandler = handler;
             Token = token;
             JsonData = data;

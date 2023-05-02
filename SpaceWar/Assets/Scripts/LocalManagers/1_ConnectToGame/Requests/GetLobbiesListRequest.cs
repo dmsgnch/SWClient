@@ -16,54 +16,22 @@ using Components;
 
 namespace LocalManagers.ConnectToGame.Requests
 {
-    public class GetLobbiesListRequest : NetworkingManager
+    public class GetLobbiesListRequest
     {
-        [SerializeField] private GameObject lobbiesPanel;
-        [SerializeField] private GameObject lobbyTemplate;
-
-        private static GameObject _lobbiesPanel;
-        private static GameObject _lobbyTemplate;
-
         private const string ConnectionEndpoint = "Lobby/GetAll";
 
-        [SerializeField] private GameObject parentCanvasObject;
-
-        void Start()
+        public void GetLobbyList()
         {
-            _lobbiesPanel = lobbiesPanel;
-            _lobbyTemplate = lobbyTemplate;
-
-            Button btn = gameObject.GetComponent<Button>();
-            btn.onClick.AddListener(GetLobbyList);
-        }
-
-        void OnEnable()
-        {
-            GetLobbyList();
-        }
-
-        void GetLobbyList()
-        {
+            Debug.Log($"Token: {NetworkingManager.AccessToken}");
             RestRequestForm<GetAllLobbiesResponse> requestForm =
-                new RestRequestForm<GetAllLobbiesResponse>(ConnectionEndpoint,
-                    RequestType.GET, parentCanvasObject, new GetAllLobbiesResponseHandler(), token: AccessToken);
+                new RestRequestForm<GetAllLobbiesResponse>(ConnectionEndpoint, 
+                    RequestType.GET, new GetAllLobbiesResponseHandler(), NetworkingManager.AccessToken);
 
-            var result = StartCoroutine(Routine_SendDataToServer(requestForm));
+            var result = NetworkingManager.Instance.StartCoroutine(NetworkingManager.Instance.Routine_SendDataToServer(requestForm));
         }
-
-        static void DisplayLobbiesList(IList<Lobby> lobbies)
-        {
-            for (int i = 0; i < lobbies.Count; i++)
-            {
-                var element = Instantiate(_lobbyTemplate, _lobbiesPanel.transform);
-                element.transform.GetChild(0).GetComponent<Text>().text += lobbies[i].LobbyName;
-                element.SetActive(true);
-            }
-        }
+        
         private class GetAllLobbiesResponseHandler : IResponseHandler
         {
-            public GameObject infoPanelCanvas { get; set; }
-
             public void PostConnectionSuccessAction<T>(RestRequestForm<T> requestForm)
                 where T : ResponseBase
             {
@@ -71,7 +39,7 @@ namespace LocalManagers.ConnectToGame.Requests
                 if (requestForm.Result is not GetAllLobbiesResponse) throw new ArgumentException(); 
                 GetAllLobbiesResponse response = requestForm.Result as GetAllLobbiesResponse;
 
-                new Task(() => DisplayLobbiesList(response.Lobbies));
+                NetworkingManager.Instance.Lobbies = response.Lobbies;
             }
         }
     }

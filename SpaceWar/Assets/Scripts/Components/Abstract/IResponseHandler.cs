@@ -10,8 +10,6 @@ namespace Components.Abstract
 {
     public interface IResponseHandler
     {
-        public GameObject infoPanelCanvas { get; set; }
-
         /// <summary>
         /// Execute methods according to request result
         /// </summary>
@@ -22,8 +20,6 @@ namespace Components.Abstract
         public void ProcessResponse<T>(UnityWebRequest request, RestRequestForm<T> requestForm)
             where T : ResponseBase
         {
-            infoPanelCanvas = requestForm.InformationPanelCanvas;
-            
             switch (request.result)
             {
                 case UnityWebRequest.Result.Success:
@@ -91,7 +87,7 @@ namespace Components.Abstract
 
             foreach (string message in operationInfo)
             {
-                infoPanelCanvas.GetComponent<InformationPanelController>().CreateMessage(msgType, message);
+                InformationPanelController.Instance.CreateMessage(msgType, message);
             }
         }
     }

@@ -16,8 +16,6 @@ namespace LocalManagers.RegisterLoginScripts.Requests
         [SerializeField] private InputField passwordField;
 
         private const string ConnectionEndpoint = "Authentication/Register";
-        
-        [SerializeField] private GameObject parentCanvasObject;
 
         void Start()
         {
@@ -36,7 +34,7 @@ namespace LocalManagers.RegisterLoginScripts.Requests
         
             RestRequestForm<AuthenticationResponse> requestForm = 
                 new RestRequestForm<AuthenticationResponse>(ConnectionEndpoint, 
-                    RequestType.POST, parentCanvasObject, new RegisterResponseHandler(),
+                    RequestType.POST, new RegisterResponseHandler(),
                     JsonConvert.SerializeObject(data));
 
             var result = StartCoroutine( Routine_SendDataToServer<AuthenticationResponse>(requestForm));
@@ -44,7 +42,5 @@ namespace LocalManagers.RegisterLoginScripts.Requests
     }
     
     public class RegisterResponseHandler : IResponseHandler
-    {
-        public GameObject infoPanelCanvas { get; set; }
-    }
+    { }
 }

@@ -1,58 +1,51 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Text;
 using Microsoft.AspNetCore.SignalR.Client;
 using Newtonsoft.Json;
 using SharedLibrary.Responses.Abstract;
 using UnityEngine.Networking;
 using Components;
+using JetBrains.Annotations;
 using SharedLibrary.Models;
 using UnityEngine;
 
 namespace Scripts.RegisterLoginScripts
 {
-    public class NetworkingManager : StaticInstance<NetworkingManager>
+    public class NetworkingManager : Singleton<NetworkingManager>
     {
         private const string BaseURL = @"https://localhost:7148/";
 
-        protected static string AccessToken { get; set; }
+        #region ParamsStore
 
-        public static Guid LobbyId { get; set; }
+        public static string AccessToken { get; set; } = "token";
 
-        public static string LobbyName { get; set; }
+        public Guid LobbyId { get; set; }
 
-        private string _selectedLobbyId { get; set; }
-        public string SelectedLobbyId 
+        public string LobbyName { get; set; }
+
+        private string _selectedLobbyId;
+
+        public string SelectedLobbyId
         {
             get => _selectedLobbyId;
             set
             {
                 _selectedLobbyId = value;
-                Debug.Log($"lobby with id \"{_selectedLobbyId}\" was selected");
+
+                if (Debug.isDebugBuild)
+                    Debug.Log($"lobby with id \"{_selectedLobbyId}\" was selected");
             }
         }
 
-        private string _heroname;
-        public string HeroName 
-        {
-            get => _heroname;
-            set
-            {
-                _heroname = value;
-            }
-        }
+        public string HeroName { get; set; }
 
-        private string _lobbyToCreateName;
-        public string LobbyToCreateName 
-        {
-            get => _lobbyToCreateName;
-            set
-            {
-                _lobbyToCreateName = value;
-            } 
-        }
+        public string LobbyToCreateName { get; set; }
 
+        public IList<Lobby> Lobbies { get; set; }// = new List<Lobby>(0);
 
+        #endregion
 
         #region SignalR
 
@@ -75,7 +68,7 @@ namespace Scripts.RegisterLoginScripts
 
         #region REST
 
-        protected IEnumerator Routine_SendDataToServer<T>(RestRequestForm<T> requestForm)
+        public IEnumerator Routine_SendDataToServer<T>(RestRequestForm<T> requestForm)
             where T : ResponseBase
         {
             using UnityWebRequest request = new UnityWebRequest($"{BaseURL}{requestForm.EndPoint}",
@@ -92,7 +85,7 @@ namespace Scripts.RegisterLoginScripts
 
             if (!String.IsNullOrWhiteSpace(requestForm.Token))
             {
-                AttachHeader(request, "Authorization", "token");
+                AttachHeader(request, "Authorization", $"{requestForm.Token}");
             }
 
             yield return request.SendWebRequest();
@@ -101,15 +94,15 @@ namespace Scripts.RegisterLoginScripts
 
             requestForm.ResponseHandler.ProcessResponse(request, requestForm);
         }
-        
+
         #endregion
-        
+
         private void AttachHeader(UnityWebRequest request, string key, string value)
         {
             request.SetRequestHeader(key, value);
         }
     }
-    
+
     public enum RequestType
     {
         GET = 0,

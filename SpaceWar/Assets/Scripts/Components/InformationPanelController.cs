@@ -8,21 +8,26 @@ using UnityEngine.UI;
 using UnityEngine.UIElements;
 using Image = UnityEngine.UI.Image;
 using Quaternion = System.Numerics.Quaternion;
+using System.Linq;
 
 namespace Components
 {
-    public class InformationPanelController : MonoBehaviour
+    public class InformationPanelController : StaticInstance<InformationPanelController>
     {
         [SerializeField] private Sprite infoIcon;
         [SerializeField] private Sprite errorIcon;
         [SerializeField] private Sprite warningIcon;
 
         [SerializeField] private GameObject infoPanelPrefab;
-        [SerializeField] private List<GameObject> infoPanels;
+        private static IList<GameObject> _infoPanels = new List<GameObject>();
+        
         public void CreateMessage(MessageType msgType, string message)
         {
-            var infoPanel = Instantiate(infoPanelPrefab,GetComponent<RectTransform>());
-            infoPanels.Add(infoPanel);
+            var parentCanvas = GetParentCanvas(gameObject);
+            
+            var infoPanel = Instantiate(infoPanelPrefab, parentCanvas.GetComponent<RectTransform>());
+            _infoPanels.Add(infoPanel);
+            
             Image objImage = infoPanel.transform.Find("IP_img").GetComponent<Image>();
             objImage.sprite = (int)msgType == 0 ? infoIcon : ((int)msgType == 1 ? errorIcon : warningIcon);
             objImage.preserveAspect = false;
@@ -31,14 +36,26 @@ namespace Components
             text.text = message;
             ControlPanels();
         }
+
+        private GameObject GetParentCanvas(GameObject canvases)
+        {
+            for (int i = 0; i < canvases.transform.childCount; i++)
+            {
+                if (canvases.transform.GetChild(i).gameObject.activeInHierarchy)
+                    return canvases.transform.GetChild(i).gameObject;
+            }
+
+            throw new ApplicationException("Active canvas was not found on the scene");
+        }
+
         public void ControlPanels()
         {
-            if (infoPanels.Count > 5)
+            if (_infoPanels.Count > 5)
             {
-                Destroy(infoPanels[0]);
-                infoPanels.RemoveAt(0);
+                Destroy(_infoPanels[0]);
+                _infoPanels.RemoveAt(0);
             }
-            foreach(GameObject i in infoPanels)
+            foreach(GameObject i in _infoPanels)
             {
                i.transform.localPosition -= new Vector3(0,50,0);
             }
