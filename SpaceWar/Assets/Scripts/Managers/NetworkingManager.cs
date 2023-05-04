@@ -13,13 +13,13 @@ using UnityEngine;
 
 namespace Scripts.RegisterLoginScripts
 {
-    public class NetworkingManager : Singleton<NetworkingManager>
+    public class NetworkingManager : GetterPersistentSingleton<NetworkingManager>
     {
         private const string BaseURL = @"https://localhost:7148/";
 
         #region ParamsStore
 
-        public static string AccessToken { get; set; } = "token";
+        public string AccessToken { get; set; } = "token";
 
         public Guid LobbyId { get; set; }
 

@@ -5,7 +5,7 @@ using UnityEngine;
 /// Nice, easy to understand enum-based game manager. For larger and more complex games, look into
 /// state machines. But this will serve just fine for most games.
 /// </summary>
-public class GameManager : StaticInstance<GameManager> {
+public class GameManager : GetterSingleton<GameManager> {
     public static event Action<GameState> OnBeforeStateChanged;
     public static event Action<GameState> OnAfterStateChanged;
 

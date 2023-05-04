@@ -22,12 +22,13 @@ namespace LocalManagers.ConnectToGame.Requests
 
         public void GetLobbyList()
         {
-            Debug.Log($"Token: {NetworkingManager.AccessToken}");
+            Debug.Log($"Token: {NetworkingManager.Instance.AccessToken}");
             RestRequestForm<GetAllLobbiesResponse> requestForm =
                 new RestRequestForm<GetAllLobbiesResponse>(ConnectionEndpoint, 
-                    RequestType.GET, new GetAllLobbiesResponseHandler(), NetworkingManager.AccessToken);
+                    RequestType.GET, new GetAllLobbiesResponseHandler(), NetworkingManager.Instance.AccessToken);
 
-            var result = NetworkingManager.Instance.StartCoroutine(NetworkingManager.Instance.Routine_SendDataToServer(requestForm));
+            var result = NetworkingManager.Instance.StartCoroutine(
+                NetworkingManager.Instance.Routine_SendDataToServer(requestForm));
         }
         
         private class GetAllLobbiesResponseHandler : IResponseHandler
