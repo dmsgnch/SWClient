@@ -20,6 +20,7 @@ namespace Assets.Scripts.SignalR
         {
             InformationPanelController.Instance.CreateMessage(InformationPanelController.MessageType.INFO,
                 serverMessage);
+
         }
 
         public void ConnectToLobby(Lobby lobby)
