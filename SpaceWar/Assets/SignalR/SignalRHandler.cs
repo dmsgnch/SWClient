@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace Assets.Scripts.SignalR
 {
-    public class SignalRHandler : GetterSingleton<SignalRHandler>
+    public class SignalRHandler : BehaviorPersistentSingleton<SignalRHandler>
     {
         public void Error(string errorMessage)
         {

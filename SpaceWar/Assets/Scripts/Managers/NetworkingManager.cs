@@ -16,7 +16,7 @@ using Assets.Scripts.SignalR;
 
 namespace Scripts.RegisterLoginScripts
 {
-    public class NetworkingManager : GetterPersistentSingleton<NetworkingManager>
+    public class NetworkingManager : BehaviorPersistentSingleton<NetworkingManager>
     {
         private const string BaseURL = @"https://localhost:7148/";
 
@@ -57,28 +57,34 @@ namespace Scripts.RegisterLoginScripts
         private void Start()
         {
             HubConnection = new HubConnectionBuilder()
-                .WithAutomaticReconnect()
-                .WithUrl($"{BaseURL}", options =>
-                {
-                    options.AccessTokenProvider = () => Task.FromResult(AccessToken);
-                }) //Add substr
+                //.WithUrl($"{BaseURL}", options =>
+                //{
+                //    options.AccessTokenProvider = () => Task.FromResult(AccessToken);
+                //}) //Add substr
                 .WithAutomaticReconnect()
                 .Build();
 
             HubConnection.On<string>(ClientHandlers.Lobby.Error,
                 SignalRHandler.Instance.Error);
+
             HubConnection.On<string>(ClientHandlers.Lobby.DeleteLobbyHandler,
                 SignalRHandler.Instance.DeleteLobby);
+
             HubConnection.On<Lobby>(ClientHandlers.Lobby.ConnectToLobbyHandler,
                 SignalRHandler.Instance.ConnectToLobby);
+
             HubConnection.On<Lobby>(ClientHandlers.Lobby.ChangeReadyStatus,
                 SignalRHandler.Instance.ChangeReadyStatus);
+
             HubConnection.On<Lobby>(ClientHandlers.Lobby.ExitFromLobbyHandler,
                 SignalRHandler.Instance.ExitFromLobby);
+
             HubConnection.On<Lobby>(ClientHandlers.Lobby.ChangeLobbyDataHandler,
                 SignalRHandler.Instance.ChangeLobbyData);
+
             HubConnection.On<Lobby>(ClientHandlers.Lobby.ChangedColor,
                 SignalRHandler.Instance.ChangedColor);
+
             HubConnection.On<Hero>(ClientHandlers.Lobby.CreatedSessionHandler,
                 SignalRHandler.Instance.CreateSession);
 

@@ -4,7 +4,7 @@ using UnityEngine;
 /// An example of a scene-specific manager grabbing resources from the resource system
 /// Scene-specific managers are things like grid managers, unit managers, environment managers etc
 /// </summary>
-public class UnitManager : GetterSingleton<UnitManager> {
+public class UnitManager : BehaviorSingleton<UnitManager> {
 
     public void SpawnHeroes() {
         SpawnUnit(ExampleHeroType.Tarodev, new Vector3(1, 0, 0));
