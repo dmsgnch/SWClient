@@ -57,10 +57,10 @@ namespace Scripts.RegisterLoginScripts
         private void Start()
         {
             HubConnection = new HubConnectionBuilder()
-                //.WithUrl($"{BaseURL}", options =>
-                //{
-                //    options.AccessTokenProvider = () => Task.FromResult(AccessToken);
-                //}) //Add substr
+                .WithUrl($"{BaseURL}", options =>
+                {
+                    options.AccessTokenProvider = () => Task.FromResult(AccessToken);
+                }) //Add substr
                 .WithAutomaticReconnect()
                 .Build();
 
