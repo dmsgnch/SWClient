@@ -14,7 +14,7 @@ namespace LocalManagers.ConnectToGame
     /// <summary>
     /// class that controls the display of lobbies list
     /// </summary>
-    public class LobbiesListController : StaticInstance<LobbiesListController>
+    public class LobbiesListController : GetterSingleton<LobbiesListController>
     {
         [SerializeField] private GameObject lobbiesListItemPrefab;
 
