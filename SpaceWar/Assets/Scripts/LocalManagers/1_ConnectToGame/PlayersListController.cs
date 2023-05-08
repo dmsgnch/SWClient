@@ -7,7 +7,7 @@ namespace LocalManagers.ConnectToGame
     /// <summary>
     /// class that controls the display of players list in lobby
     /// </summary>
-    public class PlayersListController : StaticInstance<PlayersListController>
+    public class PlayersListController : BehaviorSingleton<PlayersListController>
     {
         [SerializeField] private GameObject _playerPrefab;
 

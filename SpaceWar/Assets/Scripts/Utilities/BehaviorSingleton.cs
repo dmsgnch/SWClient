@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using UnityEngine;
 
-public class GetterSingleton<T> : MonoBehaviour where T : MonoBehaviour
+public class BehaviorSingleton<T> : MonoBehaviour where T : MonoBehaviour
 {
     private static T _instance;
 
@@ -15,7 +15,7 @@ public class GetterSingleton<T> : MonoBehaviour where T : MonoBehaviour
     }
 }
 
-public class GetterPersistentSingleton<T> : MonoBehaviour where T : MonoBehaviour
+public class BehaviorPersistentSingleton<T> : MonoBehaviour where T : MonoBehaviour
 {
     private static T _instance;
 
@@ -27,6 +27,23 @@ public class GetterPersistentSingleton<T> : MonoBehaviour where T : MonoBehaviou
             {
                 _instance = FindAnyObjectByType<T>();
                 DontDestroyOnLoad(_instance);
+            }
+            return _instance;
+        }
+    }
+}
+
+public class RegularSingleton<T> where T: new()
+{
+    private static T _instance;
+
+    public static T Instance
+    {
+        get
+        {
+            if (_instance is null)
+            {
+                _instance = new T();
             }
             return _instance;
         }
