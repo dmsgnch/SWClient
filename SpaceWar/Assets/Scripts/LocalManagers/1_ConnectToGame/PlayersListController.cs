@@ -36,7 +36,7 @@ namespace LocalManagers.ConnectToGame
                 }
                 else
                 {
-                    //toggle.GetComponent<Toggle>().onValueChanged.RemoveAllListeners();
+                    toggle.GetComponent<Toggle>().interactable = false;
                 }
             }
         }

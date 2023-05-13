@@ -15,6 +15,7 @@ using SharedLibrary.Contracts.Hubs;
 using Assets.Scripts.SignalR;
 using LocalManagers.ConnectToGame;
 using System.Linq;
+using Assets.Scripts.LocalManagers._1_ConnectToGame;
 
 namespace Scripts.RegisterLoginScripts
 {
@@ -112,6 +113,7 @@ namespace Scripts.RegisterLoginScripts
                             Id = 1,
                         },
                         LobbyLeader = true,
+                        UserId = 1,
                     },
                     new LobbyInfo
                     {
@@ -120,14 +122,16 @@ namespace Scripts.RegisterLoginScripts
                             Username = "not a host",
                             Id = 2,
                         },
-                        LobbyLeader = false
+                        LobbyLeader = false,
+                        UserId = 2,
                     },
                 },
             };
-            LobbyInfo = lobby.LobbyInfos.Last();
+            LobbyInfo = lobby.LobbyInfos.First();
             LobbyInfo.Lobby = lobby;
 
             PlayersListController.Instance.UpdatePlayersList(lobby);
+            StartButtonController.Instance.DefineButton();
         }
 
         #endregion
