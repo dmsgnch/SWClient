@@ -13,6 +13,8 @@ using UnityEngine;
 using System.Threading.Tasks;
 using SharedLibrary.Contracts.Hubs;
 using Assets.Scripts.SignalR;
+using LocalManagers.ConnectToGame;
+using System.Linq;
 
 namespace Scripts.RegisterLoginScripts
 {
@@ -48,6 +50,8 @@ namespace Scripts.RegisterLoginScripts
 
         public IList<Lobby> Lobbies { get; set; }// = new List<Lobby>(0);
 
+        public LobbyInfo LobbyInfo { get; private set; }
+
         #endregion
 
         #region SignalR
@@ -56,6 +60,8 @@ namespace Scripts.RegisterLoginScripts
 
         private void Start()
         {
+            DisplaySampleLobby();
+
             HubConnection = new HubConnectionBuilder()
                 .WithUrl($"{BaseURL}", options =>
                 {
@@ -88,7 +94,40 @@ namespace Scripts.RegisterLoginScripts
             HubConnection.On<Hero>(ClientHandlers.Lobby.CreatedSessionHandler,
                 SignalRHandler.Instance.CreateSession);
 
-            HubConnection.StartAsync().Wait();
+            //HubConnection.StartAsync().Wait();
+        }
+
+        private void DisplaySampleLobby()
+        {
+            var lobby = new Lobby
+            {
+                LobbyName = "default lobby",
+                LobbyInfos = new LobbyInfo[]
+                {
+                    new LobbyInfo
+                    {
+                        User = new ApplicationUser
+                        {
+                            Username = "host",
+                            Id = 1,
+                        },
+                        LobbyLeader = true,
+                    },
+                    new LobbyInfo
+                    {
+                        User = new ApplicationUser
+                        {
+                            Username = "not a host",
+                            Id = 2,
+                        },
+                        LobbyLeader = false
+                    },
+                },
+            };
+            LobbyInfo = lobby.LobbyInfos.Last();
+            LobbyInfo.Lobby = lobby;
+
+            PlayersListController.Instance.UpdatePlayersList(lobby);
         }
 
         #endregion
