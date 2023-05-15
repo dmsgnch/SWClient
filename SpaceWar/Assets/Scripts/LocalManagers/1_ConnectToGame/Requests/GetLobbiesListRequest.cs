@@ -21,11 +21,10 @@ namespace LocalManagers.ConnectToGame.Requests
         private const string ConnectionEndpoint = "Lobby/GetAll";
 
         public void GetLobbyList()
-        {
-            Debug.Log($"Token: {NetworkingManager.Instance.AccessToken}");
+        {           
             RestRequestForm<GetAllLobbiesResponse> requestForm =
                 new RestRequestForm<GetAllLobbiesResponse>(ConnectionEndpoint, 
-                    RequestType.GET, new GetAllLobbiesResponseHandler(), NetworkingManager.Instance.AccessToken);
+                    RequestType.GET, new GetAllLobbiesResponseHandler(), token: NetworkingManager.Instance.AccessToken);
 
             var result = NetworkingManager.Instance.StartCoroutine(
                 NetworkingManager.Instance.Routine_SendDataToServer(requestForm));
@@ -33,14 +32,16 @@ namespace LocalManagers.ConnectToGame.Requests
         
         private class GetAllLobbiesResponseHandler : IResponseHandler
         {
-            public void PostConnectionSuccessAction<T>(RestRequestForm<T> requestForm)
+			public void BodyConnectionSuccessAction<T>(RestRequestForm<T> requestForm)
+				where T : ResponseBase
+			{
+				//Not create information panel
+			}
+
+			public void PostConnectionSuccessAction<T>(RestRequestForm<T> requestForm)
                 where T : ResponseBase
             {
-                //TODO: Review code below
-                if (requestForm.Result is not GetAllLobbiesResponse) throw new ArgumentException(); 
-                GetAllLobbiesResponse response = requestForm.Result as GetAllLobbiesResponse;
-
-                NetworkingManager.Instance.Lobbies = response.Lobbies;
+                NetworkingManager.Instance.Lobbies = requestForm.GetResponseResult<GetAllLobbiesResponse>().Lobbies;
             }
         }
     }

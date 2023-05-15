@@ -9,17 +9,18 @@ using UnityEngine.UIElements;
 using Image = UnityEngine.UI.Image;
 using Quaternion = System.Numerics.Quaternion;
 using System.Linq;
+using System.Threading;
 
 namespace Components
 {
-    public class InformationPanelController : StaticInstance<InformationPanelController>
+    public class InformationPanelController : BehaviorSingleton<InformationPanelController>
     {
         [SerializeField] private Sprite infoIcon;
         [SerializeField] private Sprite errorIcon;
         [SerializeField] private Sprite warningIcon;
 
         [SerializeField] private GameObject infoPanelPrefab;
-        private static IList<GameObject> _infoPanels = new List<GameObject>();
+        private IList<GameObject> _infoPanels = new List<GameObject>();
         
         public void CreateMessage(MessageType msgType, string message)
         {

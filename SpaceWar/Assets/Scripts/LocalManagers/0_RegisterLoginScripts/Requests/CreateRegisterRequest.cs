@@ -35,7 +35,7 @@ namespace LocalManagers.RegisterLoginScripts.Requests
             RestRequestForm<AuthenticationResponse> requestForm = 
                 new RestRequestForm<AuthenticationResponse>(ConnectionEndpoint, 
                     RequestType.POST, new RegisterResponseHandler(),
-                    JsonConvert.SerializeObject(data));
+                    jsonData: JsonConvert.SerializeObject(data));
 
             var result = StartCoroutine( Routine_SendDataToServer<AuthenticationResponse>(requestForm));
         }

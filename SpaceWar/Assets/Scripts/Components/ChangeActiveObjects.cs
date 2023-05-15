@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Components
 {
-    public class ChangeActiveObjects : Singleton<ChangeActiveObjects>
+    public class ChangeActiveObjects : BehaviorSingleton<ChangeActiveObjects>
     {
         /// <summary>
         /// Change active status for the objects on the scene by the name.

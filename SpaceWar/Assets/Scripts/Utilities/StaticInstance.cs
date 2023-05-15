@@ -7,7 +7,11 @@ using UnityEngine;
 /// </summary>
 public abstract class StaticInstance<T> : MonoBehaviour where T : MonoBehaviour {
     public static T Instance { get; private set; }
-    protected virtual void Awake() => Instance = this as T;
+    protected virtual void Awake()
+    {
+        Instance = this as T;
+        //Debug.Log($"StaticInstance awake with object {typeof(T)}");
+    } 
 
     protected virtual void OnApplicationQuit() {
         Instance = null;
@@ -21,6 +25,7 @@ public abstract class StaticInstance<T> : MonoBehaviour where T : MonoBehaviour 
 /// </summary>
 public abstract class Singleton<T> : StaticInstance<T> where T : MonoBehaviour {
     protected override void Awake() {
+        //Debug.Log($"Singleton awake with object {typeof(T)}");
         if (Instance != null) Destroy(gameObject);
         base.Awake();
     }
@@ -33,6 +38,7 @@ public abstract class Singleton<T> : StaticInstance<T> where T : MonoBehaviour {
 /// </summary>
 public abstract class PersistentSingleton<T> : Singleton<T> where T : MonoBehaviour {
     protected override void Awake() {
+        //Debug.Log($"PersistentSingleton awake with object {typeof(T)}");
         base.Awake();
         DontDestroyOnLoad(gameObject);
     }

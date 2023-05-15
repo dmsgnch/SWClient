@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Threading.Tasks;
 using Components;
 using SharedLibrary.Responses.Abstract;
 using UnityEngine;
@@ -50,9 +51,9 @@ namespace Components.Abstract
             where T : ResponseBase
         {
             CreateInfoPanels(InformationPanelController.MessageType.INFO, requestForm.Result!.Info);
-            
-            //TODO: Delay for success result information panel displaying
-        }
+
+			//TODO: Delay for success result information panel displaying
+		}
 
         public void PostConnectionSuccessAction<T>(RestRequestForm<T> requestForm)
             where T : ResponseBase
@@ -72,7 +73,7 @@ namespace Components.Abstract
             where T : ResponseBase
         {
             CreateInfoPanels(InformationPanelController.MessageType.ERROR,
-                requestForm.Result!.Info is not null
+                requestForm.Result?.Info is not null
                     ? requestForm.Result.Info
                     : new string[]
                     {

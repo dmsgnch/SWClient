@@ -7,7 +7,7 @@ namespace LocalManagers.ConnectToGame.ValueChangedHandlers
     /// <summary>
     /// abstract class that defines behavior on changing values of input boxes 
     /// </summary>
-    public abstract class InputValueChangedHandler : MonoBehaviour
+    public abstract class InputValueChangedHandlerBase : MonoBehaviour
     {
         [SerializeField] protected Image _icon;
         [SerializeField] protected Sprite _validSprite;

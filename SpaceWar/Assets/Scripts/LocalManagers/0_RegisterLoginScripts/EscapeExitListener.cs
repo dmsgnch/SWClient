@@ -4,12 +4,20 @@ using UnityEngine;
 
 public class EscapeExitListener : MonoBehaviour
 {
-    private void Update()
-    {
-        if (Input.GetKeyUp(KeyCode.Escape))
-        {
-            //TODO: Add confirm window
-            Application.Quit();
-        }
-    }
+	private void Update()
+	{
+		if (Input.GetKey(KeyCode.Escape))
+		{
+			//TODO: Add confirm window			 
+
+			if (Debug.isDebugBuild)
+			{
+				Debug.Log("Application quiting");
+			}
+			else
+			{
+				Application.Quit(); //Not work in Unity
+			}
+		}
+	}
 }

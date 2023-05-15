@@ -8,6 +8,8 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using Components;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace LocalManagers.RegisterLoginScripts.Requests
 {
@@ -26,28 +28,40 @@ namespace LocalManagers.RegisterLoginScripts.Requests
         
         public void OnLoginButtonClick()
         {
-            var data = new LoginRequest()
-            {
-                Email = emailField.text,
-                Password = passwordField.text,
-            };
+			var data = new LoginRequest()
+			{
+				Email = emailField.text,
+				Password = passwordField.text,
+			};
 
-            RestRequestForm<AuthenticationResponse> requestForm = 
-                new RestRequestForm<AuthenticationResponse>(ConnectionEndpoint, 
-                    RequestType.POST, new LoginResponseHandler(),
-                    JsonConvert.SerializeObject(data));
+			RestRequestForm<AuthenticationResponse> requestForm =
+				new RestRequestForm<AuthenticationResponse>(ConnectionEndpoint,
+					RequestType.POST, new LoginResponseHandler(),
+					jsonData: JsonConvert.SerializeObject(data));
 
-            var result = StartCoroutine(Routine_SendDataToServer<AuthenticationResponse>(requestForm));
-        }
+			//NetworkingManager.Instance.Sending = true;
+
+			var result = StartCoroutine(Routine_SendDataToServer<AuthenticationResponse>(requestForm));
+		}
         
         public class LoginResponseHandler : IResponseHandler
         {
-            public void PostConnectionSuccessAction<T>(RestRequestForm<T> requestForm)
+            public void BodyConnectionSuccessAction<T>(RestRequestForm<T> requestForm)
+				where T : ResponseBase
+			{
+                //Not create information panel
+            }
+
+			public void PostConnectionSuccessAction<T>(RestRequestForm<T> requestForm)
                 where T : ResponseBase
             {
-                NetworkingManager.Instance.AccessToken = requestForm.Token;
+                NetworkingManager.Instance.AccessToken = 
+                    requestForm.GetResponseResult<AuthenticationResponse>().Token;
+
                 SceneManager.LoadScene(1);
-            }
+
+				//NetworkingManager.Instance.Sending = false;
+			}
         }
     }
 }
