@@ -10,7 +10,7 @@ namespace Assets.Resourses.MainGame
         public static int totalNumResearchShips = 322556;
         public static int totalNumColonizationShips = 346574;
         public static int usedNumSoldiers = 0;
-        public static int usedNumColonizationShips = 0;
+        public static int usedNumColonizationShips = 34;
         public static int usedNumResearchShips = 0;
         public static int timeLeft = 45;
         public static string currentTurnHeroName = "SuperCum";
