@@ -25,6 +25,7 @@ namespace Components.Abstract
             {
                 case UnityWebRequest.Result.Success:
                     ConnectionSuccessAction(requestForm);
+
                     break;
 
                 case UnityWebRequest.Result.ConnectionError:

@@ -13,73 +13,30 @@ using UnityEngine;
 using System.Threading.Tasks;
 using SharedLibrary.Contracts.Hubs;
 using LocalManagers.ConnectToGame;
+using Assets.Scripts.Components;
+using UnityEngine.Events;
+using Assets.Scripts.Managers;
 
 namespace Scripts.RegisterLoginScripts
 {
-	public class NetworkingManager : BehaviorPersistentSingleton<NetworkingManager>
+	public class NetworkingManager : StaticInstance<NetworkingManager>
 	{
-		private string BaseURL = @"https://localhost:7148/";
+		private const string BaseURL = @"https://localhost:7148/";
 
-		#region ParamsStore
-
-		public Guid LobbyId { get; set; }
-
-		//TODO: Review in the future
-		public string LobbyName { get; set; }
-
-
-		#region Access Token
-
-		private string _accessToken = null;
-		public string AccessToken
-		{
-			get => _accessToken;
-			set
-			{
-				_accessToken = value;
-				Debug.Log($"Token set to: {_accessToken}");
-			}
-		}
-
-		#endregion
-
-		#region Selected in "Connect to game" lobby id
-
-		private string _selectedLobbyId;
-
-		public string SelectedLobbyId
-		{
-			get => _selectedLobbyId;
-			set
-			{
-				_selectedLobbyId = value;
-
-				if (Debug.isDebugBuild)
-					Debug.Log($"lobby with id \"{_selectedLobbyId}\" was selected");
-			}
-		}
-
-		#endregion
-
-		public string HeroName { get; set; }
-
-		public string LobbyToCreateName { get; set; }
-
-		public IList<Lobby> Lobbies { get; set; }// = new List<Lobby>(0);
-
-		#endregion
+		public UnityEvent onCoroutineFinished;
 
 		#region SignalR
 
 		public HubConnection HubConnection { get; set; } = null;
 
-		public void StartHub()
+		public void StartHub(string endpoint)
 		{
 			HubConnection = new HubConnectionBuilder()
-				.WithUrl($"{BaseURL}/hubs/lobby", options =>
+				// /hubs/lobby
+				.WithUrl($"{BaseURL}{endpoint}", options =>
 				{
-					options.AccessTokenProvider = () => Task.FromResult(AccessToken);
-				}) //Add substr
+					options.AccessTokenProvider = () => Task.FromResult(GameManager.Instance.MainDataStore.AccessToken);
+				}) 
 				.WithAutomaticReconnect()
 				.Build();
 
@@ -183,6 +140,8 @@ namespace Scripts.RegisterLoginScripts
 			requestForm.Result = JsonConvert.DeserializeObject<T>(request.downloadHandler.text);
 
 			requestForm.ResponseHandler.ProcessResponse(request, requestForm);
+
+			onCoroutineFinished.Invoke();
 		}
 
 		#endregion
@@ -197,6 +156,7 @@ namespace Scripts.RegisterLoginScripts
 	{
 		GET = 0,
 		POST = 1,
-		PUT = 2
+		PUT = 2,
+		DELETE = 3
 	}
 }

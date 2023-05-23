@@ -9,6 +9,8 @@ using System.Linq;
 using LocalManagers.ConnectToGame.Requests;
 using UnityEngine.Serialization;
 using Newtonsoft.Json.Linq;
+using Assets.Scripts.Components;
+using Assets.Scripts.Managers;
 
 namespace LocalManagers.ConnectToGame
 {
@@ -17,50 +19,27 @@ namespace LocalManagers.ConnectToGame
 	/// </summary>
 	public class LobbiesListController : BehaviorSingleton<LobbiesListController>
 	{
-		[SerializeField] private GameObject lobbiesListItemPrefab;
-		[SerializeField] private Button ConnectToGameButton;
-
-		public void OnEnable()
-		{
-			Debug.Log($"LobbiesListController OnEnable method");
-			DisplayLobbyList();
-		}
-
-		public void GetList()
-		{
-			GetLobbiesListRequest getLobbiesListRequest = new GetLobbiesListRequest();
-			getLobbiesListRequest.GetLobbyList();
-		}
-
-		private void DisplayLobbyList()
-		{
-			//Debug:
-			//DisplaySampleLobbies();
-
-			if (ConnectToGameButton.IsActive())
-			{
-				new GetLobbiesListRequest().GetLobbyList();
-
-				UpdateLobbiesListDisplay(NetworkingManager.Instance.Lobbies);
-			}
-		}
-
 		/// <summary>
-		/// testing function that displays sample data on the panel
+		/// Testing method that displays sample data on the panel
 		/// </summary>
-		private void DisplaySampleLobbies()
+		private void DisplaySampleLobbies(
+			GameObject lobbiesListItemPrefab,
+			Button connectToGameButton)
 		{
 			var lobbies = Enumerable.Range(1, 25).Select(l =>
 			new Lobby { Id = Guid.NewGuid(), LobbyName = $"Lobby {l}" })
 				.ToList();
-			UpdateLobbiesListDisplay(lobbies);
+			UpdateLobbiesListDisplay(lobbies, lobbiesListItemPrefab, connectToGameButton);
 		}
 
 		/// <summary>
-		/// displays lobbies on lobby panel using lobby template
+		/// Displays lobbies on lobby panel using lobby prefab
 		/// </summary>
-		/// <param name="lobbies">collection of lobbies that you want to be displayed</param>
-		private void UpdateLobbiesListDisplay(IList<Lobby> lobbies)
+		/// <param name="lobbies">Collection of lobbies that must be displayed</param>
+		private void UpdateLobbiesListDisplay(
+			IList<Lobby> lobbies, 
+			GameObject lobbiesListItemPrefab, 
+			Button connectToGameButton)
 		{
 			foreach (Transform child in gameObject.transform)
 			{
@@ -79,16 +58,16 @@ namespace LocalManagers.ConnectToGame
 				lobbyButton.onClick.RemoveAllListeners();
 				lobbyButton.onClick.AddListener(() =>
 				{
-					NetworkingManager.Instance.SelectedLobbyId = lobby.Id.ToString();
+					GameManager.Instance.MainDataStore.SelectedLobbyId = lobby.Id.ToString();
 
-					if (!string.IsNullOrWhiteSpace(NetworkingManager.Instance.HeroName) &&
-					InputValidator.Validate(NetworkingManager.Instance.HeroName))
+					if (!string.IsNullOrWhiteSpace(GameManager.Instance.MainDataStore.HeroName) &&
+					InputValidator.Validate(GameManager.Instance.MainDataStore.HeroName))
 					{
-						ConnectToGameButton.interactable = true;
+						connectToGameButton.interactable = true;
 					}
 					else
 					{
-						ConnectToGameButton.interactable = false;
+						connectToGameButton.interactable = false;
 					}
 				});
 			}

@@ -13,6 +13,8 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using Components;
+using Assets.Scripts.Components;
+using Assets.Scripts.Managers;
 
 namespace LocalManagers.ConnectToGame.Requests
 {
@@ -24,7 +26,7 @@ namespace LocalManagers.ConnectToGame.Requests
         {           
             RestRequestForm<GetAllLobbiesResponse> requestForm =
                 new RestRequestForm<GetAllLobbiesResponse>(ConnectionEndpoint, 
-                    RequestType.GET, new GetAllLobbiesResponseHandler(), token: NetworkingManager.Instance.AccessToken);
+                    RequestType.GET, new GetAllLobbiesResponseHandler(), token: GameManager.Instance.MainDataStore.AccessToken);
 
             var result = NetworkingManager.Instance.StartCoroutine(
                 NetworkingManager.Instance.Routine_SendDataToServer(requestForm));
@@ -41,7 +43,7 @@ namespace LocalManagers.ConnectToGame.Requests
 			public void PostConnectionSuccessAction<T>(RestRequestForm<T> requestForm)
                 where T : ResponseBase
             {
-                NetworkingManager.Instance.Lobbies = requestForm.GetResponseResult<GetAllLobbiesResponse>().Lobbies;
+				GameManager.Instance.MainDataStore.Lobbies = requestForm.GetResponseResult<GetAllLobbiesResponse>().Lobbies;
             }
         }
     }

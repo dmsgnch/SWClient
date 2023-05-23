@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Assets.Scripts.Components;
+using Assets.Scripts.Managers;
 using Components;
 using Components.Abstract;
 using Newtonsoft.Json;
@@ -29,12 +31,12 @@ namespace LocalManagers.ConnectToGame.Requests
 
 		void CreateLobby()
 		{
-			CreateLobbyRequest request = new CreateLobbyRequest(LobbyName);
+			CreateLobbyRequest request = new CreateLobbyRequest(GameManager.Instance.MainDataStore.LobbyName);
 
 			RestRequestForm<CreateLobbyResponse> requestForm =
 				new RestRequestForm<CreateLobbyResponse>(ConnectionEndpoint,
 					RequestType.POST, new CreateLobbyRequestSender.GetLobbyResponseHandler(),
-					token: AccessToken, jsonData: JsonConvert.SerializeObject(request));
+					token: GameManager.Instance.MainDataStore.AccessToken, jsonData: JsonConvert.SerializeObject(request));
 
 			var result = StartCoroutine(Routine_SendDataToServer<CreateLobbyResponse>(requestForm));
 		}
@@ -50,9 +52,9 @@ namespace LocalManagers.ConnectToGame.Requests
 			public void PostConnectionSuccessAction<T>(RestRequestForm<T> requestForm)
 				where T : ResponseBase
 			{
-				NetworkingManager.Instance.LobbyId = requestForm.GetResponseResult<CreateLobbyResponse>().Lobby.Id;
+				GameManager.Instance.MainDataStore.LobbyId = requestForm.GetResponseResult<CreateLobbyResponse>().Lobby.Id;
 
-				ChangeActiveObjects.Instance.SwapActivity("cnvs_LobbiesList", "cnvs_Lobby");
+				//FirstSceneInit.Instance.SwapActivity("cnvs_LobbiesList", "cnvs_Lobby");
 			}
 		}
 	}

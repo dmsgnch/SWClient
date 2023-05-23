@@ -780,7 +780,7 @@ GameObject:
   - component: {fileID: 271778272}
   - component: {fileID: 271778271}
   m_Layer: 5
-  m_Name: cnvs_LobbiesList
+  m_Name: cnvs_connectToGame
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3579,6 +3579,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0a5f04deda5d4c968e4b87dcbf35b32a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  onCoroutineFinished:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &1561784123
 GameObject:
   m_ObjectHideFlags: 0
@@ -3931,6 +3934,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4a519a44fa624944594403ada3363be9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  onCoroutineFinished:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &1714022081
 GameObject:
   m_ObjectHideFlags: 0
@@ -4146,7 +4152,7 @@ GameObject:
   - component: {fileID: 1751935895}
   - component: {fileID: 1751935894}
   m_Layer: 0
-  m_Name: cnvs_Lobby
+  m_Name: cnvs_lobby
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

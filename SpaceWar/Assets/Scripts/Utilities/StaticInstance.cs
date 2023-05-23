@@ -10,7 +10,6 @@ public abstract class StaticInstance<T> : MonoBehaviour where T : MonoBehaviour 
     protected virtual void Awake()
     {
         Instance = this as T;
-        //Debug.Log($"StaticInstance awake with object {typeof(T)}");
     } 
 
     protected virtual void OnApplicationQuit() {

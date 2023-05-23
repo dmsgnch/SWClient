@@ -1,4 +1,6 @@
-﻿using Scripts.RegisterLoginScripts;
+﻿using Assets.Scripts.Components;
+using Assets.Scripts.Managers;
+using Scripts.RegisterLoginScripts;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
@@ -21,12 +23,12 @@ namespace LocalManagers.ConnectToGame.ValueChangedHandlers
             _icon.color = new Color(205, 205, 205, 255);
             if (InputValidator.Validate(value))
             {
-                NetworkingManager.Instance.LobbyToCreateName = value;
+				GameManager.Instance.MainDataStore.LobbyToCreateName = value;
                 //Debug.Log($"lobby to create name changed to {NetworkingManager.Instance.LobbyToCreateName}");
                 _icon.sprite = _validSprite;
 
-				if (!string.IsNullOrWhiteSpace(NetworkingManager.Instance.HeroName) &&
-					InputValidator.Validate(NetworkingManager.Instance.HeroName))				
+				if (!string.IsNullOrWhiteSpace(GameManager.Instance.MainDataStore.HeroName) &&
+					InputValidator.Validate(GameManager.Instance.MainDataStore.HeroName))				
 					StartNewGameButton.interactable = true;			
 
 			}
