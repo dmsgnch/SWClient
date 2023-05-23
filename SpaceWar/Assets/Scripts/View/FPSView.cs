@@ -15,7 +15,7 @@ namespace Assets.Scripts.View
 
 		[SerializeField] private Text _text;
 
-		private void Start()
+		private void SetTextField()
 		{
 			_fpsViewModel.Text = _text;
 		}
@@ -23,6 +23,7 @@ namespace Assets.Scripts.View
 		protected override void OnBind(FPSViewModel fpsViewModel)
 		{
 			_fpsViewModel = fpsViewModel;
+			SetTextField();
 		}
 	}
 }

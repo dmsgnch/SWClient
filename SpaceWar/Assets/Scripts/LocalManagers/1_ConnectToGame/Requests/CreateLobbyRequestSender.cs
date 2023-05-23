@@ -54,7 +54,7 @@ namespace LocalManagers.ConnectToGame.Requests
 			{
 				GameManager.Instance.MainDataStore.LobbyId = requestForm.GetResponseResult<CreateLobbyResponse>().Lobby.Id;
 
-				//FirstSceneInit.Instance.SwapActivity("cnvs_LobbiesList", "cnvs_Lobby");
+				GameManager.Instance.ChangeState(GameState.Lobby);
 			}
 		}
 	}

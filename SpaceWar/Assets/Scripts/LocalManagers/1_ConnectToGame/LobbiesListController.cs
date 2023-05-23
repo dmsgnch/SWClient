@@ -17,12 +17,12 @@ namespace LocalManagers.ConnectToGame
 	/// <summary>
 	/// class that controls the display of lobbies list
 	/// </summary>
-	public class LobbiesListController : BehaviorSingleton<LobbiesListController>
+	public class LobbiesListController : ComponentSingleton<LobbiesListController>
 	{
 		/// <summary>
 		/// Testing method that displays sample data on the panel
 		/// </summary>
-		private void DisplaySampleLobbies(
+		internal void DisplaySampleLobbies(
 			GameObject lobbiesListItemPrefab,
 			Button connectToGameButton)
 		{
@@ -36,7 +36,7 @@ namespace LocalManagers.ConnectToGame
 		/// Displays lobbies on lobby panel using lobby prefab
 		/// </summary>
 		/// <param name="lobbies">Collection of lobbies that must be displayed</param>
-		private void UpdateLobbiesListDisplay(
+		internal void UpdateLobbiesListDisplay(
 			IList<Lobby> lobbies, 
 			GameObject lobbiesListItemPrefab, 
 			Button connectToGameButton)

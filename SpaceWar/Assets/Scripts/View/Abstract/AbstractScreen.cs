@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -8,7 +9,7 @@ using ViewModels.Abstract;
 
 namespace Assets.View.Abstract
 {
-	public abstract class AbstractScreen<TModel> : BaseScreen 
+	public abstract class AbstractScreen<TModel> : BaseScreen
 		where TModel : IViewModel
 	{
 		public override Type ModelType => typeof(TModel);

@@ -21,7 +21,7 @@ namespace Scripts.RegisterLoginScripts
 {
 	public class NetworkingManager : StaticInstance<NetworkingManager>
 	{
-		private const string BaseURL = @"https://localhost:7148/";
+		private const string BaseURL = @"https://localhost:44355/";
 
 		public UnityEvent onCoroutineFinished;
 

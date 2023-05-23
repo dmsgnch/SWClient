@@ -11,7 +11,7 @@ namespace LocalManagers.ConnectToGame.ValueChangedHandlers
     /// script that defines behavior on changing value 
     /// in lobby to create name input box 
     /// </summary>
-    public class LobbyNameValueChanged : InputValueChangedHandlerBase
+    public class LobbyNameValueChangedHandler : InputValueChangedHandlerBase
     {
         [SerializeField] private Button StartNewGameButton;
 		/// <summary>

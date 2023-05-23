@@ -13,7 +13,7 @@ using System.Threading;
 
 namespace Components
 {
-    public class InformationPanelController : BehaviorSingleton<InformationPanelController>
+    public class InformationPanelController : ComponentSingleton<InformationPanelController>
     {
         [SerializeField] private Sprite infoIcon;
         [SerializeField] private Sprite errorIcon;

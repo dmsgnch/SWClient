@@ -12,13 +12,35 @@ using Assets.View.Abstract;
 using Assets.Scripts.ViewModels;
 using Unity.VisualScripting;
 using UnityEngine.UIElements;
+using LocalManagers.ConnectToGame.ValueChangedHandlers;
 
 namespace Assets.Scripts.View
 {
 	public class ConnectToGameView : AbstractScreen<ConnectToGameViewModel>
 	{
+		#region NotifyPropertyChanged
+
+		//private InputField _heroInput;
+
+		//public InputField HeroInput
+		//{
+		//	get => _heroInput;
+		//	set => Set(ref _heroInput, value);
+		//}
+
+		//private InputField _gameNameInput;
+
+		//public InputField GameNameInput
+		//{
+		//	get => _gameNameInput;
+		//	set => Set(ref _gameNameInput, value);
+		//}
+
+		#endregion
+
 		[SerializeField] private InputField heroInput;
 		[SerializeField] private InputField gameNameInput;
+
 		[SerializeField] private UnityEngine.UI.Button quitButton;
 		[SerializeField] private UnityEngine.UI.Button updateButton;
 		[SerializeField] private UnityEngine.UI.Button connectToGameButton;
@@ -29,15 +51,22 @@ namespace Assets.Scripts.View
 
 		private void Awake()
 		{
+			heroInput.onValueChanged.AddListener(HeroNameChangedHandler.Instance.OnValueChanged);
+			gameNameInput.onValueChanged.AddListener(LobbyNameValueChangedHandler.Instance.OnValueChanged);
 			quitButton.onClick.AddListener(_connectToGameViewModel.CloseApplication);
-			updateButton.onClick.AddListener(_connectToGameViewModel.OnUpdateButtonClick);
-			connectToGameButton.onClick.AddListener(_connectToGameViewModel.OnToRegisterButtonClick);
-			CreateGameButton.onClick.AddListener(_connectToGameViewModel.OnToRegisterButtonClick);
+			updateButton.onClick.AddListener(OnUpdateButtonClick);
+			//connectToGameButton.onClick.AddListener(_connectToGameViewModel.OnToRegisterButtonClick);
+			//CreateGameButton.onClick.AddListener(_connectToGameViewModel.OnToRegisterButtonClick);
+		}
+
+		private void OnUpdateButtonClick()
+		{
+			_connectToGameViewModel.UpdateLobbiesList(lobbiesListItemPrefab, connectToGameButton);
 		}
 
 		private void OnEnable()
 		{
-			_connectToGameViewModel.OnUpdateButtonClick();
+			_connectToGameViewModel.UpdateLobbiesList(lobbiesListItemPrefab, connectToGameButton);
 		}
 
 		private void Update()

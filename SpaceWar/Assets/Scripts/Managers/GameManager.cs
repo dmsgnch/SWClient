@@ -13,10 +13,9 @@ using View.Abstract;
 
 namespace Assets.Scripts.Managers
 {
-	public class GameManager : PersistentSingleton<GameManager>
+	public class GameManager : ComponentPersistentSingleton<GameManager>
 	{
-		//TODO: Review. Make private
-		public UiManager uiManager;
+		private UiManager uiManager;
 
 		internal MainDataStore MainDataStore { get; private set; } = new MainDataStore();
 
@@ -24,7 +23,6 @@ namespace Assets.Scripts.Managers
 		public static event Action<GameState> OnAfterStateChanged;
 
 		public GameState State { get; private set; }
-
 
 		void Start() => ChangeState(GameState.Starting);
 

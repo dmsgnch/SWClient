@@ -26,8 +26,8 @@ namespace Assets.Scripts.View
 
 		private void Awake()
 		{
-			loginButton.onClick.AddListener(_lobbyViewModel.OnLoginButtonClick);
-			toRegister.onClick.AddListener(_lobbyViewModel.OnToRegisterButtonClick);
+			//loginButton.onClick.AddListener(_lobbyViewModel.OnLoginButtonClick);
+			//toRegister.onClick.AddListener(_lobbyViewModel.OnToRegisterButtonClick);
 		}
 
 		private void Update()

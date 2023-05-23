@@ -29,7 +29,7 @@ namespace Assets.Scripts.ViewModels
 			createRegisterRequest.CreateRequest(name, email, password);
 		}
 
-		public void OnToLoginButtonClick()
+		public void ToLogin()
 		{
 			GameManager.Instance.ChangeState(GameState.Login);
 		}
