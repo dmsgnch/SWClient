@@ -53,18 +53,18 @@ namespace Assets.Scripts.View
 		{
 			heroInput.onValueChanged.AddListener(HeroNameChangedHandler.Instance.OnValueChanged);
 			gameNameInput.onValueChanged.AddListener(LobbyNameValueChangedHandler.Instance.OnValueChanged);
-			quitButton.onClick.AddListener(_connectToGameViewModel.CloseApplication);
+			quitButton.onClick.AddListener(OnQuitButtonClick);
 			updateButton.onClick.AddListener(OnUpdateButtonClick);
 			//connectToGameButton.onClick.AddListener(_connectToGameViewModel.OnToRegisterButtonClick);
 			//CreateGameButton.onClick.AddListener(_connectToGameViewModel.OnToRegisterButtonClick);
 		}
 
-		private void OnUpdateButtonClick()
+		private void OnQuitButtonClick()
 		{
-			_connectToGameViewModel.UpdateLobbiesList(lobbiesListItemPrefab, connectToGameButton);
+			_connectToGameViewModel.CloseApplication();
 		}
 
-		private void OnEnable()
+		private void OnUpdateButtonClick()
 		{
 			_connectToGameViewModel.UpdateLobbiesList(lobbiesListItemPrefab, connectToGameButton);
 		}
@@ -75,20 +75,14 @@ namespace Assets.Scripts.View
 			{
 				//TODO: Add confirm window			 
 
-				if (Debug.isDebugBuild)
-				{
-					Debug.Log("Application quiting");
-				}
-				else
-				{
-					Application.Quit();
-				}
+				_connectToGameViewModel.CloseApplication();
 			}
 		}
 
 		protected override void OnBind(ConnectToGameViewModel connectToGameViewModel)
 		{
 			_connectToGameViewModel = connectToGameViewModel;
+			_connectToGameViewModel.UpdateLobbiesList(lobbiesListItemPrefab, connectToGameButton);
 		}
 	}
 }

@@ -21,12 +21,7 @@ namespace Assets.Scripts.ViewModels
 		private int _averageCounter = 0;
 		private int _currentAveraged;
 
-		void Start()
-		{
-			//Text = gameObject as Ui;
-		}
-
-		void Awake()
+		public void CacheStringsAndCreateArray()
 		{
 			// Cache strings and create array
 			{
@@ -37,8 +32,10 @@ namespace Assets.Scripts.ViewModels
 				_frameRateSamples = new int[_averageFromAmount];
 			}
 		}
-		void Update()
+		public void UpdateValue()
 		{
+			if (_frameRateSamples is null) CacheStringsAndCreateArray();
+
 			// Sample
 			{
 				var currentFrame = (int)Math.Round(1f / Time.smoothDeltaTime); // If your game modifies Time.timeScale, use unscaledDeltaTime and smooth manually (or not).

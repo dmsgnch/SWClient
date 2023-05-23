@@ -19,11 +19,9 @@ using Assets.Scripts.Managers;
 
 namespace Scripts.RegisterLoginScripts
 {
-	public class NetworkingManager : StaticInstance<NetworkingManager>
+	public class NetworkingManager : ComponentSingleton<NetworkingManager>
 	{
 		private const string BaseURL = @"https://localhost:44355/";
-
-		public UnityEvent onCoroutineFinished;
 
 		#region SignalR
 
@@ -140,8 +138,6 @@ namespace Scripts.RegisterLoginScripts
 			requestForm.Result = JsonConvert.DeserializeObject<T>(request.downloadHandler.text);
 
 			requestForm.ResponseHandler.ProcessResponse(request, requestForm);
-
-			onCoroutineFinished.Invoke();
 		}
 
 		#endregion

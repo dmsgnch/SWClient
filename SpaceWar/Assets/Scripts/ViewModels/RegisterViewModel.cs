@@ -1,6 +1,7 @@
 ﻿using Assets.Scripts.Components.Abstract;
 using Assets.Scripts.Managers;
 using LocalManagers.RegisterLoginRequests;
+using Scripts.RegisterLoginScripts;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,8 +24,6 @@ namespace Assets.Scripts.ViewModels
 		public void Register(string name, string email, string password)
 		{
 			createRegisterRequest = new GameObject().AddComponent<CreateRegisterRequest>();
-
-			createRegisterRequest.onCoroutineFinished.AddListener(OnCoroutineFinishedEventHandler);
 
 			createRegisterRequest.CreateRequest(name, email, password);
 		}

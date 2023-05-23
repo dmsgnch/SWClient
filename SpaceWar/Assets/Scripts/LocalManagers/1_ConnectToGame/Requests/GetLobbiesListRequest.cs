@@ -18,7 +18,7 @@ using Assets.Scripts.Managers;
 
 namespace LocalManagers.ConnectToGame.Requests
 {
-    public class GetLobbiesListRequest
+    public class GetLobbiesListRequest : MonoBehaviour
     {
         private const string ConnectionEndpoint = "Lobby/GetAll";
 
@@ -28,7 +28,7 @@ namespace LocalManagers.ConnectToGame.Requests
                 new RestRequestForm<GetAllLobbiesResponse>(ConnectionEndpoint, 
                     RequestType.GET, new GetAllLobbiesResponseHandler(), token: GameManager.Instance.MainDataStore.AccessToken);
 
-            var result = NetworkingManager.Instance.StartCoroutine(
+            var result = StartCoroutine(
                 NetworkingManager.Instance.Routine_SendDataToServer(requestForm));
         }
         

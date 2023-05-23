@@ -21,7 +21,7 @@ public class ComponentSingleton<T> : MonoBehaviour where T : Component
         }
     }
 
-	protected virtual void Awake()
+	protected void Awake()
 	{
 		_instance = this as T;
 	}
@@ -46,7 +46,7 @@ public class ComponentPersistentSingleton<T> : MonoBehaviour where T : Component
         }
     }
 
-	protected virtual void Awake()
+	protected void Awake()
 	{
 		if (_instance == null)
 		{

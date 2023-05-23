@@ -9,7 +9,7 @@ using Components;
 
 namespace LocalManagers.RegisterLoginRequests
 {
-    public class CreateRegisterRequest : NetworkingManager
+    public class CreateRegisterRequest : MonoBehaviour
     {
         [SerializeField] private InputField emailField;
         [SerializeField] private InputField nameField;
@@ -31,7 +31,7 @@ namespace LocalManagers.RegisterLoginRequests
                     RequestType.POST, new RegisterResponseHandler(),
                     jsonData: JsonConvert.SerializeObject(data));
 
-            var result = StartCoroutine( Routine_SendDataToServer<AuthenticationResponse>(requestForm));
+            var result = StartCoroutine(NetworkingManager.Instance.Routine_SendDataToServer<AuthenticationResponse>(requestForm));
         }
     }
     

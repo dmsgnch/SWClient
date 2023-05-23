@@ -92,7 +92,6 @@ GameObject:
   - component: {fileID: 1215823355355220779}
   - component: {fileID: 5123447799832755625}
   - component: {fileID: 2106263843616733265}
-  - component: {fileID: -8505977463742322776}
   m_Layer: 5
   m_Name: InformationPanel
   m_TagString: Untagged
@@ -182,18 +181,6 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!114 &-8505977463742322776
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3198058697112333065}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2c408331892ab1e4bb1c9e908ac568b7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &4020006770919019597
 GameObject:
   m_ObjectHideFlags: 0
@@ -282,6 +269,7 @@ GameObject:
   - component: {fileID: 5989767054317147481}
   - component: {fileID: 7509630557127203405}
   - component: {fileID: 1991986357533812921}
+  - component: {fileID: 390642010482513715}
   m_Layer: 5
   m_Name: IP_bt_destroy
   m_TagString: Untagged
@@ -390,16 +378,16 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 7509630557127203405}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: -8505977463742322776}
-        m_TargetAssemblyTypeName: ObjectDestroyer, Assembly-CSharp
-        m_MethodName: DestroyObject
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
+--- !u!114 &390642010482513715
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8948422205435310156}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ce423d64bca63c54689caa773bf49b73, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

@@ -12,6 +12,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Assets.Scripts.Components;
 using Assets.Scripts.Managers;
+using static Assets.Scripts.ViewModels.LoginViewModel;
 
 namespace LocalManagers.RegisterLoginRequests
 {
@@ -33,24 +34,6 @@ namespace LocalManagers.RegisterLoginRequests
 					jsonData: JsonConvert.SerializeObject(data));
 
 			var result = StartCoroutine(Routine_SendDataToServer<AuthenticationResponse>(requestForm));
-		}
-        
-        public class LoginResponseHandler : IResponseHandler
-        {
-            public void BodyConnectionSuccessAction<T>(RestRequestForm<T> requestForm)
-				where T : ResponseBase
-			{
-                //Not create information panel
-            }
-
-			public void PostConnectionSuccessAction<T>(RestRequestForm<T> requestForm)
-                where T : ResponseBase
-            {
-                GameManager.Instance.MainDataStore.AccessToken = 
-                    requestForm.GetResponseResult<AuthenticationResponse>().Token;
-
-                GameManager.Instance.ChangeState(GameState.LoadConnectToGameScene);
-			}
-        }
+		} 
     }
 }

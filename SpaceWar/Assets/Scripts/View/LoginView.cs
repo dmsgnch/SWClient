@@ -27,7 +27,7 @@ namespace Assets.Scripts.View
 		private void Awake()
 		{
 			loginButton.onClick.AddListener(OnLoginButtonClick);
-			toRegister.onClick.AddListener(_loginViewModel.OnToRegisterButtonClick);
+			toRegister.onClick.AddListener(OnToRegisterButtonClick);
 		}
 
 		private void OnLoginButtonClick()
@@ -38,6 +38,12 @@ namespace Assets.Scripts.View
 				_loginViewModel.Login(emailInput.text, passwordInput.text);
 			}			
 		}
+
+		private void OnToRegisterButtonClick()
+		{
+			_loginViewModel.ToRegister();
+		}
+
 		protected override void OnBind(LoginViewModel loginViewModel)
 		{
 			_loginViewModel = loginViewModel;

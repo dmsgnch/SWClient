@@ -2,6 +2,7 @@
 using Assets.Scripts.View;
 using Assets.Scripts.ViewModels;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
@@ -15,8 +16,6 @@ namespace Assets.Scripts.Managers
 {
 	public class GameManager : ComponentPersistentSingleton<GameManager>
 	{
-		private UiManager uiManager;
-
 		internal MainDataStore MainDataStore { get; private set; } = new MainDataStore();
 
 		public static event Action<GameState> OnBeforeStateChanged;
@@ -80,64 +79,78 @@ namespace Assets.Scripts.Managers
 
 		private void HandleLoadLoginRegisterScene()
 		{
-			uiManager = FindObjectOfType<UiManager>();
-
-			FPSView fpsView = GameObject.Find("cnvs_FPS").GetComponent<FPSView>();
-			LoginView loginView = GameObject.Find("cnvs_login").GetComponent<LoginView>();
-			RegisterView registerView = GameObject.Find("cnvs_register").GetComponent<RegisterView>();
+			FPSView fpsView = GameObject.Find("cnvs_FPS")?.GetComponent<FPSView>();
+			LoginView loginView = GameObject.Find("cnvs_login")?.GetComponent<LoginView>();
+			RegisterView registerView = GameObject.Find("cnvs_register")?.GetComponent<RegisterView>();
 
 			if (fpsView is null || loginView is null || registerView is null) throw new DataException();
 
 			List<BaseScreen> screens = new List<BaseScreen>() { fpsView, loginView, registerView };
 
-			uiManager.Init(screens);
+			UiManager.Instance.Init(screens);
 
 			ChangeState(GameState.Login);
 		}
 
 		private void HandleLogin()
 		{
-			uiManager.BindAndShow(new FPSViewModel());
-			uiManager.BindAndShow(new LoginViewModel());
-			uiManager.Hide<RegisterViewModel>();
+			UiManager.Instance.BindAndShow(new FPSViewModel());
+			UiManager.Instance.BindAndShow(new LoginViewModel());
+			UiManager.Instance.Hide<RegisterViewModel>();
 		}
 
 		private void HandleRegister()
 		{
-			uiManager.BindAndShow(new FPSViewModel());
-			uiManager.BindAndShow(new RegisterViewModel());
-			uiManager.Hide<LoginViewModel>();
+			UiManager.Instance.BindAndShow(new FPSViewModel());
+			UiManager.Instance.BindAndShow(new RegisterViewModel());
+			UiManager.Instance.Hide<LoginViewModel>();
 		}
 
 		private void HandleLoadConnectToGameScene()
 		{
 			SceneManager.LoadScene(1);
 
-			uiManager = FindObjectOfType<UiManager>();
+			SceneManager.sceneLoaded += OnConnectToGameSceneLoaded;
+		}
 
-			FPSView fpsView = GameObject.Find("cnvs_FPS").GetComponent<FPSView>();
-			ConnectToGameView connectToGameView = GameObject.Find("cnvs_connectToGame").GetComponent<ConnectToGameView>();
-			LobbyView lobbyView = GameObject.Find("cnvs_lobby").GetComponent<LobbyView>();
+		private void OnConnectToGameSceneLoaded(Scene scene, LoadSceneMode mode)
+		{
+			if (scene.buildIndex == 1) // Проверяем, что это нужная сцена
+			{
+				FPSView fpsView = GameObject.Find("cnvs_FPS")?.GetComponent<FPSView>();
+				ConnectToGameView connectToGameView = GameObject.Find("cnvs_connectToGame")?.GetComponent<ConnectToGameView>();
+				LobbyView lobbyView = GameObject.Find("cnvs_lobby")?.GetComponent<LobbyView>();
 
-			if (fpsView is null || connectToGameView is null || lobbyView is null) throw new DataException();
+				if (fpsView is null || connectToGameView is null || lobbyView is null)
+				{
+					throw new DataException();
+				}
 
-			List<BaseScreen> screens = new List<BaseScreen>() { fpsView, connectToGameView, lobbyView };
+				List<BaseScreen> screens = new List<BaseScreen>() { fpsView, connectToGameView, lobbyView };
 
-			uiManager.Init(screens);
+				UiManager.Instance.Init(screens);
+
+				SceneManager.sceneLoaded -= OnConnectToGameSceneLoaded;
+
+				ChangeState(GameState.ConnectToGame);
+			}
+			else throw new DataException();
+
+			
 		}
 
 		private void HandleConnectToGame()
 		{
-			uiManager.BindAndShow(new FPSViewModel());
-			uiManager.BindAndShow(new ConnectToGameViewModel());
-			uiManager.Hide<LobbyViewModel>();
+			UiManager.Instance.BindAndShow(new FPSViewModel());
+			UiManager.Instance.BindAndShow(new ConnectToGameViewModel());
+			UiManager.Instance.Hide<LobbyViewModel>();
 		}
 
 		private void HandleLobby()
 		{
-			uiManager.BindAndShow(new FPSViewModel());
-			uiManager.BindAndShow(new LobbyViewModel());
-			uiManager.Hide<ConnectToGameViewModel>();
+			UiManager.Instance.BindAndShow(new FPSViewModel());
+			UiManager.Instance.BindAndShow(new LobbyViewModel());
+			UiManager.Instance.Hide<ConnectToGameViewModel>();
 		}
 
 		private void HandleLoadMainGameScene()

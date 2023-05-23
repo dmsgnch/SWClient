@@ -5,23 +5,24 @@ using UnityEngine;
 using View.Abstract;
 using ViewModels.Abstract;
 
-public class UiManager : MonoBehaviour
+public class UiManager : ComponentSingleton<UiManager>
 {
-	private IEnumerable<BaseScreen> _screens;
 	private Dictionary<Type, BaseScreen> _screensMap;
-	private Dictionary<Type, BaseScreen> _shownScreens;
+	private Dictionary<Type, BaseScreen> _shownScreens = new Dictionary<Type, BaseScreen>();
 
 	public void Init(IEnumerable<BaseScreen> screens)
 	{
-		foreach (var screen in _screens)
+		foreach (var screen in screens)
 		{
 			screen.gameObject.SetActive(false);
 		}
-		_screensMap = _screens.ToDictionary(e => e.ModelType, e => e);
+		_screensMap = screens.ToDictionary(e => e.ModelType, e => e);
 	}
 
 	public void BindAndShow<TModel>(TModel model) where TModel : IViewModel
 	{
+		if (_shownScreens.ContainsKey(typeof(TModel))) return;
+
 		if (_screensMap.TryGetValue(typeof(TModel), out var screen))
 		{
 			screen.Bind(model);

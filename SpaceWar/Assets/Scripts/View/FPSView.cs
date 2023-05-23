@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using UnityEngine.UI;
 using UnityEngine;
 using Assets.View.Abstract;
+using Unity.VisualScripting;
 
 namespace Assets.Scripts.View
 {
@@ -24,6 +25,22 @@ namespace Assets.Scripts.View
 		{
 			_fpsViewModel = fpsViewModel;
 			SetTextField();
+		}
+
+		void Awake()
+		{
+			if (_fpsViewModel is not null)
+			{
+				_fpsViewModel.CacheStringsAndCreateArray();
+			}
+			
+		}
+		void Update()
+		{
+			if (_fpsViewModel is not null)
+			{
+				_fpsViewModel.UpdateValue();
+			}
 		}
 	}
 }
