@@ -37,8 +37,6 @@ namespace LocalManagers.ConnectToGame.ValueChangedHandlers
 			}
             else
             {
-				Debug.LogError($"{result}");
-
 				IsValidated = false;
 				
 				_icon.sprite = _errorSprite;
