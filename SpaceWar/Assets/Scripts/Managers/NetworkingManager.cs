@@ -12,128 +12,147 @@ using SharedLibrary.Models;
 using UnityEngine;
 using System.Threading.Tasks;
 using SharedLibrary.Contracts.Hubs;
-using Assets.Scripts.SignalR;
+using LocalManagers.ConnectToGame;
+using Assets.Scripts.Components;
+using UnityEngine.Events;
+using Assets.Scripts.Managers;
 
 namespace Scripts.RegisterLoginScripts
 {
-    public class NetworkingManager : BehaviorPersistentSingleton<NetworkingManager>
-    {
-        private const string BaseURL = @"https://localhost:7148/";
+	public class NetworkingManager : ComponentSingleton<NetworkingManager>
+	{
+		private const string BaseURL = @"https://localhost:44355/";
 
-        #region ParamsStore
+		#region SignalR
 
-        public string AccessToken { get; set; } = "token";
+		public HubConnection HubConnection { get; set; } = null;
 
-        public Guid LobbyId { get; set; }
+		public void StartHub(string endpoint)
+		{
+			HubConnection = new HubConnectionBuilder()
+				// /hubs/lobby
+				.WithUrl($"{BaseURL}{endpoint}", options =>
+				{
+					options.AccessTokenProvider = () => Task.FromResult(GameManager.Instance.MainDataStore.AccessToken);
+				}) 
+				.WithAutomaticReconnect()
+				.Build();
 
-        public string LobbyName { get; set; }
+			HubConnection.On<string>(ClientHandlers.Lobby.Error,
+				(string errorMessage) =>
+				{
+					if (Debug.isDebugBuild) Debug.Log($"an error ocured. error message: {errorMessage}");
+					InformationPanelController.Instance.CreateMessage(InformationPanelController.MessageType.ERROR,
+						errorMessage);
+				});
 
-        private string _selectedLobbyId;
+			HubConnection.On<string>(ClientHandlers.Lobby.DeleteLobbyHandler,
+				(string serverMessage) =>
+				{
+					InformationPanelController.Instance.CreateMessage(InformationPanelController.MessageType.INFO,
+						serverMessage);
+				});
 
-        public string SelectedLobbyId
-        {
-            get => _selectedLobbyId;
-            set
-            {
-                _selectedLobbyId = value;
+			HubConnection.On<Lobby>(ClientHandlers.Lobby.ConnectToLobbyHandler,
+				(Lobby lobby) =>
+				{
+					PlayersListController.Instance.UpdatePlayersList(lobby);
+				});
 
-                if (Debug.isDebugBuild)
-                    Debug.Log($"lobby with id \"{_selectedLobbyId}\" was selected");
-            }
-        }
+			HubConnection.On<Lobby>(ClientHandlers.Lobby.ChangeReadyStatus,
+				(Lobby lobby) =>
+				{
+					PlayersListController.Instance.UpdatePlayersList(lobby);
+				});
 
-        public string HeroName { get; set; }
+			HubConnection.On<Lobby>(ClientHandlers.Lobby.ExitFromLobbyHandler,
+				(Lobby lobby) =>
+				{
+					PlayersListController.Instance.UpdatePlayersList(lobby);
+				});
 
-        public string LobbyToCreateName { get; set; }
+			HubConnection.On<Lobby>(ClientHandlers.Lobby.ChangeLobbyDataHandler,
+				(Lobby lobby) =>
+				{
+					throw new NotImplementedException();
+				});
 
-        public IList<Lobby> Lobbies { get; set; }// = new List<Lobby>(0);
+			HubConnection.On<Lobby>(ClientHandlers.Lobby.ChangedColor,
+				(Lobby lobby) =>
+				{
+					throw new NotImplementedException();
+				});
 
-        #endregion
+			HubConnection.On<Hero>(ClientHandlers.Lobby.CreatedSessionHandler,
+				(Hero hero) =>
+				{
+					throw new NotImplementedException();
+				});
 
-        #region SignalR
+			HubConnection.StartAsync().Wait();
+		}
 
-        public HubConnection HubConnection { get; set; }
+		public async void StopHub()
+		{
+			if (HubConnection is not null)
+			{
+				await HubConnection.StopAsync();
+			}
+			else
+			{
+				if (Debug.isDebugBuild)
+				{
+					Debug.Log("Hub is not running so it can`t been stopped");
+				}
+			}
+		}
 
-        private void Start()
-        {
-            HubConnection = new HubConnectionBuilder()
-                .WithUrl($"{BaseURL}", options =>
-                {
-                    options.AccessTokenProvider = () => Task.FromResult(AccessToken);
-                }) //Add substr
-                .WithAutomaticReconnect()
-                .Build();
+		#endregion
 
-            HubConnection.On<string>(ClientHandlers.Lobby.Error,
-                SignalRHandler.Instance.Error);
+		#region REST
 
-            HubConnection.On<string>(ClientHandlers.Lobby.DeleteLobbyHandler,
-                SignalRHandler.Instance.DeleteLobby);
+		public bool Sending { get; set; } = false;
 
-            HubConnection.On<Lobby>(ClientHandlers.Lobby.ConnectToLobbyHandler,
-                SignalRHandler.Instance.ConnectToLobby);
+		public IEnumerator Routine_SendDataToServer<T>(RestRequestForm<T> requestForm)
+			where T : ResponseBase
+		{
+			using UnityWebRequest request = new UnityWebRequest($"{BaseURL}{requestForm.EndPoint}",
+				requestForm.RequestType.ToString());
+			request.SetRequestHeader("Content-Type", "application/json");
 
-            HubConnection.On<Lobby>(ClientHandlers.Lobby.ChangeReadyStatus,
-                SignalRHandler.Instance.ChangeReadyStatus);
+			if (requestForm.JsonData is not null)
+			{
+				byte[] rowData = Encoding.UTF8.GetBytes(requestForm.JsonData);
+				request.uploadHandler = new UploadHandlerRaw(rowData);
+			}
 
-            HubConnection.On<Lobby>(ClientHandlers.Lobby.ExitFromLobbyHandler,
-                SignalRHandler.Instance.ExitFromLobby);
+			request.downloadHandler = new DownloadHandlerBuffer();
 
-            HubConnection.On<Lobby>(ClientHandlers.Lobby.ChangeLobbyDataHandler,
-                SignalRHandler.Instance.ChangeLobbyData);
+			if (!String.IsNullOrWhiteSpace(requestForm.Token))
+			{
+				AttachHeader(request, "Authorization", $"{requestForm.Token}");
+			}
 
-            HubConnection.On<Lobby>(ClientHandlers.Lobby.ChangedColor,
-                SignalRHandler.Instance.ChangedColor);
+			yield return request.SendWebRequest();
 
-            HubConnection.On<Hero>(ClientHandlers.Lobby.CreatedSessionHandler,
-                SignalRHandler.Instance.CreateSession);
+			requestForm.Result = JsonConvert.DeserializeObject<T>(request.downloadHandler.text);
 
-            HubConnection.StartAsync().Wait();
-        }
+			requestForm.ResponseHandler.ProcessResponse(request, requestForm);
+		}
 
-        #endregion
+		#endregion
 
-        #region REST
+		private void AttachHeader(UnityWebRequest request, string key, string value)
+		{
+			request.SetRequestHeader(key, value);
+		}
+	}
 
-        public IEnumerator Routine_SendDataToServer<T>(RestRequestForm<T> requestForm)
-            where T : ResponseBase
-        {
-            using UnityWebRequest request = new UnityWebRequest($"{BaseURL}{requestForm.EndPoint}",
-                requestForm.RequestType.ToString());
-            request.SetRequestHeader("Content-Type", "application/json");
-
-            if (requestForm.JsonData is not null)
-            {
-                byte[] rowData = Encoding.UTF8.GetBytes(requestForm.JsonData);
-                request.uploadHandler = new UploadHandlerRaw(rowData);
-            }
-
-            request.downloadHandler = new DownloadHandlerBuffer();
-
-            if (!String.IsNullOrWhiteSpace(requestForm.Token))
-            {
-                AttachHeader(request, "Authorization", $"{requestForm.Token}");
-            }
-
-            yield return request.SendWebRequest();
-
-            requestForm.Result = JsonConvert.DeserializeObject<T>(request.downloadHandler.text);
-
-            requestForm.ResponseHandler.ProcessResponse(request, requestForm);
-        }
-
-        #endregion
-
-        private void AttachHeader(UnityWebRequest request, string key, string value)
-        {
-            request.SetRequestHeader(key, value);
-        }
-    }
-
-    public enum RequestType
-    {
-        GET = 0,
-        POST = 1,
-        PUT = 2
-    }
+	public enum RequestType
+	{
+		GET = 0,
+		POST = 1,
+		PUT = 2,
+		DELETE = 3
+	}
 }
