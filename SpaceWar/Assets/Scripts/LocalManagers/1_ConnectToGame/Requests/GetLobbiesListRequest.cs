@@ -15,6 +15,7 @@ using UnityEngine.UI;
 using Components;
 using Assets.Scripts.Components;
 using Assets.Scripts.Managers;
+using static Assets.Scripts.ViewModels.ConnectToGameViewModel;
 
 namespace LocalManagers.ConnectToGame.Requests
 {
@@ -30,21 +31,7 @@ namespace LocalManagers.ConnectToGame.Requests
 
             var result = StartCoroutine(
                 NetworkingManager.Instance.Routine_SendDataToServer(requestForm));
-        }
+        }       
         
-        private class GetAllLobbiesResponseHandler : IResponseHandler
-        {
-			public void BodyConnectionSuccessAction<T>(RestRequestForm<T> requestForm)
-				where T : ResponseBase
-			{
-				//Not create information panel
-			}
-
-			public void PostConnectionSuccessAction<T>(RestRequestForm<T> requestForm)
-                where T : ResponseBase
-            {
-				GameManager.Instance.MainDataStore.Lobbies = requestForm.GetResponseResult<GetAllLobbiesResponse>().Lobbies;
-            }
-        }
     }
 }

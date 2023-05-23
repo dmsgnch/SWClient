@@ -19,6 +19,8 @@ namespace LocalManagers.ConnectToGame
 	/// </summary>
 	public class LobbiesListController : ComponentSingleton<LobbiesListController>
 	{
+		public bool IsSelected { get; set; } = false;
+
 		/// <summary>
 		/// Testing method that displays sample data on the panel
 		/// </summary>
@@ -37,8 +39,8 @@ namespace LocalManagers.ConnectToGame
 		/// </summary>
 		/// <param name="lobbies">Collection of lobbies that must be displayed</param>
 		internal void UpdateLobbiesListDisplay(
-			IList<Lobby> lobbies, 
-			GameObject lobbiesListItemPrefab, 
+			IList<Lobby> lobbies,
+			GameObject lobbiesListItemPrefab,
 			Button connectToGameButton)
 		{
 			foreach (Transform child in gameObject.transform)
@@ -60,15 +62,17 @@ namespace LocalManagers.ConnectToGame
 				{
 					GameManager.Instance.MainDataStore.SelectedLobbyId = lobby.Id.ToString();
 
-					if (!string.IsNullOrWhiteSpace(GameManager.Instance.MainDataStore.HeroName) &&
-					InputValidator.Validate(GameManager.Instance.MainDataStore.HeroName))
-					{
-						connectToGameButton.interactable = true;
-					}
-					else
-					{
-						connectToGameButton.interactable = false;
-					}
+					IsSelected = true;
+
+//					if (!string.IsNullOrWhiteSpace(GameManager.Instance.MainDataStore.HeroName) &&
+//InputValidator.Validate(GameManager.Instance.MainDataStore.HeroName))
+//					{
+//						connectToGameButton.interactable = true;
+//					}
+//					else
+//					{
+//						connectToGameButton.interactable = false;
+//					}
 				});
 			}
 		}

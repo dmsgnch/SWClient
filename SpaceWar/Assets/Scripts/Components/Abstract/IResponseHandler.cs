@@ -39,6 +39,8 @@ namespace Components.Abstract
                 default:
                     throw new ArgumentOutOfRangeException();
             }
+
+            OnRequestFinished();
         }
 
         public void ConnectionSuccessAction<T>(RestRequestForm<T> requestForm) 
@@ -82,8 +84,12 @@ namespace Components.Abstract
                     });
         }
 
+        public void OnRequestFinished()
+        {
+			//No any post request action;
+		}
 
-        private void CreateInfoPanels(InformationPanelController.MessageType msgType, string[] operationInfo)
+		private void CreateInfoPanels(InformationPanelController.MessageType msgType, string[] operationInfo)
         {
             if (operationInfo is null) throw new InvalidDataException("Information strings must be not null");
 

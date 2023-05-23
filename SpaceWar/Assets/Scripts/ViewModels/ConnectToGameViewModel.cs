@@ -12,19 +12,26 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Playables;
 using ViewModels.Abstract;
+using LocalManagers.ConnectToGame.ValueChangedHandlers;
+using Components.Abstract;
+using Components;
+using SharedLibrary.Responses.Abstract;
+using SharedLibrary.Responses;
 
 namespace Assets.Scripts.ViewModels
 {
 	public class ConnectToGameViewModel : ViewModelBase
 	{
-		CreateLoginRequest createLoginRequest;
+		public static GetLobbiesListRequest GetLobbiesListRequest { get; set; }
 
 		public ConnectToGameViewModel()
 		{ }
 
 		public void UpdateLobbiesList(GameObject lobbiesListItemPrefab, Button connectToGameButton)
 		{
-			new GetLobbiesListRequest().GetLobbyList();
+			GetLobbiesListRequest = new GameObject("GetLobbiesRequest").AddComponent<GetLobbiesListRequest>();
+
+			GetLobbiesListRequest.GetLobbyList();
 
 			LobbiesListController.Instance.UpdateLobbiesListDisplay(
 				GameManager.Instance.MainDataStore.Lobbies, 
@@ -37,9 +44,19 @@ namespace Assets.Scripts.ViewModels
 			GameManager.Instance.ChangeState(GameState.Lobby);
 		}
 
-		private void OnCoroutineFinishedEventHandler()
+		public void SetInteractableToButtons(Button connectToGameButton, Button CreateGameButton)
 		{
-			Destroy(createLoginRequest.gameObject);
+			CreateGameButton.interactable = false;
+			connectToGameButton.interactable = false;
+
+			if (HeroNameChangedHandler.Instance.IsValidated is true)
+			{
+				if (LobbyNameValueChangedHandler.Instance.IsValidated is true)				
+					CreateGameButton.interactable = true;				
+				
+				if(LobbiesListController.Instance.IsSelected is true)				
+					connectToGameButton.interactable = true;			
+			}
 		}
 
 		public void CloseApplication()
@@ -48,6 +65,26 @@ namespace Assets.Scripts.ViewModels
 				Debug.Log("Application quiting");
 
 			Application.Quit();
+		}
+
+		public class GetAllLobbiesResponseHandler : IResponseHandler
+		{
+			public void BodyConnectionSuccessAction<T>(RestRequestForm<T> requestForm)
+				where T : ResponseBase
+			{
+				//Not create information panel
+			}
+
+			public void PostConnectionSuccessAction<T>(RestRequestForm<T> requestForm)
+				where T : ResponseBase
+			{
+				GameManager.Instance.MainDataStore.Lobbies = requestForm.GetResponseResult<GetAllLobbiesResponse>().Lobbies;
+			}
+
+			public void OnRequestFinished()
+			{
+				Destroy(GetLobbiesListRequest.gameObject);
+			}
 		}
 	}
 }

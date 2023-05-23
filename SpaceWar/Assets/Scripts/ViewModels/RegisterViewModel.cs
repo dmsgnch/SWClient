@@ -1,5 +1,6 @@
 ﻿using Assets.Scripts.Components.Abstract;
 using Assets.Scripts.Managers;
+using Components.Abstract;
 using LocalManagers.RegisterLoginRequests;
 using Scripts.RegisterLoginScripts;
 using System;
@@ -16,26 +17,21 @@ namespace Assets.Scripts.ViewModels
 	public class RegisterViewModel : ViewModelBase
 	{
 
-		CreateRegisterRequest createRegisterRequest;
+		public static CreateRegisterRequest CreateRegisterRequest { get; set; }
 
 		public RegisterViewModel()
-		{ }		
+		{ }
 
 		public void Register(string name, string email, string password)
 		{
-			createRegisterRequest = new GameObject().AddComponent<CreateRegisterRequest>();
+			CreateRegisterRequest = new GameObject("ReisterRequest").AddComponent<CreateRegisterRequest>();
 
-			createRegisterRequest.CreateRequest(name, email, password);
+			CreateRegisterRequest.CreateRequest(name, email, password);
 		}
 
 		public void ToLogin()
 		{
 			GameManager.Instance.ChangeState(GameState.Login);
-		}
-
-		private void OnCoroutineFinishedEventHandler()
-		{
-			Destroy(createRegisterRequest.gameObject);
 		}
 
 		public void CloseApplication()
@@ -80,5 +76,14 @@ namespace Assets.Scripts.ViewModels
 
 			//TODO: Implement validation
 		}
+
+		public class RegisterResponseHandler : IResponseHandler
+		{
+			public void OnRequestFinished()
+			{
+				Destroy(CreateRegisterRequest.gameObject);
+			}
+		}
 	}
+
 }

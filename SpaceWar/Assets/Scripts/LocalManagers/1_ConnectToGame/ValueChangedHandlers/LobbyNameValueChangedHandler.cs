@@ -7,34 +7,40 @@ using UnityEngine.UI;
 
 namespace LocalManagers.ConnectToGame.ValueChangedHandlers
 {
+
     /// <summary>
     /// script that defines behavior on changing value 
     /// in lobby to create name input box 
     /// </summary>
-    public class LobbyNameValueChangedHandler : InputValueChangedHandlerBase
+    public class LobbyNameValueChangedHandler : InputValueChangedHandlerBase<LobbyNameValueChangedHandler>
     {
-        [SerializeField] private Button StartNewGameButton;
+		public bool IsValidated { get; set; } = false;
+
 		/// <summary>
 		/// function that should be called when lobby to create box value is changed
 		/// </summary>
 		/// <param name="value">new value for lobby name</param>
 		public override void OnValueChanged(string value)
         {
-            _icon.color = new Color(205, 205, 205, 255);
-            if (InputValidator.Validate(value))
+            _icon.color = BaseColor;
+
+			DataValidator dataValidator = new DataValidator();
+
+			if (dataValidator.ValidateString(value, out string result))
             {
 				GameManager.Instance.MainDataStore.LobbyToCreateName = value;
-                //Debug.Log($"lobby to create name changed to {NetworkingManager.Instance.LobbyToCreateName}");
+
                 _icon.sprite = _validSprite;
 
-				if (!string.IsNullOrWhiteSpace(GameManager.Instance.MainDataStore.HeroName) &&
-					InputValidator.Validate(GameManager.Instance.MainDataStore.HeroName))				
-					StartNewGameButton.interactable = true;			
+				IsValidated = true;	
 
 			}
             else
             {
-				StartNewGameButton.interactable = false;
+				Debug.LogError($"{result}");
+
+				IsValidated = false;
+				
 				_icon.sprite = _errorSprite;
             }
         }

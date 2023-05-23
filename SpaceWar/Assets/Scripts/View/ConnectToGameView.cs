@@ -51,12 +51,26 @@ namespace Assets.Scripts.View
 
 		private void Awake()
 		{
-			heroInput.onValueChanged.AddListener(HeroNameChangedHandler.Instance.OnValueChanged);
-			gameNameInput.onValueChanged.AddListener(LobbyNameValueChangedHandler.Instance.OnValueChanged);
+			heroInput.onValueChanged.AddListener(HeroNameValueChanged);
+			gameNameInput.onValueChanged.AddListener(GameNameValueChanged);
 			quitButton.onClick.AddListener(OnQuitButtonClick);
 			updateButton.onClick.AddListener(OnUpdateButtonClick);
 			//connectToGameButton.onClick.AddListener(_connectToGameViewModel.OnToRegisterButtonClick);
 			//CreateGameButton.onClick.AddListener(_connectToGameViewModel.OnToRegisterButtonClick);
+		}
+
+		private void HeroNameValueChanged(string value)
+		{
+			HeroNameChangedHandler.Instance.OnValueChanged(value);
+
+			_connectToGameViewModel.SetInteractableToButtons(connectToGameButton, CreateGameButton);
+		}
+
+		private void GameNameValueChanged(string value)
+		{
+			LobbyNameValueChangedHandler.Instance.OnValueChanged(value);
+
+			_connectToGameViewModel.SetInteractableToButtons(connectToGameButton, CreateGameButton);
 		}
 
 		private void OnQuitButtonClick()
@@ -67,6 +81,8 @@ namespace Assets.Scripts.View
 		private void OnUpdateButtonClick()
 		{
 			_connectToGameViewModel.UpdateLobbiesList(lobbiesListItemPrefab, connectToGameButton);
+
+			_connectToGameViewModel.SetInteractableToButtons(connectToGameButton, CreateGameButton);
 		}
 
 		private void Update()
@@ -82,6 +98,10 @@ namespace Assets.Scripts.View
 		protected override void OnBind(ConnectToGameViewModel connectToGameViewModel)
 		{
 			_connectToGameViewModel = connectToGameViewModel;
+
+			connectToGameButton.interactable = false;
+			CreateGameButton.interactable = false;
+
 			_connectToGameViewModel.UpdateLobbiesList(lobbiesListItemPrefab, connectToGameButton);
 		}
 	}

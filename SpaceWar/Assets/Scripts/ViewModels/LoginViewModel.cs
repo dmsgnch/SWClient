@@ -20,21 +20,17 @@ namespace Assets.Scripts.ViewModels
 {
 	public class LoginViewModel : ViewModelBase
 	{
-		CreateLoginRequest createLoginRequest;
+
+		public static CreateLoginRequest CreateLoginRequest { get; set; }
 
 		public LoginViewModel()
 		{ }
 
 		public void Login(string email, string password)
 		{
-			createLoginRequest = new GameObject().AddComponent<CreateLoginRequest>();
+			CreateLoginRequest = new GameObject("LoginRequest").AddComponent<CreateLoginRequest>();
 
-			createLoginRequest.CreateRequest(email, password);
-		}
-
-		private void OnCoroutineFinishedEventHandler()
-		{
-			Destroy(createLoginRequest.gameObject);
+			CreateLoginRequest.CreateRequest(email, password);			
 		}
 
 		public void ToRegister()
@@ -54,9 +50,8 @@ namespace Assets.Scripts.ViewModels
 		{
 			DataValidator validator = new DataValidator();
 
-			var validationResult = validator.ValidateEmail(email);
-
-			if (string.IsNullOrWhiteSpace(validationResult))
+			string validationResult; 
+			if (validator.ValidateEmail(email, out validationResult))
 			{
 				Debug.Log($"Success email validation");
 				return true;
@@ -90,7 +85,12 @@ namespace Assets.Scripts.ViewModels
 				GameManager.Instance.MainDataStore.AccessToken =
 					requestForm.GetResponseResult<AuthenticationResponse>().Token;
 
-				GameManager.Instance.ChangeState(GameState.LoadConnectToGameScene);
+				GameManager.Instance.ChangeState(GameState.LoadConnectToGameScene);				
+			}
+
+			public void OnRequestFinished()
+			{
+				Destroy(CreateLoginRequest.gameObject);
 			}
 		}
 	}

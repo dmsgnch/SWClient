@@ -6,6 +6,7 @@ using SharedLibrary.Responses;
 using UnityEngine;
 using UnityEngine.UI;
 using Components;
+using static Assets.Scripts.ViewModels.RegisterViewModel;
 
 namespace LocalManagers.RegisterLoginRequests
 {
@@ -33,8 +34,5 @@ namespace LocalManagers.RegisterLoginRequests
 
             var result = StartCoroutine(NetworkingManager.Instance.Routine_SendDataToServer<AuthenticationResponse>(requestForm));
         }
-    }
-    
-    public class RegisterResponseHandler : IResponseHandler
-    { }
+    }   
 }
