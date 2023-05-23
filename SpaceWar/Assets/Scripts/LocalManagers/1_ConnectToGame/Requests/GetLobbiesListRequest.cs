@@ -13,35 +13,25 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using Components;
+using Assets.Scripts.Components;
+using Assets.Scripts.Managers;
+using static Assets.Scripts.ViewModels.ConnectToGameViewModel;
 
 namespace LocalManagers.ConnectToGame.Requests
 {
-    public class GetLobbiesListRequest
+    public class GetLobbiesListRequest : MonoBehaviour
     {
         private const string ConnectionEndpoint = "Lobby/GetAll";
 
         public void GetLobbyList()
-        {
-            Debug.Log($"Token: {NetworkingManager.Instance.AccessToken}");
+        {           
             RestRequestForm<GetAllLobbiesResponse> requestForm =
                 new RestRequestForm<GetAllLobbiesResponse>(ConnectionEndpoint, 
-                    RequestType.GET, new GetAllLobbiesResponseHandler(), NetworkingManager.Instance.AccessToken);
+                    RequestType.GET, new GetAllLobbiesResponseHandler(), token: GameManager.Instance.MainDataStore.AccessToken);
 
-            var result = NetworkingManager.Instance.StartCoroutine(
+            var result = StartCoroutine(
                 NetworkingManager.Instance.Routine_SendDataToServer(requestForm));
-        }
+        }       
         
-        private class GetAllLobbiesResponseHandler : IResponseHandler
-        {
-            public void PostConnectionSuccessAction<T>(RestRequestForm<T> requestForm)
-                where T : ResponseBase
-            {
-                //TODO: Review code below
-                if (requestForm.Result is not GetAllLobbiesResponse) throw new ArgumentException(); 
-                GetAllLobbiesResponse response = requestForm.Result as GetAllLobbiesResponse;
-
-                NetworkingManager.Instance.Lobbies = response.Lobbies;
-            }
-        }
     }
 }

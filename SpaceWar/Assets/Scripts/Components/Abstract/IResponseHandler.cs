@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Threading.Tasks;
 using Components;
 using SharedLibrary.Responses.Abstract;
 using UnityEngine;
@@ -24,6 +25,7 @@ namespace Components.Abstract
             {
                 case UnityWebRequest.Result.Success:
                     ConnectionSuccessAction(requestForm);
+
                     break;
 
                 case UnityWebRequest.Result.ConnectionError:
@@ -37,6 +39,8 @@ namespace Components.Abstract
                 default:
                     throw new ArgumentOutOfRangeException();
             }
+
+            OnRequestFinished();
         }
 
         public void ConnectionSuccessAction<T>(RestRequestForm<T> requestForm) 
@@ -50,9 +54,9 @@ namespace Components.Abstract
             where T : ResponseBase
         {
             CreateInfoPanels(InformationPanelController.MessageType.INFO, requestForm.Result!.Info);
-            
-            //TODO: Delay for success result information panel displaying
-        }
+
+			//TODO: Delay for success result information panel displaying
+		}
 
         public void PostConnectionSuccessAction<T>(RestRequestForm<T> requestForm)
             where T : ResponseBase
@@ -72,7 +76,7 @@ namespace Components.Abstract
             where T : ResponseBase
         {
             CreateInfoPanels(InformationPanelController.MessageType.ERROR,
-                requestForm.Result!.Info is not null
+                requestForm.Result?.Info is not null
                     ? requestForm.Result.Info
                     : new string[]
                     {
@@ -80,8 +84,12 @@ namespace Components.Abstract
                     });
         }
 
+        public void OnRequestFinished()
+        {
+			//No any post request action;
+		}
 
-        private void CreateInfoPanels(InformationPanelController.MessageType msgType, string[] operationInfo)
+		private void CreateInfoPanels(InformationPanelController.MessageType msgType, string[] operationInfo)
         {
             if (operationInfo is null) throw new InvalidDataException("Information strings must be not null");
 

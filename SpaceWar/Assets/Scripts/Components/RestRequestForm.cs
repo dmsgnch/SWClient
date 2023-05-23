@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Components.Abstract;
 using JetBrains.Annotations;
 using Scripts.RegisterLoginScripts;
+using SharedLibrary.Responses;
 using SharedLibrary.Responses.Abstract;
 using UnityEngine;
 
@@ -22,13 +23,25 @@ namespace Components
             RequestType requestType,
             IResponseHandler handler,
             [CanBeNull] string token = null,
-            [CanBeNull] string data = null)
+            [CanBeNull] string jsonData = null)
         {
             EndPoint = endPoint;
             RequestType = requestType;
             ResponseHandler = handler;
             Token = token;
-            JsonData = data;
+            JsonData = jsonData;
         }
+
+        /// <summary>
+        /// Checks that the class is a generic type
+        /// </summary>
+        /// <typeparam name="K">Invariant class of ResponseBase</typeparam>
+        /// <returns>Query execution result in generic type</returns>
+        public K GetResponseResult<K>() 
+            where K : ResponseBase
+        {
+            if (Result is K) return Result as K;
+            return null;
+		}
     }
 }
