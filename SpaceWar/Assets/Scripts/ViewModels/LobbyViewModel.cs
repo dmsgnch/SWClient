@@ -37,6 +37,8 @@ namespace Assets.Scripts.ViewModels
 		/// <returns>lobby filled with sample data</returns>
 		public Lobby GetSampleData()
 		{
+			var userId1 = Guid.NewGuid();
+			var userId2 = Guid.NewGuid();
 			var lobby = new Lobby
 			{
 				LobbyName = "default lobby",
@@ -47,20 +49,20 @@ namespace Assets.Scripts.ViewModels
 						User = new ApplicationUser
 						{
 							Username = "host",
-							Id = Guid.NewGuid(),
+							Id = userId1,
 						},
 						LobbyLeader = true,
-						UserId = Guid.NewGuid(),
+						UserId = userId1,
 					},
 					new LobbyInfo
 					{
 						User = new ApplicationUser
 						{
 							Username = "not a host",
-							Id = Guid.NewGuid(),
+							Id = userId2,
 						},
 						LobbyLeader = false,
-						UserId = Guid.NewGuid(),
+						UserId = userId2,
 					},
 				},
 			};
