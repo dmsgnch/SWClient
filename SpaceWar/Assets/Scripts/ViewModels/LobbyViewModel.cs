@@ -19,13 +19,14 @@ namespace Assets.Scripts.ViewModels
 		public LobbyViewModel()
 		{ }
 
-		public void OnLoginButtonClick()
-		{	
-			//createLoginRequest = new GameObject().AddComponent<CreateLoginRequest>();
+		public void OnStartButtonClick()
+		{
 
-			//createLoginRequest.onCoroutineFinished.AddListener(OnCoroutineFinishedEventHandler);
+		}
 
-			//createLoginRequest.CreateRequest();
+		public void OnReadyButtonClick()
+		{
+
 		}
 
 		private void OnCoroutineFinishedEventHandler()

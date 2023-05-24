@@ -21,7 +21,7 @@ namespace Scripts.RegisterLoginScripts
 {
 	public class NetworkingManager : ComponentSingleton<NetworkingManager>
 	{
-		private const string BaseURL = @"https://localhost:44355/";
+		private const string BaseURL = @"https://localhost:7148/";
 
 		#region SignalR
 

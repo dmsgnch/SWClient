@@ -1,4 +1,5 @@
-﻿using Assets.Scripts.Components.Abstract;
+﻿using Assets.Scripts.Components;
+using Assets.Scripts.Components.Abstract;
 using Assets.Scripts.Managers;
 using Components.Abstract;
 using LocalManagers.RegisterLoginRequests;
@@ -44,37 +45,23 @@ namespace Assets.Scripts.ViewModels
 
 		public bool ValidateName(string name)
 		{
-			return true;
+			DataValidator validator = new DataValidator();
 
-			//TODO: Implement validation
+			return validator.ValidateString(name);
 		}
 
 		public bool ValidateEmail(string email)
 		{
-			if (string.IsNullOrWhiteSpace(email))
-			{
-				//TODO: Infopanel outputing
-				Debug.Log("Displaying information panel in the future. You must fill the all of filds");
-				return false;
-			}
+			DataValidator validator = new DataValidator();
 
-			string pattern = @"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$";
-
-			if (!Regex.IsMatch(email, pattern))
-			{
-				//TODO: Infopanel outputing
-				Debug.Log("Displaying information panel in the future. Email is not match to the pattern");
-				return false;
-			}
-
-			return true;
+			return validator.ValidateEmail(email);
 		}
 
 		public bool ValidatePassword(string password, string confirmPassword)
 		{
-			return true;
+			DataValidator validator = new DataValidator();
 
-			//TODO: Implement validation
+			return validator.ValidatePassword(password,confirmPassword);
 		}
 
 		public class RegisterResponseHandler : IResponseHandler

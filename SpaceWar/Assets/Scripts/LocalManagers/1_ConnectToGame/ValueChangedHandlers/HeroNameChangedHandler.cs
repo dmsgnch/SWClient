@@ -25,9 +25,9 @@ namespace LocalManagers.ConnectToGame.ValueChangedHandlers
 
 			DataValidator dataValidator = new DataValidator();
 
-			if (dataValidator.ValidateString(value, out string result))
+			if (dataValidator.ValidateString(value))
             {
-				GameManager.Instance.MainDataStore.HeroName = value;
+				GameManager.Instance.ConnectToGameDataStore.HeroName = value;
                
                 _icon.sprite = _validSprite;
 

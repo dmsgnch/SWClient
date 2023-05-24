@@ -50,25 +50,14 @@ namespace Assets.Scripts.ViewModels
 		{
 			DataValidator validator = new DataValidator();
 
-			string validationResult; 
-			if (validator.ValidateEmail(email, out validationResult))
-			{
-				Debug.Log($"Success email validation");
-				return true;
-			}
-
-			//TODO: Infopanel outputing	
-			Debug.Log($"{validationResult}");
-			return false;
+			return validator.ValidateEmail(email);
 		}
 
 		public bool ValidatePassword(string password)
 		{
-			Debug.Log($"Mock password validation");
+			DataValidator validator = new DataValidator();
 
-			return true;
-
-			//TODO: Implement validation
+			return validator.ValidatePassword(password);
 		}
 
 		public class LoginResponseHandler : IResponseHandler

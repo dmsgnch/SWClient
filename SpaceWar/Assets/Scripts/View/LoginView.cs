@@ -19,6 +19,7 @@ namespace Assets.Scripts.View
 	{
 		[SerializeField] private InputField emailInput;
 		[SerializeField] private InputField passwordInput;
+		[SerializeField] private InputField confirmPasswordInput;
 		[SerializeField] private UnityEngine.UI.Button loginButton;
 		[SerializeField] private UnityEngine.UI.Button toRegister;
 

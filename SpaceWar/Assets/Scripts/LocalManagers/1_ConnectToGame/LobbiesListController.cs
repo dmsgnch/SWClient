@@ -60,7 +60,7 @@ namespace LocalManagers.ConnectToGame
 				lobbyButton.onClick.RemoveAllListeners();
 				lobbyButton.onClick.AddListener(() =>
 				{
-					GameManager.Instance.MainDataStore.SelectedLobbyId = lobby.Id.ToString();
+					GameManager.Instance.ConnectToGameDataStore.SelectedLobbyId = lobby.Id.ToString();
 
 					IsSelected = true;
 
