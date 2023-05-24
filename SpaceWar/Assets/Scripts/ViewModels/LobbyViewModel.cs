@@ -31,11 +31,15 @@ namespace Assets.Scripts.ViewModels
 
 		}
 
-		public void StartWithSampleData()
+		/// <summary>
+		/// generates sample data for testing lobby functionality
+		/// </summary>
+		/// <returns>lobby filled with sample data</returns>
+		public Lobby GetSampleData()
 		{
 			var lobby = new Lobby
 			{
-				LobbyName = GameManager.Instance.ConnectToGameDataStore.LobbyName,
+				LobbyName = "default lobby",
 				LobbyInfos = new LobbyInfo[]
 				{
 					new LobbyInfo
@@ -60,23 +64,29 @@ namespace Assets.Scripts.ViewModels
 					},
 				},
 			};
-			GameManager.Instance.LobbyDataStore.LobbyInfo = lobby.LobbyInfos.Last();
-			GameManager.Instance.LobbyDataStore.LobbyInfo.Lobby = lobby;
+			GameManager.Instance.LobbyDataStore.IsLobbyLeader = lobby.LobbyInfos.Last().LobbyLeader;
+			return lobby;
 		}
 
-		public void UpdatePlayersList(GameObject playerList, GameObject playerListItemPrefab)
+		/// <summary>
+		/// updates list of players with new state of lobby
+		/// </summary>
+		/// <param name="playerList">
+		/// GameObject for list of players that is being updated
+		/// </param>
+		/// <param name="playerListItemPrefab">
+		/// GameObject for a prefab for item in players list
+		/// </param>
+		/// <param name="lobby">
+		/// new state of lobby
+		/// </param>
+		public void UpdatePlayersList(GameObject playerList, GameObject playerListItemPrefab, Lobby lobby)
 		{
-			// Clearing the list to correct displaying
+			//Clear players list
 			foreach (Transform child in playerList.transform)
 			{
 				Destroy(child.gameObject);
 			}
-
-			Lobby lobby = GameManager.Instance.LobbyDataStore.LobbyInfo.Lobby;
-			Guid? lobbyLidertId = GameManager.Instance.LobbyDataStore.
-				LobbyInfo.Lobby.LobbyInfos.FirstOrDefault(l => l.LobbyLeader).UserId;
-
-			if (lobbyLidertId is null) throw new ArgumentException();
 
 			foreach (var lobbyInfo in lobby.LobbyInfos)
 			{
@@ -87,7 +97,7 @@ namespace Assets.Scripts.ViewModels
 				lobbyView.transform.GetChild(1).GetComponent<Image>().color = Color.blue;
 
 				var toggle = lobbyView.transform.GetChild(2);
-				if (lobbyInfo.UserId == lobbyLidertId)
+				if (lobbyInfo.LobbyLeader)
 				{
 					toggle.gameObject.SetActive(false);
 				}
@@ -98,13 +108,19 @@ namespace Assets.Scripts.ViewModels
 			}
 		}
 
+		/// <summary>
+		/// defines whether lobby view should have start button or ready button 
+		/// depending on whether current user is lobby leader
+		/// </summary>
+		/// <param name="startButton">
+		/// start button, which should be viewed when current user is a lobby leader
+		/// </param>
+		/// <param name="readyButton">
+		/// ready button, which should be viewed when current user is not a lobby leade
+		/// r</param>
 		public void DefineButton(GameObject startButton, GameObject readyButton)
 		{
-			var currentUserId = GameManager.Instance.LobbyDataStore.LobbyInfo.UserId;
-			var hostId = GameManager.Instance.LobbyDataStore.LobbyInfo.Lobby.
-				LobbyInfos.First(l => l.LobbyLeader).UserId;
-
-			if (currentUserId.Equals(hostId))
+			if (GameManager.Instance.LobbyDataStore.IsLobbyLeader)
 			{
 				startButton.SetActive(true);
 				readyButton.SetActive(false);
@@ -116,6 +132,11 @@ namespace Assets.Scripts.ViewModels
 				readyButton.SetActive(true);
 				readyButton.GetComponent<Button>().onClick.AddListener(OnReadyButtonClick);
 			}
+		}
+
+		private void OnCoroutineFinishedEventHandler()
+		{
+			Destroy(createLoginRequest.gameObject);
 		}
 	}
 }

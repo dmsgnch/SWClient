@@ -121,8 +121,10 @@ namespace Assets.Scripts.Managers
 		{
 			if(scene.buildIndex != 1) throw new DataException();
 
+#pragma warning disable CS0618 // Тип или член устарел
             GameObject[] canvases = FindObjectsOfTypeAll(typeof(Canvas))
                 .Select(o => (o as Canvas).gameObject).ToArray();
+#pragma warning restore CS0618 // Тип или член устарел
 
 			if (canvases is null || canvases.Length.Equals(0))
 			{

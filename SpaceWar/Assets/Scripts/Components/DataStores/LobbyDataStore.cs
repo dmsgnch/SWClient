@@ -12,6 +12,9 @@ namespace Assets.Scripts.Components
         /// Id of the lobby we are in
         /// </summary>
         public Guid LobbyId { get; set; }
-        public LobbyInfo LobbyInfo { get; set; }
+        /// <summary>
+        /// shows whether current user is a lobby leader
+        /// </summary>
+        public bool IsLobbyLeader { get; set; }
     }
 }

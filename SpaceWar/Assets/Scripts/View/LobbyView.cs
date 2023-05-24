@@ -26,11 +26,10 @@ namespace Assets.Scripts.View
 
 		private void OnEnable()
 		{
-			_lobbyViewModel.StartWithSampleData();
 
 			_lobbyViewModel.DefineButton(startButton, readyButton);
 
-			_lobbyViewModel.UpdatePlayersList(playerList, playerListItemPrefab);
+			_lobbyViewModel.UpdatePlayersList(playerList, playerListItemPrefab,_lobbyViewModel.GetSampleData());
 		}
 
 		protected override void OnBind(LobbyViewModel lobbyViewModel)

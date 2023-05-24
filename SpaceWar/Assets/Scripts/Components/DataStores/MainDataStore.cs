@@ -21,11 +21,5 @@ namespace Assets.Scripts.Components
 		public string AccessToken { get; set; }
 
 		#endregion
-
-
-		//TODO: Find out what is that
-		//It had to be a property for the name of lobby, that you input in "connect to game" input field,
-		//but now we have LobbyName, so now it is redundant
-		//public string LobbyToCreateName { get; set; }
 	}
 }
