@@ -62,17 +62,9 @@ namespace LocalManagers.ConnectToGame
 				{
 					GameManager.Instance.ConnectToGameDataStore.SelectedLobbyId = lobby.Id.ToString();
 
-					IsSelected = true;
+					GameManager.Instance.ConnectToGameDataStore.LobbyName = lobby.LobbyName.ToString();
 
-//					if (!string.IsNullOrWhiteSpace(GameManager.Instance.MainDataStore.HeroName) &&
-//InputValidator.Validate(GameManager.Instance.MainDataStore.HeroName))
-//					{
-//						connectToGameButton.interactable = true;
-//					}
-//					else
-//					{
-//						connectToGameButton.interactable = false;
-//					}
+					IsSelected = true;
 				});
 			}
 		}

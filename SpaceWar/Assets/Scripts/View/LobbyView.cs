@@ -26,24 +26,11 @@ namespace Assets.Scripts.View
 
 		private void OnEnable()
 		{
-			_lobbyViewModel.StartWithSampleData(startButton, readyButton,playerList,playerListItemPrefab);
-		}
+			_lobbyViewModel.StartWithSampleData();
 
-		private void Update()
-		{
-			if (Input.GetKey(KeyCode.Escape))
-			{
-				//TODO: Add confirm window			 
+			_lobbyViewModel.DefineButton(startButton, readyButton);
 
-				if (Debug.isDebugBuild)
-				{
-					Debug.Log("Application quiting");
-				}
-				else
-				{
-					Application.Quit();
-				}
-			}
+			_lobbyViewModel.UpdatePlayersList(playerList, playerListItemPrefab);
 		}
 
 		protected override void OnBind(LobbyViewModel lobbyViewModel)

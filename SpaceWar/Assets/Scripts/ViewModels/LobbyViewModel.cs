@@ -15,7 +15,7 @@ using ViewModels.Abstract;
 namespace Assets.Scripts.ViewModels
 {
 	public class LobbyViewModel : ViewModelBase
-	{		
+	{
 		CreateLoginRequest createLoginRequest;
 
 		public LobbyViewModel()
@@ -31,12 +31,11 @@ namespace Assets.Scripts.ViewModels
 
 		}
 
-		public void StartWithSampleData(GameObject startButton, GameObject readyButton,
-			GameObject playerList, GameObject playerListItemPrefab)
-        {
+		public void StartWithSampleData()
+		{
 			var lobby = new Lobby
 			{
-				LobbyName = "default lobby",
+				LobbyName = GameManager.Instance.ConnectToGameDataStore.LobbyName,
 				LobbyInfos = new LobbyInfo[]
 				{
 					new LobbyInfo
@@ -63,21 +62,21 @@ namespace Assets.Scripts.ViewModels
 			};
 			GameManager.Instance.LobbyDataStore.LobbyInfo = lobby.LobbyInfos.Last();
 			GameManager.Instance.LobbyDataStore.LobbyInfo.Lobby = lobby;
-			DefineButton(startButton, readyButton);
-			UpdatePlayersList(playerList, playerListItemPrefab);
 		}
 
 		public void UpdatePlayersList(GameObject playerList, GameObject playerListItemPrefab)
 		{
+			// Clearing the list to correct displaying
 			foreach (Transform child in playerList.transform)
 			{
 				Destroy(child.gameObject);
 			}
 
 			Lobby lobby = GameManager.Instance.LobbyDataStore.LobbyInfo.Lobby;
-			Guid? hostId = GameManager.Instance.LobbyDataStore.
+			Guid? lobbyLidertId = GameManager.Instance.LobbyDataStore.
 				LobbyInfo.Lobby.LobbyInfos.FirstOrDefault(l => l.LobbyLeader).UserId;
-			if (hostId is null) return;
+
+			if (lobbyLidertId is null) throw new ArgumentException();
 
 			foreach (var lobbyInfo in lobby.LobbyInfos)
 			{
@@ -88,7 +87,7 @@ namespace Assets.Scripts.ViewModels
 				lobbyView.transform.GetChild(1).GetComponent<Image>().color = Color.blue;
 
 				var toggle = lobbyView.transform.GetChild(2);
-				if (lobbyInfo.UserId == hostId)
+				if (lobbyInfo.UserId == lobbyLidertId)
 				{
 					toggle.gameObject.SetActive(false);
 				}
@@ -104,7 +103,8 @@ namespace Assets.Scripts.ViewModels
 			var currentUserId = GameManager.Instance.LobbyDataStore.LobbyInfo.UserId;
 			var hostId = GameManager.Instance.LobbyDataStore.LobbyInfo.Lobby.
 				LobbyInfos.First(l => l.LobbyLeader).UserId;
-			if (currentUserId == hostId)
+
+			if (currentUserId.Equals(hostId))
 			{
 				startButton.SetActive(true);
 				readyButton.SetActive(false);
@@ -116,11 +116,6 @@ namespace Assets.Scripts.ViewModels
 				readyButton.SetActive(true);
 				readyButton.GetComponent<Button>().onClick.AddListener(OnReadyButtonClick);
 			}
-		}
-
-		private void OnCoroutineFinishedEventHandler()
-		{
-			Destroy(createLoginRequest.gameObject);
 		}
 	}
 }

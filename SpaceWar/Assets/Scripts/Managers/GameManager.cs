@@ -1,6 +1,7 @@
 ﻿using Assets.Scripts.Components;
 using Assets.Scripts.View;
 using Assets.Scripts.ViewModels;
+using OpenCover.Framework.Model;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -122,6 +123,11 @@ namespace Assets.Scripts.Managers
 
             GameObject[] canvases = FindObjectsOfTypeAll(typeof(Canvas))
                 .Select(o => (o as Canvas).gameObject).ToArray();
+
+			if (canvases is null || canvases.Length.Equals(0))
+			{
+				throw new DataException();
+			}
 
 			FPSView fpsView = canvases.FirstOrDefault(c => c.name == "cnvs_FPS")?
 				.GetComponent<FPSView>();
