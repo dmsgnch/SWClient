@@ -1,5 +1,6 @@
 ﻿using Assets.Scripts.Components;
 using Assets.Scripts.Managers;
+using Components;
 using Scripts.RegisterLoginScripts;
 using System.Collections;
 using UnityEngine;
@@ -26,15 +27,18 @@ namespace LocalManagers.ConnectToGame.ValueChangedHandlers
 
 			DataValidator dataValidator = new DataValidator();
 
-			if (dataValidator.ValidateString(value))
+			if (dataValidator.ValidateString(value, out string message))
             {
 				GameManager.Instance.ConnectToGameDataStore.LobbyName = value;
 
                 _icon.sprite = _validSprite;
 
-				IsValidated = true;	
+				IsValidated = true;
 
-			}
+                if (!string.IsNullOrEmpty(message))
+                    InformationPanelController.Instance.CreateMessage(
+                            InformationPanelController.MessageType.ERROR, message);
+            }
             else
             {
 				IsValidated = false;

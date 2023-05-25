@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.Playables;
 using UnityEngine.UI;
 using ViewModels.Abstract;
@@ -16,8 +17,6 @@ namespace Assets.Scripts.ViewModels
 {
 	public class LobbyViewModel : ViewModelBase
 	{
-		CreateLoginRequest createLoginRequest;
-
 		public LobbyViewModel()
 		{ }
 
@@ -59,10 +58,10 @@ namespace Assets.Scripts.ViewModels
 						User = new ApplicationUser
 						{
 							Username = "not a host",
-							Id = userId2,
+							Id = GameManager.Instance.MainDataStore.UserId,
 						},
 						LobbyLeader = false,
-						UserId = userId2,
+						UserId = GameManager.Instance.MainDataStore.UserId,
 					},
 				},
 			};
@@ -92,20 +91,27 @@ namespace Assets.Scripts.ViewModels
 
 			foreach (var lobbyInfo in lobby.LobbyInfos)
 			{
+				//create new player list item based on prefab
 				var lobbyView = Instantiate(playerListItemPrefab.transform.GetChild(0).gameObject,
 					playerList.transform);
 
 				lobbyView.transform.GetChild(0).GetComponent<Text>().text = lobbyInfo.User.Username;
-				lobbyView.transform.GetChild(1).GetComponent<Image>().color = Color.blue;
-
-				var toggle = lobbyView.transform.GetChild(2);
+				GameObject toggle = lobbyView.transform.GetChild(2).gameObject;
 				if (lobbyInfo.LobbyLeader)
 				{
-					toggle.gameObject.SetActive(false);
+					toggle.SetActive(false);
 				}
 				else
 				{
 					toggle.GetComponent<Toggle>().interactable = false;
+				}
+
+				GameObject colorButton = lobbyView.transform.GetChild(1).gameObject;
+				colorButton.GetComponent<Image>().color = Color.blue;
+
+				if (lobbyInfo.UserId == GameManager.Instance.MainDataStore.UserId)
+				{
+					colorButton.AddComponent<ColorChanger>().SetButton(colorButton.GetComponent<Button>());
 				}
 			}
 		}
@@ -135,10 +141,52 @@ namespace Assets.Scripts.ViewModels
 				readyButton.GetComponent<Button>().onClick.AddListener(OnReadyButtonClick);
 			}
 		}
-
-		private void OnCoroutineFinishedEventHandler()
+		
+		class ColorChanger : MonoBehaviour, IPointerClickHandler
 		{
-			Destroy(createLoginRequest.gameObject);
+			private Button button;
+			private readonly Color[] colors = new[] { Color.blue, Color.red, Color.yellow };
+
+			public void SetButton(Button button)
+			{
+				this.button = button;
+			}
+
+			public void OnPointerClick(PointerEventData eventData)
+			{
+				if (eventData.button == PointerEventData.InputButton.Left)
+					NextColor();
+				else if (eventData.button == PointerEventData.InputButton.Right)
+					PreviousColor();
+			}
+
+			private void NextColor()
+			{
+				var image = button.image;
+				if (!colors.Contains(image.color)) return;
+
+				var currentColor = image.color;
+				Color nextColor;
+				var index = Array.IndexOf(colors, currentColor);
+				if (index != colors.Length - 1) nextColor = colors[index + 1];
+				else nextColor = colors.First();
+
+				image.color = nextColor;
+			}
+
+			private void PreviousColor()
+			{
+				var image = button.image;
+				if (!colors.Contains(image.color)) return;
+
+				var currentColor = image.color;
+				Color previousColor;
+				var index = Array.IndexOf(colors, currentColor);
+				if (index != 0) previousColor = colors[index - 1];
+				else previousColor = colors.Last();
+
+				image.color = previousColor;
+			}
 		}
 	}
 }

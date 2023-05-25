@@ -21,5 +21,10 @@ namespace Assets.Scripts.Components
 		public string AccessToken { get; set; }
 
 		#endregion
+
+		/// <summary>
+		/// id of authorizated user
+		/// </summary>
+		public Guid UserId { get; set; }
 	}
 }
