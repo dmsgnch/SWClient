@@ -60,19 +60,11 @@ namespace LocalManagers.ConnectToGame
 				lobbyButton.onClick.RemoveAllListeners();
 				lobbyButton.onClick.AddListener(() =>
 				{
-					GameManager.Instance.MainDataStore.SelectedLobbyId = lobby.Id.ToString();
+					GameManager.Instance.ConnectToGameDataStore.SelectedLobbyId = lobby.Id.ToString();
+
+					GameManager.Instance.ConnectToGameDataStore.LobbyName = lobby.LobbyName.ToString();
 
 					IsSelected = true;
-
-//					if (!string.IsNullOrWhiteSpace(GameManager.Instance.MainDataStore.HeroName) &&
-//InputValidator.Validate(GameManager.Instance.MainDataStore.HeroName))
-//					{
-//						connectToGameButton.interactable = true;
-//					}
-//					else
-//					{
-//						connectToGameButton.interactable = false;
-//					}
 				});
 			}
 		}

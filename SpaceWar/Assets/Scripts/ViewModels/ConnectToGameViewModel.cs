@@ -34,12 +34,12 @@ namespace Assets.Scripts.ViewModels
 			GetLobbiesListRequest.GetLobbyList();
 
 			LobbiesListController.Instance.UpdateLobbiesListDisplay(
-				GameManager.Instance.MainDataStore.Lobbies, 
+				GameManager.Instance.ConnectToGameDataStore.Lobbies, 
 				lobbiesListItemPrefab, 
 				connectToGameButton);
 		}
 
-		public void OnToLobbyButtonClick()
+		public void ToLobby()
 		{
 			GameManager.Instance.ChangeState(GameState.Lobby);
 		}
@@ -51,7 +51,7 @@ namespace Assets.Scripts.ViewModels
 
 			if (HeroNameChangedHandler.Instance.IsValidated is true)
 			{
-				if (LobbyNameValueChangedHandler.Instance.IsValidated is true)				
+				if (LobbyNameChangedHandler.Instance.IsValidated is true)				
 					CreateGameButton.interactable = true;				
 				
 				if(LobbiesListController.Instance.IsSelected is true)				
@@ -78,7 +78,8 @@ namespace Assets.Scripts.ViewModels
 			public void PostConnectionSuccessAction<T>(RestRequestForm<T> requestForm)
 				where T : ResponseBase
 			{
-				GameManager.Instance.MainDataStore.Lobbies = requestForm.GetResponseResult<GetAllLobbiesResponse>().Lobbies;
+				GameManager.Instance.ConnectToGameDataStore.Lobbies = 
+					requestForm.GetResponseResult<GetAllLobbiesResponse>().Lobbies;
 			}
 
 			public void OnRequestFinished()

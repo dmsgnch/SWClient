@@ -1,19 +1,11 @@
 ﻿using Assets.Scripts.Components;
-using Assets.Scripts.Components.Abstract;
 using Assets.Scripts.Managers;
 using Components.Abstract;
 using Components;
 using LocalManagers.RegisterLoginRequests;
 using SharedLibrary.Responses.Abstract;
 using SharedLibrary.Responses;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using UnityEngine;
-using UnityEngine.Playables;
 using ViewModels.Abstract;
 
 namespace Assets.Scripts.ViewModels
@@ -50,25 +42,24 @@ namespace Assets.Scripts.ViewModels
 		{
 			DataValidator validator = new DataValidator();
 
-			string validationResult; 
-			if (validator.ValidateEmail(email, out validationResult))
-			{
-				Debug.Log($"Success email validation");
-				return true;
-			}
-
-			//TODO: Infopanel outputing	
-			Debug.Log($"{validationResult}");
-			return false;
+			bool validationResult = validator.ValidateEmail(email, out string message);
+			if (!string.IsNullOrEmpty(message)) ShowError(message);
+			return validationResult;
 		}
 
 		public bool ValidatePassword(string password)
 		{
-			Debug.Log($"Mock password validation");
+			DataValidator validator = new DataValidator();
 
-			return true;
+			bool validationResult = validator.ValidatePassword(password, out string message);
+			if (!string.IsNullOrEmpty(message)) ShowError(message);
+			return validationResult;
+		}
 
-			//TODO: Implement validation
+		private void ShowError(string message)
+        {
+			InformationPanelController.Instance.CreateMessage(
+					InformationPanelController.MessageType.ERROR, message);
 		}
 
 		public class LoginResponseHandler : IResponseHandler
@@ -82,8 +73,9 @@ namespace Assets.Scripts.ViewModels
 			public void PostConnectionSuccessAction<T>(RestRequestForm<T> requestForm)
 				where T : ResponseBase
 			{
-				GameManager.Instance.MainDataStore.AccessToken =
-					requestForm.GetResponseResult<AuthenticationResponse>().Token;
+				var authResponse = requestForm.GetResponseResult<AuthenticationResponse>();
+				GameManager.Instance.MainDataStore.AccessToken = authResponse.Token;
+				GameManager.Instance.MainDataStore.UserId = authResponse.UserId;
 
 				GameManager.Instance.ChangeState(GameState.LoadConnectToGameScene);				
 			}

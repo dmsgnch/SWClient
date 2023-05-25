@@ -1,5 +1,6 @@
 ﻿using Assets.Scripts.Components;
 using Assets.Scripts.Managers;
+using Components;
 using Scripts.RegisterLoginScripts;
 using System.Collections;
 using UnityEngine;
@@ -12,12 +13,12 @@ namespace LocalManagers.ConnectToGame.ValueChangedHandlers
     /// script that defines behavior on changing value 
     /// in lobby to create name input box 
     /// </summary>
-    public class LobbyNameValueChangedHandler : InputValueChangedHandlerBase<LobbyNameValueChangedHandler>
+    public class LobbyNameChangedHandler : InputValueChangedHandlerBase<LobbyNameChangedHandler>
     {
 		public bool IsValidated { get; set; } = false;
 
 		/// <summary>
-		/// function that should be called when lobby to create box value is changed
+		/// function that should be called when new lobby input box value is changed
 		/// </summary>
 		/// <param name="value">new value for lobby name</param>
 		public override void OnValueChanged(string value)
@@ -26,15 +27,18 @@ namespace LocalManagers.ConnectToGame.ValueChangedHandlers
 
 			DataValidator dataValidator = new DataValidator();
 
-			if (dataValidator.ValidateString(value, out string result))
+			if (dataValidator.ValidateString(value, out string message))
             {
-				GameManager.Instance.MainDataStore.LobbyToCreateName = value;
+				GameManager.Instance.ConnectToGameDataStore.LobbyName = value;
 
                 _icon.sprite = _validSprite;
 
-				IsValidated = true;	
+				IsValidated = true;
 
-			}
+                if (!string.IsNullOrEmpty(message))
+                    InformationPanelController.Instance.CreateMessage(
+                            InformationPanelController.MessageType.ERROR, message);
+            }
             else
             {
 				IsValidated = false;

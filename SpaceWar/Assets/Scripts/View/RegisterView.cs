@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using UnityEngine.UI;
 using UnityEngine;
 using Assets.View.Abstract;
+using Assets.Scripts.Components;
 
 namespace Assets.Scripts.View
 {
@@ -31,7 +32,7 @@ namespace Assets.Scripts.View
 		{
 			if (_registerViewModel.ValidateName(usernameInput.text) &&
 				_registerViewModel.ValidateEmail(emailInput.text) &&
-			_registerViewModel.ValidatePassword(passwordInput.text, confirmPasswordInput.text))
+				_registerViewModel.ValidatePassword(passwordInput.text, confirmPasswordInput.text))
 			{
 				_registerViewModel.Register(usernameInput.text, emailInput.text, passwordInput.text);
 			}

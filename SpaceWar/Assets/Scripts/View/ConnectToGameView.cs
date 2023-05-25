@@ -55,8 +55,8 @@ namespace Assets.Scripts.View
 			gameNameInput.onValueChanged.AddListener(GameNameValueChanged);
 			quitButton.onClick.AddListener(OnQuitButtonClick);
 			updateButton.onClick.AddListener(OnUpdateButtonClick);
+			CreateGameButton.onClick.AddListener(OnCreateGameButtonClick);
 			//connectToGameButton.onClick.AddListener(_connectToGameViewModel.OnToRegisterButtonClick);
-			//CreateGameButton.onClick.AddListener(_connectToGameViewModel.OnToRegisterButtonClick);
 		}
 
 		private void HeroNameValueChanged(string value)
@@ -68,7 +68,7 @@ namespace Assets.Scripts.View
 
 		private void GameNameValueChanged(string value)
 		{
-			LobbyNameValueChangedHandler.Instance.OnValueChanged(value);
+			LobbyNameChangedHandler.Instance.OnValueChanged(value);
 
 			_connectToGameViewModel.SetInteractableToButtons(connectToGameButton, CreateGameButton);
 		}
@@ -84,6 +84,11 @@ namespace Assets.Scripts.View
 
 			_connectToGameViewModel.SetInteractableToButtons(connectToGameButton, CreateGameButton);
 		}
+
+		private void OnCreateGameButtonClick()
+        {
+			_connectToGameViewModel.ToLobby();
+        }
 
 		private void Update()
 		{

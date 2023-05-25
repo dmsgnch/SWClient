@@ -1,6 +1,7 @@
 ﻿using Assets.Scripts.Components;
 using Assets.Scripts.View;
 using Assets.Scripts.ViewModels;
+using OpenCover.Framework.Model;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -17,12 +18,15 @@ namespace Assets.Scripts.Managers
 	public class GameManager : ComponentPersistentSingleton<GameManager>
 	{
 		internal MainDataStore MainDataStore { get; private set; } = new MainDataStore();
+		internal ConnectToGameDataStore ConnectToGameDataStore { get; private set; } = new ConnectToGameDataStore();
+		internal LobbyDataStore LobbyDataStore { get; private set; } = new LobbyDataStore();
 
 		public static event Action<GameState> OnBeforeStateChanged;
 		public static event Action<GameState> OnAfterStateChanged;
 
 		public GameState State { get; private set; }
 
+		//TODO: return starting state to normal after testing
 		void Start() => ChangeState(GameState.Starting);
 
 		public void ChangeState(GameState newState)
@@ -113,30 +117,41 @@ namespace Assets.Scripts.Managers
 			SceneManager.sceneLoaded += OnConnectToGameSceneLoaded;
 		}
 
-		private void OnConnectToGameSceneLoaded(Scene scene, LoadSceneMode mode)
+        private void OnConnectToGameSceneLoaded(Scene scene, LoadSceneMode mode)
 		{
-			if (scene.buildIndex == 1) // Проверяем, что это нужная сцена
+			if(scene.buildIndex != 1) throw new DataException();
+
+#pragma warning disable CS0618 // Тип или член устарел
+            GameObject[] canvases = FindObjectsOfTypeAll(typeof(Canvas))
+                .Select(o => (o as Canvas).gameObject).ToArray();
+#pragma warning restore CS0618 // Тип или член устарел
+
+			if (canvases is null || canvases.Length.Equals(0))
 			{
-				FPSView fpsView = GameObject.Find("cnvs_FPS")?.GetComponent<FPSView>();
-				ConnectToGameView connectToGameView = GameObject.Find("cnvs_connectToGame")?.GetComponent<ConnectToGameView>();
-				LobbyView lobbyView = GameObject.Find("cnvs_lobby")?.GetComponent<LobbyView>();
-
-				if (fpsView is null || connectToGameView is null || lobbyView is null)
-				{
-					throw new DataException();
-				}
-
-				List<BaseScreen> screens = new List<BaseScreen>() { fpsView, connectToGameView, lobbyView };
-
-				UiManager.Instance.Init(screens);
-
-				SceneManager.sceneLoaded -= OnConnectToGameSceneLoaded;
-
-				ChangeState(GameState.ConnectToGame);
+				throw new DataException();
 			}
-			else throw new DataException();
 
-			
+			FPSView fpsView = canvases.FirstOrDefault(c => c.name == "cnvs_FPS")?
+				.GetComponent<FPSView>();
+
+			ConnectToGameView connectToGameView = canvases.FirstOrDefault(c => c.name == "cnvs_connectToGame")?
+				.GetComponent<ConnectToGameView>();
+
+			LobbyView lobbyView = canvases.FirstOrDefault(c => c.name == "cnvs_lobby")?
+				.GetComponent<LobbyView>();
+
+			if (fpsView is null || connectToGameView is null || lobbyView is null)
+			{
+				throw new DataException();
+			}
+
+			List<BaseScreen> screens = new List<BaseScreen>() { fpsView, connectToGameView, lobbyView };
+
+			UiManager.Instance.Init(screens);
+
+			SceneManager.sceneLoaded -= OnConnectToGameSceneLoaded;
+
+			ChangeState(GameState.ConnectToGame);		
 		}
 
 		private void HandleConnectToGame()

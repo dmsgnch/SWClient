@@ -1,14 +1,8 @@
-﻿using Assets.Scripts.Components.Abstract;
+﻿using Assets.Scripts.Components;
 using Assets.Scripts.Managers;
+using Components;
 using Components.Abstract;
 using LocalManagers.RegisterLoginRequests;
-using Scripts.RegisterLoginScripts;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using UnityEngine;
 using ViewModels.Abstract;
 
@@ -44,37 +38,35 @@ namespace Assets.Scripts.ViewModels
 
 		public bool ValidateName(string name)
 		{
-			return true;
+			DataValidator validator = new DataValidator();
 
-			//TODO: Implement validation
+			bool validationResult = validator.ValidateString(name, out string message);
+			if (!string.IsNullOrEmpty(message)) ShowError(message);
+			return validationResult;
 		}
 
 		public bool ValidateEmail(string email)
 		{
-			if (string.IsNullOrWhiteSpace(email))
-			{
-				//TODO: Infopanel outputing
-				Debug.Log("Displaying information panel in the future. You must fill the all of filds");
-				return false;
-			}
+			DataValidator validator = new DataValidator();
 
-			string pattern = @"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$";
-
-			if (!Regex.IsMatch(email, pattern))
-			{
-				//TODO: Infopanel outputing
-				Debug.Log("Displaying information panel in the future. Email is not match to the pattern");
-				return false;
-			}
-
-			return true;
+			bool validationResult = validator.ValidateEmail(email, out string message);
+			if (!string.IsNullOrEmpty(message)) ShowError(message);
+			return validationResult;
 		}
 
 		public bool ValidatePassword(string password, string confirmPassword)
 		{
-			return true;
+			DataValidator validator = new DataValidator();
 
-			//TODO: Implement validation
+			bool validationResult = validator.ValidatePassword(password, out string message, confirmPassword);
+			if (!string.IsNullOrEmpty(message)) ShowError(message);
+			return validationResult;
+		}
+
+		private void ShowError(string message)
+		{
+			InformationPanelController.Instance.CreateMessage(
+					InformationPanelController.MessageType.ERROR, message);
 		}
 
 		public class RegisterResponseHandler : IResponseHandler

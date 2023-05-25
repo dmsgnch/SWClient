@@ -17,34 +17,19 @@ namespace Assets.Scripts.View
 {
 	public class LobbyView : AbstractScreen<LobbyViewModel>
 	{
-		[SerializeField] private InputField emailInput;
-		[SerializeField] private InputField passwordInput;
-		[SerializeField] private UnityEngine.UI.Button loginButton;
-		[SerializeField] private UnityEngine.UI.Button toRegister;
+		[SerializeField] private GameObject playerList;
+		[SerializeField] private GameObject playerListItemPrefab;
+		[SerializeField] private GameObject startButton;
+		[SerializeField] private GameObject readyButton;
 
 		private LobbyViewModel _lobbyViewModel;
 
-		private void Awake()
+		private void OnEnable()
 		{
-			//loginButton.onClick.AddListener(_lobbyViewModel.OnLoginButtonClick);
-			//toRegister.onClick.AddListener(_lobbyViewModel.OnToRegisterButtonClick);
-		}
 
-		private void Update()
-		{
-			if (Input.GetKey(KeyCode.Escape))
-			{
-				//TODO: Add confirm window			 
+			_lobbyViewModel.DefineButton(startButton, readyButton);
 
-				if (Debug.isDebugBuild)
-				{
-					Debug.Log("Application quiting");
-				}
-				else
-				{
-					Application.Quit();
-				}
-			}
+			_lobbyViewModel.UpdatePlayersList(playerList, playerListItemPrefab,_lobbyViewModel.GetSampleData());
 		}
 
 		protected override void OnBind(LobbyViewModel lobbyViewModel)

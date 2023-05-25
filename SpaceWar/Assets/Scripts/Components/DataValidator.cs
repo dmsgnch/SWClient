@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Components;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -14,7 +15,7 @@ namespace Assets.Scripts.Components
 		{
 			if (string.IsNullOrWhiteSpace(email))
 			{
-				result = "Displaying information panel in the future. You must fill the all of filds";
+				result = "Email cannot be empty!";
 				return false;
 			}
 
@@ -22,7 +23,7 @@ namespace Assets.Scripts.Components
 
 			if (!Regex.IsMatch(email, pattern))
 			{
-				result = "Displaying information panel in the future. Email is not match to the pattern";
+				result = "Invalid email!";
 				return false;
 			}
 
@@ -34,7 +35,7 @@ namespace Assets.Scripts.Components
 		{
 			if (string.IsNullOrWhiteSpace(input) || input.Length > 30 || input.Length < 4)
 			{
-				result = "Displaying information panel in the future. The *string* must have between 4 and 30 characters";
+				result = "Value length must have between 4 and 30 characters!";
 				return false;
 			}
 
@@ -42,10 +43,52 @@ namespace Assets.Scripts.Components
 
 			if (!Regex.IsMatch(input, pattern))
 			{
-				result = "Displaying information panel in the future. The string have unavailable symbols";
+				result = "Value is invalid!";
 				return false;
 			}
 
+			result = "";
+			return true;
+		}
+
+		public bool ValidatePassword(string password, out string result, string confirmPassword = null)
+        {
+			// Check password length
+			if (password.Length < 8)
+			{
+				result = "Password must be at least 8 characters long!";
+				return false;
+			}
+
+			// Check for at least one uppercase letter
+			if (!password.Any(c => char.IsUpper(c)))
+			{
+				result = "Password must contain at least one uppercase letter!";
+				return false;
+			}
+
+			// Check for at least one lowercase letter
+			if (!password.Any(c => char.IsLower(c)))
+			{
+				result = "Password must contain at least one lowercase letter!";
+				return false;
+			}
+
+			// Check for at least one digit
+			if (!password.Any(c => char.IsDigit(c)))
+			{
+				result = "Password must contain at least one digit!";
+				return false;
+			}
+
+			// Check for equality between password and confirm password  
+			if (confirmPassword is not null && password != confirmPassword)
+			{
+				result = "Password must contain at least one digit!";
+				return false;
+			}
+
+			// All checks passed, password is valid
 			result = "";
 			return true;
 		}

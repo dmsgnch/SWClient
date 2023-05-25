@@ -31,7 +31,7 @@ namespace LocalManagers.ConnectToGame.Requests
 
 		void CreateLobby()
 		{
-			CreateLobbyRequest request = new CreateLobbyRequest(GameManager.Instance.MainDataStore.LobbyName);
+			CreateLobbyRequest request = new CreateLobbyRequest(GameManager.Instance.ConnectToGameDataStore.LobbyName);
 
 			RestRequestForm<CreateLobbyResponse> requestForm =
 				new RestRequestForm<CreateLobbyResponse>(ConnectionEndpoint,
@@ -52,7 +52,8 @@ namespace LocalManagers.ConnectToGame.Requests
 			public void PostConnectionSuccessAction<T>(RestRequestForm<T> requestForm)
 				where T : ResponseBase
 			{
-				GameManager.Instance.MainDataStore.LobbyId = requestForm.GetResponseResult<CreateLobbyResponse>().Lobby.Id;
+				GameManager.Instance.LobbyDataStore.LobbyId = 
+					requestForm.GetResponseResult<CreateLobbyResponse>().Lobby.Id;
 
 				GameManager.Instance.ChangeState(GameState.Lobby);
 			}
