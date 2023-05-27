@@ -12,7 +12,6 @@ using Assets.View.Abstract;
 using Assets.Scripts.ViewModels;
 using Unity.VisualScripting;
 using UnityEngine.UIElements;
-using LocalManagers.ConnectToGame.ValueChangedHandlers;
 
 namespace Assets.Scripts.View
 {
@@ -47,6 +46,10 @@ namespace Assets.Scripts.View
 		[SerializeField] private UnityEngine.UI.Button createGameButton;
 		[SerializeField] private GameObject lobbiesListItemPrefab;
 
+		[SerializeField] protected UnityEngine.UI.Image _icon;
+		[SerializeField] protected Sprite _validSprite;
+		[SerializeField] protected Sprite _errorSprite;
+
 		private ConnectToGameViewModel _connectToGameViewModel;
 
 		private void Awake()
@@ -56,19 +59,19 @@ namespace Assets.Scripts.View
 			quitButton.onClick.AddListener(OnQuitButtonClick);
 			updateButton.onClick.AddListener(OnUpdateButtonClick);
 			createGameButton.onClick.AddListener(OnCreateGameButtonClick);
-			connectToGameButton.onClick.AddListener(OnConnectToGameClick);
+			connectToGameButton.onClick.AddListener(OnConnectToGameClickAsync);
 		}
 
 		private void HeroNameValueChanged(string value)
 		{
-			HeroNameChangedHandler.Instance.OnValueChanged(value);
+			_connectToGameViewModel.OnHeroNameValueChanged(_icon, _validSprite, _errorSprite, value); 
 
 			_connectToGameViewModel.SetInteractableToButtons(connectToGameButton, createGameButton);
 		}
 
 		private void GameNameValueChanged(string value)
 		{
-			LobbyNameChangedHandler.Instance.OnValueChanged(value);
+			_connectToGameViewModel.OnLobbyNameValueChanged(_icon, _validSprite, _errorSprite, value);
 
 			_connectToGameViewModel.SetInteractableToButtons(connectToGameButton, createGameButton);
 		}
@@ -90,9 +93,9 @@ namespace Assets.Scripts.View
 			_connectToGameViewModel.ToLobby();
         }
 
-		private void OnConnectToGameClick()
+		private async void OnConnectToGameClickAsync()
         {
-			_connectToGameViewModel.ConnectToLobby();
+			await _connectToGameViewModel.ConnectToLobby();
 
 			_connectToGameViewModel.ToLobby();
         }

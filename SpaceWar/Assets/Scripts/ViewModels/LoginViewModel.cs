@@ -13,16 +13,18 @@ namespace Assets.Scripts.ViewModels
 	public class LoginViewModel : ViewModelBase
 	{
 
-		public static CreateLoginRequest CreateLoginRequest { get; set; }
+		public static GameObject CreateLoginRequestObject { get; set; }
 
 		public LoginViewModel()
 		{ }
 
 		public void Login(string email, string password)
 		{
-			CreateLoginRequest = new GameObject("LoginRequest").AddComponent<CreateLoginRequest>();
+			CreateLoginRequestObject = new GameObject("LoginRequest");
 
-			CreateLoginRequest.CreateRequest(email, password);			
+			var createLoginRequest = CreateLoginRequestObject.AddComponent<CreateLoginRequest>();
+
+			createLoginRequest.CreateRequest(email, password);			
 		}
 
 		public void ToRegister()
@@ -60,30 +62,6 @@ namespace Assets.Scripts.ViewModels
         {
 			InformationPanelController.Instance.CreateMessage(
 					InformationPanelController.MessageType.ERROR, message);
-		}
-
-		public class LoginResponseHandler : IResponseHandler
-		{
-			public void BodyConnectionSuccessAction<T>(RestRequestForm<T> requestForm)
-				where T : ResponseBase
-			{
-				//Not create information panel
-			}
-
-			public void PostConnectionSuccessAction<T>(RestRequestForm<T> requestForm)
-				where T : ResponseBase
-			{
-				var authResponse = requestForm.GetResponseResult<AuthenticationResponse>();
-				GameManager.Instance.MainDataStore.AccessToken = authResponse.Token;
-				GameManager.Instance.MainDataStore.UserId = authResponse.UserId;
-
-				GameManager.Instance.ChangeState(GameState.LoadConnectToGameScene);				
-			}
-
-			public void OnRequestFinished()
-			{
-				Destroy(CreateLoginRequest.gameObject);
-			}
-		}
+		}		
 	}
 }

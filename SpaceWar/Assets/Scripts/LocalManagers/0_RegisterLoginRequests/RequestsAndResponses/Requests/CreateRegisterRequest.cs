@@ -7,6 +7,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using Components;
 using static Assets.Scripts.ViewModels.RegisterViewModel;
+using Assets.Scripts.LocalManagers._0_RegisterLoginRequests.ResponseHandlers;
 
 namespace LocalManagers.RegisterLoginRequests
 {

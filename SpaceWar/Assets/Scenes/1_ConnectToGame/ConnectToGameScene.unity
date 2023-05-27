@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.18028378, g: 0.22571412, b: 0.30692285, a: 1}
+  m_IndirectSpecularColor: {r: 0.18028334, g: 0.2257134, b: 0.30692226, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -848,6 +848,9 @@ MonoBehaviour:
   connectToGameButton: {fileID: 216824686}
   createGameButton: {fileID: 0}
   lobbiesListItemPrefab: {fileID: 901189835464986182, guid: 705d970fc97db8c4882806db9e6e4778, type: 3}
+  _icon: {fileID: 0}
+  _validSprite: {fileID: 0}
+  _errorSprite: {fileID: 0}
 --- !u!1 &283431161
 GameObject:
   m_ObjectHideFlags: 0
@@ -2716,6 +2719,12 @@ MonoBehaviour:
   _icon: {fileID: 807003481}
   _validSprite: {fileID: 21300000, guid: e52bea7673825054b807abe10515d2f9, type: 3}
   _errorSprite: {fileID: 21300000, guid: 2ccbc9613693d1e4ab540b50be88ccb9, type: 3}
+  <BaseColor>k__BackingField:
+    r: 205
+    g: 205
+    b: 205
+    a: 255
+  <IsValidated>k__BackingField: 0
 --- !u!1 &962049400
 GameObject:
   m_ObjectHideFlags: 0
@@ -4623,6 +4632,12 @@ MonoBehaviour:
   _icon: {fileID: 726205897}
   _validSprite: {fileID: 21300000, guid: e52bea7673825054b807abe10515d2f9, type: 3}
   _errorSprite: {fileID: 21300000, guid: 2ccbc9613693d1e4ab540b50be88ccb9, type: 3}
+  <BaseColor>k__BackingField:
+    r: 205
+    g: 205
+    b: 205
+    a: 255
+  <IsValidated>k__BackingField: 0
 --- !u!1 &1830157300
 GameObject:
   m_ObjectHideFlags: 0

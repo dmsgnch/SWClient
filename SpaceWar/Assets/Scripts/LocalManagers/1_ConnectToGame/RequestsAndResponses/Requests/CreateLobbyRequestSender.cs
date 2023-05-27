@@ -13,50 +13,28 @@ using SharedLibrary.Responses;
 using SharedLibrary.Responses.Abstract;
 using UnityEngine;
 using UnityEngine.UI;
+using Assets.Scripts.ViewModels;
+using Assets.Scripts.LocalManagers._0_RegisterLoginRequests.ResponseHandlers;
 
 namespace LocalManagers.ConnectToGame.Requests
 {
 	/// <summary>
 	/// 
 	/// </summary>
-	public class CreateLobbyRequestSender : NetworkingManager
+	public class CreateLobbyRequestSender : MonoBehaviour
 	{
 		private const string ConnectionEndpoint = "Lobby/Create";
 
-		void Start()
-		{
-			Button btn = gameObject.GetComponent<Button>();
-			btn.onClick.AddListener(CreateLobby);
-		}
-
-		void CreateLobby()
+		public void CreateLobby()
 		{
 			CreateLobbyRequest request = new CreateLobbyRequest(GameManager.Instance.ConnectToGameDataStore.LobbyName);
 
 			RestRequestForm<CreateLobbyResponse> requestForm =
 				new RestRequestForm<CreateLobbyResponse>(ConnectionEndpoint,
-					RequestType.POST, new CreateLobbyRequestSender.GetLobbyResponseHandler(),
+					RequestType.POST, new GetLobbyResponseHandler(),
 					token: GameManager.Instance.MainDataStore.AccessToken, jsonData: JsonConvert.SerializeObject(request));
 
-			var result = StartCoroutine(Routine_SendDataToServer<CreateLobbyResponse>(requestForm));
-		}
-
-		private class GetLobbyResponseHandler : IResponseHandler
-		{
-			public void BodyConnectionSuccessAction<T>(RestRequestForm<T> requestForm)
-				where T : ResponseBase
-			{
-				//Not create information panel
-			}
-
-			public void PostConnectionSuccessAction<T>(RestRequestForm<T> requestForm)
-				where T : ResponseBase
-			{
-				GameManager.Instance.LobbyDataStore.LobbyId = 
-					requestForm.GetResponseResult<CreateLobbyResponse>().Lobby.Id;
-
-				GameManager.Instance.ChangeState(GameState.Lobby);
-			}
+			var result = StartCoroutine(NetworkingManager.Instance.Routine_SendDataToServer<CreateLobbyResponse>(requestForm));
 		}
 	}
 }
