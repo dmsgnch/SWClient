@@ -73,8 +73,8 @@ namespace Assets.Scripts.ViewModels
 		public void ConnectToLobby()
         {
 			HubConnection hubConnection = NetworkingManager.Instance.HubConnection;
-			Guid lobbyId = Guid.Parse(GameManager.Instance.ConnectToGameDataStore.SelectedLobbyId);
-			hubConnection.InvokeAsync<Guid>(ServerHandlers.Lobby.ConnectToLobby,lobbyId).Wait();
+			Guid lobbyId = GameManager.Instance.ConnectToGameDataStore.SelectedLobbyId;
+			hubConnection.InvokeAsync(ServerHandlers.Lobby.ConnectToLobby,lobbyId).Wait();
         }
 
 		public class GetAllLobbiesResponseHandler : IResponseHandler

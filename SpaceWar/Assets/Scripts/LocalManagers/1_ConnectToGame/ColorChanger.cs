@@ -1,4 +1,9 @@
-﻿using System;
+﻿using Components;
+using Microsoft.AspNetCore.SignalR.Client;
+using Scripts.RegisterLoginScripts;
+using SharedLibrary.Contracts.Hubs;
+using SharedLibrary.Models;
+using System;
 using System.Collections;
 using System.Linq;
 using UnityEngine;
@@ -9,14 +14,6 @@ namespace LocalManagers.ConnectToGame
 {
 	class ColorChanger : MonoBehaviour, IPointerClickHandler
 	{
-		private Button button;
-		private readonly Color[] colors = new[] { Color.blue, Color.red, Color.yellow };
-
-		public void SetButton(Button button)
-		{
-			this.button = button;
-		}
-
 		public void OnPointerClick(PointerEventData eventData)
 		{
 			if (eventData.button == PointerEventData.InputButton.Left)
@@ -27,30 +24,50 @@ namespace LocalManagers.ConnectToGame
 
 		private void NextColor()
 		{
-			var image = button.image;
-			if (!colors.Contains(image.color)) return;
+			var image = gameObject.GetComponent<Button>().image;
 
-			var currentColor = image.color;
-			Color nextColor;
-			var index = Array.IndexOf(colors, currentColor);
-			if (index != colors.Length - 1) nextColor = colors[index + 1];
-			else nextColor = colors.First();
+			var colorParser = new ColorParser();
+			Color currentColor = image.color;
+			ColorStatus currentColorStatus = colorParser.GetColorStatus(currentColor);
+			ColorStatus nextColorStatus;
+			ColorStatus lastColor = (ColorStatus)Enum.GetValues(typeof(ColorStatus)).Cast<int>().Max();
+			if (currentColorStatus.Equals(lastColor))
+			{
+				ColorStatus firstColor = (ColorStatus)Enum.GetValues(typeof(ColorStatus)).Cast<int>().Min();
+				nextColorStatus = firstColor;
+			}
+            else
+            {
+				nextColorStatus = currentColorStatus++;
+            }
 
-			image.color = nextColor;
+			Color nextColor = colorParser.GetColor(nextColorStatus);
+			HubConnection hubConnection = NetworkingManager.Instance.HubConnection;
+			hubConnection.InvokeAsync(ServerHandlers.Lobby.ChangeColor,nextColor);
 		}
 
 		private void PreviousColor()
 		{
-			var image = button.image;
-			if (!colors.Contains(image.color)) return;
+			var image = gameObject.GetComponent<Button>().image;
 
-			var currentColor = image.color;
-			Color previousColor;
-			var index = Array.IndexOf(colors, currentColor);
-			if (index != 0) previousColor = colors[index - 1];
-			else previousColor = colors.Last();
+			var colorParser = new ColorParser();
+			Color currentColor = image.color;
+			ColorStatus currentColorStatus = colorParser.GetColorStatus(currentColor);
+			ColorStatus previousColorStatus;
+			ColorStatus firstColor = (ColorStatus)Enum.GetValues(typeof(ColorStatus)).Cast<int>().Min();
+			if (currentColorStatus.Equals(firstColor))
+			{
+				ColorStatus lastColor = (ColorStatus)Enum.GetValues(typeof(ColorStatus)).Cast<int>().Max();
+				previousColorStatus = lastColor;
+			}
+			else
+			{
+				previousColorStatus = currentColorStatus--;
+			}
 
-			image.color = previousColor;
+			var previousColor = colorParser.GetColor(previousColorStatus);
+			HubConnection hubConnection = NetworkingManager.Instance.HubConnection;
+			hubConnection.InvokeAsync(ServerHandlers.Lobby.ChangeColor, previousColor);
 		}
 	}
 }

@@ -1,5 +1,6 @@
 ﻿using Assets.Scripts.Components.Abstract;
 using SharedLibrary.Models;
+using System;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
@@ -21,7 +22,7 @@ namespace Assets.Scripts.Components
 		/// <summary>
 		/// Id of the lobby that we select from the list ob the ConnectToGame scene
 		/// </summary>
-		public string SelectedLobbyId { get; set; }
+		public Guid SelectedLobbyId { get; set; }
 
 		/// <summary>
 		/// List of the lobbies using for displaying list in ConnectToGame scene
