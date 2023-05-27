@@ -4,15 +4,13 @@ using Assets.Scripts.Managers;
 using LocalManagers.RegisterLoginRequests;
 using SharedLibrary.Models;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using UnityEngine;
-using UnityEngine.EventSystems;
-using UnityEngine.Playables;
 using UnityEngine.UI;
 using ViewModels.Abstract;
+using Microsoft.AspNetCore.SignalR.Client;
+using Scripts.RegisterLoginScripts;
+using SharedLibrary.Contracts.Hubs;
 
 namespace Assets.Scripts.ViewModels
 {
@@ -21,15 +19,13 @@ namespace Assets.Scripts.ViewModels
 		public LobbyViewModel()
 		{ }
 
-		public void OnStartButtonClick()
-		{
-
-		}
-
-		public void OnReadyButtonClick()
-		{
-
-		}
+		public void ExitFromLobby()
+        {
+			HubConnection hubConnection = NetworkingManager.Instance.HubConnection;
+			Guid lobbyId = GameManager.Instance.LobbyDataStore.LobbyId;
+			hubConnection.InvokeAsync(ServerHandlers.Lobby.ExitFromLobby,lobbyId).Wait();
+			GameManager.Instance.ChangeState(GameState.ConnectToGame);
+        }
 
 		/// <summary>
 		/// generates sample data for testing lobby functionality
@@ -141,6 +137,16 @@ namespace Assets.Scripts.ViewModels
 				readyButton.SetActive(true);
 				readyButton.GetComponent<Button>().onClick.AddListener(OnReadyButtonClick);
 			}
+		}
+
+		private void OnStartButtonClick()
+		{
+
+		}
+
+		private void OnReadyButtonClick()
+		{
+
 		}
 	}
 }

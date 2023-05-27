@@ -44,7 +44,7 @@ namespace Assets.Scripts.View
 		[SerializeField] private UnityEngine.UI.Button quitButton;
 		[SerializeField] private UnityEngine.UI.Button updateButton;
 		[SerializeField] private UnityEngine.UI.Button connectToGameButton;
-		[SerializeField] private UnityEngine.UI.Button CreateGameButton;
+		[SerializeField] private UnityEngine.UI.Button createGameButton;
 		[SerializeField] private GameObject lobbiesListItemPrefab;
 
 		private ConnectToGameViewModel _connectToGameViewModel;
@@ -55,22 +55,22 @@ namespace Assets.Scripts.View
 			gameNameInput.onValueChanged.AddListener(GameNameValueChanged);
 			quitButton.onClick.AddListener(OnQuitButtonClick);
 			updateButton.onClick.AddListener(OnUpdateButtonClick);
-			CreateGameButton.onClick.AddListener(OnCreateGameButtonClick);
-			//connectToGameButton.onClick.AddListener(_connectToGameViewModel.OnToRegisterButtonClick);
+			createGameButton.onClick.AddListener(OnCreateGameButtonClick);
+			connectToGameButton.onClick.AddListener(OnConnectToGameClick);
 		}
 
 		private void HeroNameValueChanged(string value)
 		{
 			HeroNameChangedHandler.Instance.OnValueChanged(value);
 
-			_connectToGameViewModel.SetInteractableToButtons(connectToGameButton, CreateGameButton);
+			_connectToGameViewModel.SetInteractableToButtons(connectToGameButton, createGameButton);
 		}
 
 		private void GameNameValueChanged(string value)
 		{
 			LobbyNameChangedHandler.Instance.OnValueChanged(value);
 
-			_connectToGameViewModel.SetInteractableToButtons(connectToGameButton, CreateGameButton);
+			_connectToGameViewModel.SetInteractableToButtons(connectToGameButton, createGameButton);
 		}
 
 		private void OnQuitButtonClick()
@@ -82,11 +82,18 @@ namespace Assets.Scripts.View
 		{
 			_connectToGameViewModel.UpdateLobbiesList(lobbiesListItemPrefab, connectToGameButton);
 
-			_connectToGameViewModel.SetInteractableToButtons(connectToGameButton, CreateGameButton);
+			_connectToGameViewModel.SetInteractableToButtons(connectToGameButton, createGameButton);
 		}
 
 		private void OnCreateGameButtonClick()
         {
+			_connectToGameViewModel.ToLobby();
+        }
+
+		private void OnConnectToGameClick()
+        {
+			_connectToGameViewModel.ConnectToLobby();
+
 			_connectToGameViewModel.ToLobby();
         }
 
@@ -105,7 +112,7 @@ namespace Assets.Scripts.View
 			_connectToGameViewModel = connectToGameViewModel;
 
 			connectToGameButton.interactable = false;
-			CreateGameButton.interactable = false;
+			createGameButton.interactable = false;
 
 			_connectToGameViewModel.UpdateLobbiesList(lobbiesListItemPrefab, connectToGameButton);
 		}

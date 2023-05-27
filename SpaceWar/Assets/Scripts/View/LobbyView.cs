@@ -12,6 +12,7 @@ using Assets.View.Abstract;
 using Assets.Scripts.ViewModels;
 using Unity.VisualScripting;
 using UnityEngine.UIElements;
+using LocalManagers.ConnectToGame;
 
 namespace Assets.Scripts.View
 {
@@ -21,15 +22,17 @@ namespace Assets.Scripts.View
 		[SerializeField] private GameObject playerListItemPrefab;
 		[SerializeField] private GameObject startButton;
 		[SerializeField] private GameObject readyButton;
+		[SerializeField] private GameObject quitButton;
 
 		private LobbyViewModel _lobbyViewModel;
 
 		private void OnEnable()
 		{
-
 			_lobbyViewModel.DefineButton(startButton, readyButton);
 
-			_lobbyViewModel.UpdatePlayersList(playerList, playerListItemPrefab,_lobbyViewModel.GetSampleData());
+			PlayersListController.Instance.UpdatePlayersList(_lobbyViewModel.GetSampleData());
+
+			quitButton.GetComponent<UnityEngine.UI.Button>().onClick.AddListener(_lobbyViewModel.ExitFromLobby);
 		}
 
 		protected override void OnBind(LobbyViewModel lobbyViewModel)

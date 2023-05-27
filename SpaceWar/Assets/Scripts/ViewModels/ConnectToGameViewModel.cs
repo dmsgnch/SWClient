@@ -17,6 +17,9 @@ using Components.Abstract;
 using Components;
 using SharedLibrary.Responses.Abstract;
 using SharedLibrary.Responses;
+using Microsoft.AspNetCore.SignalR.Client;
+using Scripts.RegisterLoginScripts;
+using SharedLibrary.Contracts.Hubs;
 
 namespace Assets.Scripts.ViewModels
 {
@@ -66,6 +69,13 @@ namespace Assets.Scripts.ViewModels
 
 			Application.Quit();
 		}
+
+		public void ConnectToLobby()
+        {
+			HubConnection hubConnection = NetworkingManager.Instance.HubConnection;
+			Guid lobbyId = Guid.Parse(GameManager.Instance.ConnectToGameDataStore.SelectedLobbyId);
+			hubConnection.InvokeAsync<Guid>(ServerHandlers.Lobby.ConnectToLobby,lobbyId).Wait();
+        }
 
 		public class GetAllLobbiesResponseHandler : IResponseHandler
 		{
