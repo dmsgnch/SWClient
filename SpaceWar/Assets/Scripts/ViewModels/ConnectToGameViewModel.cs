@@ -12,7 +12,6 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Playables;
 using ViewModels.Abstract;
-using LocalManagers.ConnectToGame.ValueChangedHandlers;
 using Components.Abstract;
 using Components;
 using SharedLibrary.Responses.Abstract;
@@ -20,26 +19,39 @@ using SharedLibrary.Responses;
 using Microsoft.AspNetCore.SignalR.Client;
 using Scripts.RegisterLoginScripts;
 using SharedLibrary.Contracts.Hubs;
+using Assets.Scripts.Components;
 
 namespace Assets.Scripts.ViewModels
 {
 	public class ConnectToGameViewModel : ViewModelBase
 	{
-		public static GetLobbiesListRequest GetLobbiesListRequest { get; set; }
+		public static GameObject GetLobbiesListRequestObject { get; set; }
+		public static GameObject CreateLobbyRequestSenderObject { get; set; }
 
 		public ConnectToGameViewModel()
 		{ }
 
 		public void UpdateLobbiesList(GameObject lobbiesListItemPrefab, Button connectToGameButton)
 		{
-			GetLobbiesListRequest = new GameObject("GetLobbiesRequest").AddComponent<GetLobbiesListRequest>();
+			GetLobbiesListRequestObject = new GameObject("GetLobbiesRequest");
 
-			GetLobbiesListRequest.GetLobbyList();
+			var getLobbiesListRequest = GetLobbiesListRequestObject.AddComponent<GetLobbiesListRequest>();
+
+			getLobbiesListRequest.GetLobbyList();
 
 			LobbiesListController.Instance.UpdateLobbiesListDisplay(
 				GameManager.Instance.ConnectToGameDataStore.Lobbies, 
 				lobbiesListItemPrefab, 
 				connectToGameButton);
+		}
+
+		public void CreateLobby()
+		{
+			CreateLobbyRequestSenderObject = new GameObject("CreateLobbyRequest");
+
+			var createLobbyRequestSender = CreateLobbyRequestSenderObject.AddComponent<CreateLobbyRequestSender>();
+
+			createLobbyRequestSender.CreateLobby();
 		}
 
 		public void ToLobby()
@@ -52,9 +64,9 @@ namespace Assets.Scripts.ViewModels
 			CreateGameButton.interactable = false;
 			connectToGameButton.interactable = false;
 
-			if (HeroNameChangedHandler.Instance.IsValidated is true)
+			if (IsValidHeroName is true)
 			{
-				if (LobbyNameChangedHandler.Instance.IsValidated is true)				
+				if (IsValidLobbyName is true)				
 					CreateGameButton.interactable = true;				
 				
 				if(LobbiesListController.Instance.IsSelected is true)				
@@ -70,32 +82,73 @@ namespace Assets.Scripts.ViewModels
 			Application.Quit();
 		}
 
-		public void ConnectToLobby()
+		public async Task ConnectToLobby()
         {
 			HubConnection hubConnection = NetworkingManager.Instance.HubConnection;
-			Guid lobbyId = GameManager.Instance.ConnectToGameDataStore.SelectedLobbyId;
-			hubConnection.InvokeAsync(ServerHandlers.Lobby.ConnectToLobby,lobbyId).Wait();
+
+			Guid lobbyId = Guid.Parse(GameManager.Instance.ConnectToGameDataStore.SelectedLobbyId);
+			await hubConnection.InvokeAsync<Guid>(ServerHandlers.Lobby.ConnectToLobby,lobbyId);
         }
 
-		public class GetAllLobbiesResponseHandler : IResponseHandler
+		#region Changed Handlers
+
+		protected Color BaseColor { get; set; } = new Color(205, 205, 205, 255);
+
+		public bool IsValidHeroName{ get; set; } = false;
+		public bool IsValidLobbyName{ get; set; } = false;
+
+		public void OnHeroNameValueChanged(Image _icon, Sprite _validSprite, Sprite _errorSprite, string value)
 		{
-			public void BodyConnectionSuccessAction<T>(RestRequestForm<T> requestForm)
-				where T : ResponseBase
-			{
-				//Not create information panel
-			}
+			_icon.color = BaseColor;
 
-			public void PostConnectionSuccessAction<T>(RestRequestForm<T> requestForm)
-				where T : ResponseBase
-			{
-				GameManager.Instance.ConnectToGameDataStore.Lobbies = 
-					requestForm.GetResponseResult<GetAllLobbiesResponse>().Lobbies;
-			}
+			DataValidator dataValidator = new DataValidator();
 
-			public void OnRequestFinished()
+			if (dataValidator.ValidateString(value, out string message))
 			{
-				Destroy(GetLobbiesListRequest.gameObject);
+				GameManager.Instance.ConnectToGameDataStore.HeroName = value;
+
+				_icon.sprite = _validSprite;
+
+				IsValidHeroName = true;
+
+				if (!string.IsNullOrEmpty(message))
+					InformationPanelController.Instance.CreateMessage(
+							InformationPanelController.MessageType.ERROR, message);
+			}
+			else
+			{
+				IsValidHeroName = false;
+
+				_icon.sprite = _errorSprite;
 			}
 		}
+
+		public void OnLobbyNameValueChanged(Image _icon, Sprite _validSprite, Sprite _errorSprite, string value)
+		{
+			_icon.color = BaseColor;
+
+			DataValidator dataValidator = new DataValidator();
+
+			if (dataValidator.ValidateString(value, out string message))
+			{
+				GameManager.Instance.ConnectToGameDataStore.LobbyName = value;
+
+				_icon.sprite = _validSprite;
+
+				IsValidLobbyName = true;
+
+				if (!string.IsNullOrEmpty(message))
+					InformationPanelController.Instance.CreateMessage(
+							InformationPanelController.MessageType.ERROR, message);
+			}
+			else
+			{
+				IsValidLobbyName = false;
+
+				_icon.sprite = _errorSprite;
+			}
+		}
+
+		#endregion
 	}
 }

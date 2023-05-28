@@ -12,16 +12,16 @@ using System.Threading;
 using System.Threading.Tasks;
 using Assets.Scripts.Components;
 using Assets.Scripts.Managers;
-using static Assets.Scripts.ViewModels.LoginViewModel;
+using Assets.Scripts.LocalManagers._0_RegisterLoginRequests.ResponseHandlers;
 
 namespace LocalManagers.RegisterLoginRequests
 {
-    public class CreateLoginRequest : NetworkingManager
-    {
-        private const string ConnectionEndpoint = "Authentication/Login";
+	public class CreateLoginRequest : NetworkingManager
+	{
+		private const string ConnectionEndpoint = "Authentication/Login";
 
-        public void CreateRequest(string email, string password)
-        {
+		public void CreateRequest(string email, string password)
+		{
 			var data = new LoginRequest()
 			{
 				Email = email,
@@ -34,6 +34,6 @@ namespace LocalManagers.RegisterLoginRequests
 					jsonData: JsonConvert.SerializeObject(data));
 
 			var result = StartCoroutine(Routine_SendDataToServer<AuthenticationResponse>(requestForm));
-		} 
-    }
+		}
+	}
 }

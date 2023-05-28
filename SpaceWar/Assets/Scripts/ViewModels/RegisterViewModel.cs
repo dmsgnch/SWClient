@@ -11,16 +11,18 @@ namespace Assets.Scripts.ViewModels
 	public class RegisterViewModel : ViewModelBase
 	{
 
-		public static CreateRegisterRequest CreateRegisterRequest { get; set; }
+		public static GameObject CreateRegisterRequestObject { get; set; }
 
 		public RegisterViewModel()
 		{ }
 
 		public void Register(string name, string email, string password)
 		{
-			CreateRegisterRequest = new GameObject("ReisterRequest").AddComponent<CreateRegisterRequest>();
+			CreateRegisterRequestObject = new GameObject("ReisterRequest");
 
-			CreateRegisterRequest.CreateRequest(name, email, password);
+			var createRegisterRequest = CreateRegisterRequestObject.AddComponent<CreateRegisterRequest>();
+
+			createRegisterRequest.CreateRequest(name, email, password);
 		}
 
 		public void ToLogin()
@@ -67,14 +69,6 @@ namespace Assets.Scripts.ViewModels
 		{
 			InformationPanelController.Instance.CreateMessage(
 					InformationPanelController.MessageType.ERROR, message);
-		}
-
-		public class RegisterResponseHandler : IResponseHandler
-		{
-			public void OnRequestFinished()
-			{
-				Destroy(CreateRegisterRequest.gameObject);
-			}
 		}
 	}
 
