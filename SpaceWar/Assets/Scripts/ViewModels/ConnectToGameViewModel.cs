@@ -31,18 +31,15 @@ namespace Assets.Scripts.ViewModels
 		public ConnectToGameViewModel()
 		{ }
 
-		public void UpdateLobbiesList(GameObject lobbiesListItemPrefab, Button connectToGameButton)
+		#region Rest Requests
+
+		public void UpdateLobbiesList()
 		{
 			GetLobbiesListRequestObject = new GameObject("GetLobbiesRequest");
 
 			var getLobbiesListRequest = GetLobbiesListRequestObject.AddComponent<GetLobbiesListRequest>();
 
 			getLobbiesListRequest.GetLobbyList();
-
-			LobbiesListController.Instance.UpdateLobbiesListDisplay(
-				GameManager.Instance.ConnectToGameDataStore.Lobbies, 
-				lobbiesListItemPrefab, 
-				connectToGameButton);
 		}
 
 		public void CreateLobby()
@@ -54,10 +51,9 @@ namespace Assets.Scripts.ViewModels
 			createLobbyRequestSender.CreateLobby();
 		}
 
-		public void ToLobby()
-		{
-			GameManager.Instance.ChangeState(GameState.Lobby);
-		}
+		#endregion
+
+		#region Other
 
 		public void SetInteractableToButtons(Button connectToGameButton, Button CreateGameButton)
 		{
@@ -82,13 +78,21 @@ namespace Assets.Scripts.ViewModels
 			Application.Quit();
 		}
 
+		#endregion
+
+		#region SignalR 
+
 		public async Task ConnectToLobby()
         {
+			//TODO: Hub start listening 
+
 			HubConnection hubConnection = NetworkingManager.Instance.HubConnection;
 
 			Guid lobbyId = GameManager.Instance.ConnectToGameDataStore.SelectedLobbyId;
 			await hubConnection.InvokeAsync<Guid>(ServerHandlers.Lobby.ConnectToLobby,lobbyId);
         }
+
+		#endregion
 
 		#region Changed Handlers
 

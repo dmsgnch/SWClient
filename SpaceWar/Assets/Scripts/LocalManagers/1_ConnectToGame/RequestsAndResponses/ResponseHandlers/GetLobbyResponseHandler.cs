@@ -22,6 +22,7 @@ namespace Assets.Scripts.LocalManagers._0_RegisterLoginRequests.ResponseHandlers
 		{
 			//Not create information panel
 		}
+
 		public void PostConnectionSuccessAction<T>(RestRequestForm<T> requestForm)
 			where T : ResponseBase
 		{
@@ -30,7 +31,6 @@ namespace Assets.Scripts.LocalManagers._0_RegisterLoginRequests.ResponseHandlers
 
 			GameManager.Instance.ChangeState(GameState.Lobby);
 		}
-
 
 		public void OnRequestFinished()
 		{

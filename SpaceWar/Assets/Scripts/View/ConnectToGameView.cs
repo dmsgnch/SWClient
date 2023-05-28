@@ -12,6 +12,8 @@ using Assets.View.Abstract;
 using Assets.Scripts.ViewModels;
 using Unity.VisualScripting;
 using UnityEngine.UIElements;
+using Assets.Scripts.Managers;
+using LocalManagers.ConnectToGame;
 
 namespace Assets.Scripts.View
 {
@@ -46,7 +48,8 @@ namespace Assets.Scripts.View
 		[SerializeField] private UnityEngine.UI.Button createGameButton;
 		[SerializeField] private GameObject lobbiesListItemPrefab;
 
-		[SerializeField] protected UnityEngine.UI.Image _icon;
+		[SerializeField] protected UnityEngine.UI.Image _heroIcon;
+		[SerializeField] protected UnityEngine.UI.Image _gameIcon;
 		[SerializeField] protected Sprite _validSprite;
 		[SerializeField] protected Sprite _errorSprite;
 
@@ -64,14 +67,14 @@ namespace Assets.Scripts.View
 
 		private void HeroNameValueChanged(string value)
 		{
-			_connectToGameViewModel.OnHeroNameValueChanged(_icon, _validSprite, _errorSprite, value); 
+			_connectToGameViewModel.OnHeroNameValueChanged(_heroIcon, _validSprite, _errorSprite, value);
 
 			_connectToGameViewModel.SetInteractableToButtons(connectToGameButton, createGameButton);
 		}
 
 		private void GameNameValueChanged(string value)
 		{
-			_connectToGameViewModel.OnLobbyNameValueChanged(_icon, _validSprite, _errorSprite, value);
+			_connectToGameViewModel.OnLobbyNameValueChanged(_gameIcon, _validSprite, _errorSprite, value);
 
 			_connectToGameViewModel.SetInteractableToButtons(connectToGameButton, createGameButton);
 		}
@@ -83,22 +86,26 @@ namespace Assets.Scripts.View
 
 		private void OnUpdateButtonClick()
 		{
-			_connectToGameViewModel.UpdateLobbiesList(lobbiesListItemPrefab, connectToGameButton);
+			_connectToGameViewModel.UpdateLobbiesList();
+
+			LobbiesListController.Instance.UpdateLobbiesListDisplay(
+				GameManager.Instance.ConnectToGameDataStore.Lobbies,
+				lobbiesListItemPrefab,
+				connectToGameButton);
 
 			_connectToGameViewModel.SetInteractableToButtons(connectToGameButton, createGameButton);
 		}
 
 		private void OnCreateGameButtonClick()
-        {
-			_connectToGameViewModel.ToLobby();
-        }
+		{
+			//Sending CreateLobbyRequest
+			_connectToGameViewModel.CreateLobby();
+		}
 
 		private async void OnConnectToGameClickAsync()
-        {
+		{
 			await _connectToGameViewModel.ConnectToLobby();
-
-			_connectToGameViewModel.ToLobby();
-        }
+		}
 
 		private void Update()
 		{
@@ -117,7 +124,7 @@ namespace Assets.Scripts.View
 			connectToGameButton.interactable = false;
 			createGameButton.interactable = false;
 
-			_connectToGameViewModel.UpdateLobbiesList(lobbiesListItemPrefab, connectToGameButton);
+			OnUpdateButtonClick();
 		}
 	}
 }
