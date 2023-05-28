@@ -86,7 +86,7 @@ namespace Assets.Scripts.ViewModels
         {
 			HubConnection hubConnection = NetworkingManager.Instance.HubConnection;
 
-			Guid lobbyId = Guid.Parse(GameManager.Instance.ConnectToGameDataStore.SelectedLobbyId);
+			Guid lobbyId = GameManager.Instance.ConnectToGameDataStore.SelectedLobbyId;
 			await hubConnection.InvokeAsync<Guid>(ServerHandlers.Lobby.ConnectToLobby,lobbyId);
         }
 
