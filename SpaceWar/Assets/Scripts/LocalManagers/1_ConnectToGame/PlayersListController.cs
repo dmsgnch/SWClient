@@ -1,11 +1,14 @@
 ﻿using Assets.Scripts.Managers;
 using Microsoft.AspNetCore.SignalR.Client;
+using Scripts.LocalManagers;
 using Scripts.RegisterLoginScripts;
 using SharedLibrary.Contracts.Hubs;
 using SharedLibrary.Models;
 using System;
 using UnityEngine;
 using UnityEngine.UI;
+using System.Linq;
+using Components;
 
 namespace LocalManagers.ConnectToGame
 {
@@ -38,38 +41,57 @@ namespace LocalManagers.ConnectToGame
 				else
 				{
 					toggle.GetComponent<Toggle>().interactable = false;
+					toggle.GetComponent<Toggle>().isOn = lobbyInfo.Ready;
 				}
 
-				GameObject colorButton = lobbyView.transform.GetChild(1).gameObject;
+				lobbyView.GetComponent<UserIdStorage>().UserId = lobbyInfo.UserId;
 
-				//if (lobbyInfo.Color is not null)
-				//{
-				//	float r = lobbyInfo.Color.R;
-				//	float g = lobbyInfo.Color.G;
-				//	float b = lobbyInfo.Color.B;
-				//	float a = lobbyInfo.Color.A;
-				//	colorButton.GetComponent<Image>().color = new Color(r,g,b,a);
-				//}
-				//            else
-				//            {
-				//	colorButton.GetComponent<Image>().color = Color.blue;
-				//	Color color = colorButton.GetComponent<Image>().color;
-				//	byte[] argbBytes = { 
-				//		(byte)color.a,
-				//		(byte)color.r,
-				//		(byte)color.g,
-				//		(byte)color.b,
-				//	};
-				//	int argb = BitConverter.ToInt32(argbBytes, 0);
-				//	HubConnection hubConnection = NetworkingManager.Instance.HubConnection;
-				//	hubConnection.InvokeAsync(ServerHandlers.Lobby.ChangeColor, lobby.Id, argb).Wait();
-				//}
-				colorButton.GetComponent<Image>().color = Color.blue;
-				if (lobbyInfo.UserId == GameManager.Instance.MainDataStore.UserId)
+				GameObject colorButton = lobbyView.transform.GetChild(1).gameObject;
+				var colorParser = new ColorParser();
+				colorButton.GetComponent<Image>().color = colorParser.GetColor((ColorStatus)lobbyInfo.ColorStatus);
+				if (lobbyInfo.UserId.Equals(GameManager.Instance.MainDataStore.UserId))
 				{
-					colorButton.AddComponent<ColorChanger>().SetButton(colorButton.GetComponent<Button>());
+					colorButton.AddComponent<ColorChanger>();
 				}
 			}
         }
-    }
+
+		public void ChangeColor(LobbyInfo lobbyInfo)
+        {
+			GameObject lobbyInfoView = GetLobbyInfoView(lobbyInfo.UserId);
+
+			GameObject colorButton = lobbyInfoView.transform.GetChild(1).gameObject;
+			var colorParser = new ColorParser();
+			colorButton.GetComponent<Image>().color = colorParser.GetColor((ColorStatus)lobbyInfo.ColorStatus);
+		}
+
+		public void ChangeReadyStatus(LobbyInfo lobbyInfo)
+		{
+			GameObject lobbyInfoView = GetLobbyInfoView(lobbyInfo.UserId);
+
+			GameObject toggle = lobbyInfoView.transform.GetChild(2).gameObject;
+			toggle.GetComponent<Toggle>().isOn = lobbyInfo.Ready;
+		}
+
+		public bool GetReadyStatus(Guid userId)
+        {
+			GameObject lobbyInfoView = GetLobbyInfoView(userId);
+			Toggle toggle = lobbyInfoView.transform.GetChild(2).gameObject.GetComponent<Toggle>();
+			return toggle.isOn;
+		}
+
+		private GameObject GetLobbyInfoView(Guid userId)
+		{
+			GameObject lobbyInfoView = null;
+			foreach (Transform child in gameObject.transform)
+			{
+				if (child.GetComponent<UserIdStorage>().UserId.Equals(userId))
+				{
+					lobbyInfoView = child.gameObject;
+				}
+			}
+			if (lobbyInfoView is null) throw new ArgumentException();
+			return lobbyInfoView;
+		}
+	}
 }

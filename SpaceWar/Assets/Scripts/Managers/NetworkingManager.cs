@@ -59,10 +59,16 @@ namespace Scripts.RegisterLoginScripts
 					PlayersListController.Instance.UpdatePlayersList(lobby);
 				});
 
-			HubConnection.On<Lobby>(ClientHandlers.Lobby.ChangeReadyStatus,
-				(Lobby lobby) =>
+			HubConnection.On<LobbyInfo>(ClientHandlers.Lobby.ChangeReadyStatus,
+				(LobbyInfo lobbyInfo) =>
 				{
-					PlayersListController.Instance.UpdatePlayersList(lobby);
+					PlayersListController.Instance.ChangeReadyStatus(lobbyInfo);
+				});
+
+			HubConnection.On<LobbyInfo>(ClientHandlers.Lobby.ChangedColor,
+				(LobbyInfo lobbyInfo) =>
+				{
+					PlayersListController.Instance.ChangeColor(lobbyInfo);
 				});
 
 			HubConnection.On<Lobby>(ClientHandlers.Lobby.ExitFromLobbyHandler,
@@ -72,12 +78,6 @@ namespace Scripts.RegisterLoginScripts
 				});
 
 			HubConnection.On<Lobby>(ClientHandlers.Lobby.ChangeLobbyDataHandler,
-				(Lobby lobby) =>
-				{
-					throw new NotImplementedException();
-				});
-
-			HubConnection.On<Lobby>(ClientHandlers.Lobby.ChangedColor,
 				(Lobby lobby) =>
 				{
 					throw new NotImplementedException();

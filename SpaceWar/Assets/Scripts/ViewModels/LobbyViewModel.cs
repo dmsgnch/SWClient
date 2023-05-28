@@ -67,53 +67,6 @@ namespace Assets.Scripts.ViewModels
 		}
 
 		/// <summary>
-		/// updates list of players with new state of lobby
-		/// </summary>
-		/// <param name="playerList">
-		/// GameObject for list of players that is being updated
-		/// </param>
-		/// <param name="playerListItemPrefab">
-		/// GameObject for a prefab for item in players list
-		/// </param>
-		/// <param name="lobby">
-		/// new state of lobby
-		/// </param>
-		public void UpdatePlayersList(GameObject playerList, GameObject playerListItemPrefab, Lobby lobby)
-		{
-			//Clear players list
-			foreach (Transform child in playerList.transform)
-			{
-				Destroy(child.gameObject);
-			}
-
-			foreach (var lobbyInfo in lobby.LobbyInfos)
-			{
-				//create new player list item based on prefab
-				var lobbyView = Instantiate(playerListItemPrefab.transform.GetChild(0).gameObject,
-					playerList.transform);
-
-				lobbyView.transform.GetChild(0).GetComponent<Text>().text = lobbyInfo.User.Username;
-				GameObject toggle = lobbyView.transform.GetChild(2).gameObject;
-				if (lobbyInfo.LobbyLeader)
-				{
-					toggle.SetActive(false);
-				}
-				else
-				{
-					toggle.GetComponent<Toggle>().interactable = false;
-				}
-
-				GameObject colorButton = lobbyView.transform.GetChild(1).gameObject;
-				colorButton.GetComponent<Image>().color = Color.blue;
-
-				if (lobbyInfo.UserId == GameManager.Instance.MainDataStore.UserId)
-				{
-					colorButton.AddComponent<ColorChanger>().SetButton(colorButton.GetComponent<Button>());
-				}
-			}
-		}
-
-		/// <summary>
 		/// defines whether lobby view should have start button or ready button 
 		/// depending on whether current user is lobby leader
 		/// </summary>
@@ -147,6 +100,15 @@ namespace Assets.Scripts.ViewModels
 		private void OnReadyButtonClick()
 		{
 
+		}
+
+		public void ChangeReadyStatus()
+        {
+			bool readyStatus = PlayersListController.Instance.GetReadyStatus(
+				GameManager.Instance.MainDataStore.UserId);
+
+			HubConnection hubConnection = NetworkingManager.Instance.HubConnection;
+			hubConnection.InvokeAsync(ServerHandlers.Lobby.ChangeReadyStatus,!readyStatus);
 		}
 	}
 }
