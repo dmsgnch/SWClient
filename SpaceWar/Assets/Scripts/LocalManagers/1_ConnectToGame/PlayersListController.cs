@@ -44,7 +44,7 @@ namespace LocalManagers.ConnectToGame
 					toggle.GetComponent<Toggle>().isOn = lobbyInfo.Ready;
 				}
 
-				lobbyView.GetComponent<UserIdStorage>().UserId = lobbyInfo.UserId;
+				lobbyView.AddComponent<UserIdStorage>().UserId = lobbyInfo.UserId;
 
 				GameObject colorButton = lobbyView.transform.GetChild(1).gameObject;
 				var colorParser = new ColorParser();

@@ -10,6 +10,8 @@ using ViewModels.Abstract;
 using Assets.View.Abstract;
 using Assets.Scripts.ViewModels;
 using LocalManagers.ConnectToGame;
+using SharedLibrary.Responses;
+using SharedLibrary.Models;
 
 namespace Assets.Scripts.View
 {
@@ -39,8 +41,11 @@ namespace Assets.Scripts.View
 			if (_lobbyViewModel is null) return;
 
 			_lobbyViewModel.DefineButton(startButton, readyButton);
+		}
 
-			PlayersListController.Instance.UpdatePlayersList(_lobbyViewModel.GetSampleData());
+		public void UpdatePlayersListInLobby(Lobby lobby)
+		{
+			PlayersListController.Instance.UpdatePlayersList(lobby);
 		}
 
 		protected override void OnBind(LobbyViewModel lobbyViewModel)

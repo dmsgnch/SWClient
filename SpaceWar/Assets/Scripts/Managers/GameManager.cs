@@ -165,8 +165,8 @@ namespace Assets.Scripts.Managers
 		private void HandleLobby()
 		{
 			UiManager.Instance.BindAndShow(new FPSViewModel());
-			UiManager.Instance.BindAndShow(new LobbyViewModel());
 			UiManager.Instance.Hide<ConnectToGameViewModel>();
+			UiManager.Instance.BindAndShow(new LobbyViewModel());
 		}
 
 		private void HandleLoadMainGameScene()

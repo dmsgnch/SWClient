@@ -19,6 +19,8 @@ using Assets.Scripts.Managers;
 using System.Linq;
 using System.Text.Json;
 using UnityEditor.MemoryProfiler;
+using Assets.Scripts.View;
+using SharedLibrary.Responses;
 
 namespace Scripts.RegisterLoginScripts
 {
@@ -48,43 +50,55 @@ namespace Scripts.RegisterLoginScripts
 
 			hubConnection.On<string>(ClientHandlers.Lobby.Error, (errorMessage) =>
 			{
-				if (Debug.isDebugBuild) Debug.Log($"an error ocured. error message: {errorMessage}");
-				InformationPanelController.Instance.CreateMessage(InformationPanelController.MessageType.ERROR,
-					errorMessage);
+				UnityMainThreadDispatcher.Instance().Enqueue(() =>
+				{
+					if (Debug.isDebugBuild) Debug.Log($"an error ocured. error message: {errorMessage}");
+					InformationPanelController.Instance.CreateMessage(InformationPanelController.MessageType.ERROR,
+						errorMessage);
+				});
 			});
 
 			hubConnection.On<string>(ClientHandlers.Lobby.DeleteLobbyHandler, (serverMessage) =>
 			{
-				InformationPanelController.Instance.CreateMessage(InformationPanelController.MessageType.INFO,
+				UnityMainThreadDispatcher.Instance().Enqueue(() =>
+				{
+					InformationPanelController.Instance.CreateMessage(InformationPanelController.MessageType.INFO,
 						serverMessage);
+				});
 			});
 
 			hubConnection.On<Lobby>(ClientHandlers.Lobby.ConnectToLobbyHandler, (lobby) =>
 			{
-				Debug.Log($"Game state on start: {GameManager.Instance.State}");
-				if (GameManager.Instance.State is GameState.ConnectToGame)
+				UnityMainThreadDispatcher.Instance().Enqueue(() =>
 				{
-					Debug.Log($"State is changing to lobby");
-					GameManager.Instance.ChangeState(GameState.Lobby);
-				}
+					Debug.Log($"Game state on start: {GameManager.Instance.State}");
+					if (GameManager.Instance.State is GameState.ConnectToGame)
+					{
+						Debug.Log($"State is changing to lobby");
+						GameManager.Instance.ChangeState(GameState.Lobby);
+					}
 
-				Debug.Log($"Game state before updating: {GameManager.Instance.State}");
-				if (GameManager.Instance.State is GameState.Lobby)
-				{
-					PlayersListController.Instance.UpdatePlayersList(lobby);
-				}
+					Debug.Log($"Game state before updating: {GameManager.Instance.State}");
+					if (GameManager.Instance.State is GameState.Lobby)
+					{
+						PlayersListController.Instance.UpdatePlayersList(lobby);
+					}
+				});
 			});
 
 			hubConnection.On<Lobby>(ClientHandlers.Lobby.ExitFromLobbyHandler, (lobby) =>
 			{
-				if (lobby.LobbyInfos.Any(l => l.UserId.Equals(GameManager.Instance.MainDataStore.UserId)))
+				UnityMainThreadDispatcher.Instance().Enqueue(() =>
 				{
-					PlayersListController.Instance.UpdatePlayersList(lobby);
-				}
-				else
-				{
-					GameManager.Instance.ChangeState(GameState.ConnectToGame);
-				}
+					if (lobby.LobbyInfos.Any(l => l.UserId.Equals(GameManager.Instance.MainDataStore.UserId)))
+					{
+						FindAnyObjectByType<LobbyView>()?.UpdatePlayersListInLobby(lobby);
+					}
+					else
+					{
+						GameManager.Instance.ChangeState(GameState.ConnectToGame);
+					}
+				});
 			});
 
 			hubConnection.On<Lobby>(ClientHandlers.Lobby.ChangeLobbyDataHandler, (lobby) =>
@@ -94,12 +108,18 @@ namespace Scripts.RegisterLoginScripts
 
 			hubConnection.On<LobbyInfo>(ClientHandlers.Lobby.ChangedColor, (info) =>
 			{
-				PlayersListController.Instance.ChangeColor(info);
+				UnityMainThreadDispatcher.Instance().Enqueue(() =>
+				{
+					PlayersListController.Instance.ChangeColor(info);
+				});
 			});
 
 			hubConnection.On<LobbyInfo>(ClientHandlers.Lobby.ChangeReadyStatus, (info) =>
 			{
-				PlayersListController.Instance.ChangeReadyStatus(info);
+				UnityMainThreadDispatcher.Instance().Enqueue(() =>
+				{
+					PlayersListController.Instance.ChangeReadyStatus(info);
+				});
 			});
 
 			hubConnection.On<Guid>(ClientHandlers.Lobby.CreatedSessionHandler, (sessionId) =>

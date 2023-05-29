@@ -24,6 +24,7 @@ namespace Assets.Scripts.ViewModels
         {
 			HubConnection hubConnection = NetworkingManager.Instance.HubConnection;
 			Guid lobbyId = GameManager.Instance.LobbyDataStore.LobbyId;
+
 			await hubConnection.InvokeAsync(ServerHandlers.Lobby.ExitFromLobby,lobbyId);
 
 			GameManager.Instance.ChangeState(GameState.ConnectToGame);

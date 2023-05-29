@@ -12,10 +12,11 @@ using System.Threading.Tasks;
 using UnityEngine;
 using Assets.Scripts.ViewModels;
 using LocalManagers.ConnectToGame.Requests;
+using Assets.Scripts.View;
 
 namespace Assets.Scripts.LocalManagers._0_RegisterLoginRequests.ResponseHandlers
 {
-	public class GetLobbyResponseHandler : IResponseHandler
+	public class CreateLobbyResponseHandler : IResponseHandler
 	{
 		public void BodyConnectionSuccessAction<T>(RestRequestForm<T> requestForm)
 			where T : ResponseBase
@@ -30,6 +31,8 @@ namespace Assets.Scripts.LocalManagers._0_RegisterLoginRequests.ResponseHandlers
 				requestForm.GetResponseResult<CreateLobbyResponse>().Lobby.Id;
 
 			GameManager.Instance.ChangeState(GameState.Lobby);
+
+			UnityEngine.Object.FindAnyObjectByType<LobbyView>()?.UpdatePlayersListInLobby(requestForm.GetResponseResult<CreateLobbyResponse>().Lobby);
 		}
 
 		public void OnRequestFinished()
