@@ -100,18 +100,11 @@ namespace Assets.Scripts.ViewModels
 
 		}
 
-		private void OnReadyButtonClick()
+		private async void OnReadyButtonClick()
 		{
-
-		}
-
-		public void ChangeReadyStatus()
-        {
-			bool readyStatus = PlayersListController.Instance.GetReadyStatus(
-				GameManager.Instance.MainDataStore.UserId);
-
 			HubConnection hubConnection = NetworkingManager.Instance.HubConnection;
-			hubConnection.InvokeAsync(ServerHandlers.Lobby.ChangeReadyStatus,!readyStatus);
+			Guid lobbyId = GameManager.Instance.LobbyDataStore.LobbyId;
+			await hubConnection.InvokeAsync(ServerHandlers.Lobby.ChangeReadyStatus,lobbyId);
 		}
 	}
 }

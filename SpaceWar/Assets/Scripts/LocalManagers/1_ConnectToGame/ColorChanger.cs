@@ -1,4 +1,5 @@
-﻿using Components;
+﻿using Assets.Scripts.Managers;
+using Components;
 using Microsoft.AspNetCore.SignalR.Client;
 using Scripts.RegisterLoginScripts;
 using SharedLibrary.Contracts.Hubs;
@@ -22,7 +23,7 @@ namespace LocalManagers.ConnectToGame
 				PreviousColor();
 		}
 
-		private void NextColor()
+		private async void NextColor()
 		{
 			var image = gameObject.GetComponent<Button>().image;
 
@@ -41,12 +42,12 @@ namespace LocalManagers.ConnectToGame
 				nextColorStatus = currentColorStatus++;
             }
 
-			Color nextColor = colorParser.GetColor(nextColorStatus);
 			HubConnection hubConnection = NetworkingManager.Instance.HubConnection;
-			hubConnection.InvokeAsync(ServerHandlers.Lobby.ChangeColor,nextColor);
+			Guid lobbyId = GameManager.Instance.LobbyDataStore.LobbyId;
+			await hubConnection.InvokeAsync(ServerHandlers.Lobby.ChangeColor, lobbyId, (int)nextColorStatus);
 		}
 
-		private void PreviousColor()
+		private async void PreviousColor()
 		{
 			var image = gameObject.GetComponent<Button>().image;
 
@@ -65,9 +66,9 @@ namespace LocalManagers.ConnectToGame
 				previousColorStatus = currentColorStatus--;
 			}
 
-			var previousColor = colorParser.GetColor(previousColorStatus);
 			HubConnection hubConnection = NetworkingManager.Instance.HubConnection;
-			hubConnection.InvokeAsync(ServerHandlers.Lobby.ChangeColor, previousColor);
+			Guid lobbyId = GameManager.Instance.LobbyDataStore.LobbyId;
+			await hubConnection.InvokeAsync(ServerHandlers.Lobby.ChangeColor, lobbyId, (int)previousColorStatus);
 		}
 	}
 }

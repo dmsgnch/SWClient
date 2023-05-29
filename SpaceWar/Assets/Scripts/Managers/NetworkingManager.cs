@@ -75,6 +75,7 @@ namespace Scripts.RegisterLoginScripts
 					if (GameManager.Instance.State is GameState.ConnectToGame)
 					{
 						Debug.Log($"State is changing to lobby");
+						GameManager.Instance.LobbyDataStore.LobbyId = lobby.Id;
 						GameManager.Instance.ChangeState(GameState.Lobby);
 					}
 
