@@ -7,6 +7,7 @@ using SharedLibrary.Models;
 using System;
 using System.Collections;
 using System.Linq;
+using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -23,7 +24,7 @@ namespace LocalManagers.ConnectToGame
 				PreviousColor();
 		}
 
-		private async void NextColor()
+		private async Task NextColor()
 		{
 			var image = gameObject.GetComponent<Button>().image;
 
@@ -31,9 +32,11 @@ namespace LocalManagers.ConnectToGame
 			Color currentColor = image.color;
 			ColorStatus currentColorStatus = colorParser.GetColorStatus(currentColor);
 			ColorStatus nextColorStatus;
+			//scary magic for getting last element of enum
 			ColorStatus lastColor = (ColorStatus)Enum.GetValues(typeof(ColorStatus)).Cast<int>().Max();
 			if (currentColorStatus.Equals(lastColor))
 			{
+				//scary magic for getting first element of enum
 				ColorStatus firstColor = (ColorStatus)Enum.GetValues(typeof(ColorStatus)).Cast<int>().Min();
 				nextColorStatus = firstColor;
 			}
@@ -47,7 +50,7 @@ namespace LocalManagers.ConnectToGame
 			await hubConnection.InvokeAsync(ServerHandlers.Lobby.ChangeColor, lobbyId, (int)nextColorStatus);
 		}
 
-		private async void PreviousColor()
+		private async Task PreviousColor()
 		{
 			var image = gameObject.GetComponent<Button>().image;
 
@@ -55,9 +58,11 @@ namespace LocalManagers.ConnectToGame
 			Color currentColor = image.color;
 			ColorStatus currentColorStatus = colorParser.GetColorStatus(currentColor);
 			ColorStatus previousColorStatus;
+			//scary magic for getting first element of enum
 			ColorStatus firstColor = (ColorStatus)Enum.GetValues(typeof(ColorStatus)).Cast<int>().Min();
 			if (currentColorStatus.Equals(firstColor))
 			{
+				//scary magic for getting last element of enum
 				ColorStatus lastColor = (ColorStatus)Enum.GetValues(typeof(ColorStatus)).Cast<int>().Max();
 				previousColorStatus = lastColor;
 			}

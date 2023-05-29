@@ -13,6 +13,8 @@ using UnityEngine;
 using Assets.Scripts.ViewModels;
 using LocalManagers.ConnectToGame.Requests;
 using Assets.Scripts.View;
+using Scripts.RegisterLoginScripts;
+using SharedLibrary.Models;
 
 namespace Assets.Scripts.LocalManagers._0_RegisterLoginRequests.ResponseHandlers
 {
@@ -24,15 +26,18 @@ namespace Assets.Scripts.LocalManagers._0_RegisterLoginRequests.ResponseHandlers
 			//Not create information panel
 		}
 
-		public void PostConnectionSuccessAction<T>(RestRequestForm<T> requestForm)
+		public async void PostConnectionSuccessAction<T>(RestRequestForm<T> requestForm)
 			where T : ResponseBase
 		{
-			GameManager.Instance.LobbyDataStore.LobbyId =
-				requestForm.GetResponseResult<CreateLobbyResponse>().Lobby.Id;
+			Lobby lobby = requestForm.GetResponseResult<CreateLobbyResponse>().Lobby;
+
+			GameManager.Instance.LobbyDataStore.LobbyId = lobby.Id;
+			GameManager.Instance.LobbyDataStore.IsLobbyLeader = lobby.LobbyInfos.First().LobbyLeader;
 
 			GameManager.Instance.ChangeState(GameState.Lobby);
 
-			UnityEngine.Object.FindAnyObjectByType<LobbyView>()?.UpdatePlayersListInLobby(requestForm.GetResponseResult<CreateLobbyResponse>().Lobby);
+			UnityEngine.Object.FindAnyObjectByType<LobbyView>()?.UpdatePlayersListInLobby(lobby);
+			await NetworkingManager.Instance.StartHub("lobby");
 		}
 
 		public void OnRequestFinished()
