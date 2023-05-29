@@ -39,7 +39,7 @@ namespace LocalManagers.ConnectToGame
 			}
             else
             {
-				nextColorStatus = currentColorStatus++;
+				nextColorStatus = currentColorStatus+1;
             }
 
 			HubConnection hubConnection = NetworkingManager.Instance.HubConnection;
@@ -63,7 +63,7 @@ namespace LocalManagers.ConnectToGame
 			}
 			else
 			{
-				previousColorStatus = currentColorStatus--;
+				previousColorStatus = currentColorStatus-1;
 			}
 
 			HubConnection hubConnection = NetworkingManager.Instance.HubConnection;
