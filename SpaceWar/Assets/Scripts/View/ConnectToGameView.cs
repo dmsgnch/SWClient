@@ -120,11 +120,11 @@ namespace Assets.Scripts.View
 			}
 		}
 
-		private void OnEnable()
+		private async void OnEnable()
 		{
 			if (_connectToGameViewModel is null) return;
 
-			_connectToGameViewModel.StopHub().Wait();
+			await _connectToGameViewModel.StopHub();
 
 			connectToGameButton.interactable = false;
 			createGameButton.interactable = false;

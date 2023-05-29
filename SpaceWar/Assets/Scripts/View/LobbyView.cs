@@ -29,9 +29,9 @@ namespace Assets.Scripts.View
 			quitButton.onClick.AddListener(OnQuitButtonClick);
 		}
 
-		private void OnQuitButtonClick()
+		private async void OnQuitButtonClick()
 		{
-			_lobbyViewModel.ExitFromLobby().Wait();
+			await _lobbyViewModel.ExitFromLobby();
 		}
 
 		private void OnEnable()
