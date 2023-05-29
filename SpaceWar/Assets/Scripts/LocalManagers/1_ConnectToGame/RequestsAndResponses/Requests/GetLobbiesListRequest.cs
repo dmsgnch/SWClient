@@ -22,7 +22,7 @@ namespace LocalManagers.ConnectToGame.Requests
 {
     public class GetLobbiesListRequest : MonoBehaviour
     {
-        private const string ConnectionEndpoint = "Lobby/GetAll";
+        private const string ConnectionEndpoint = "Lobby";
 
         public void GetLobbyList()
         {           

@@ -86,8 +86,11 @@ namespace Assets.Scripts.View
 
 		private void OnUpdateButtonClick()
 		{
-			_connectToGameViewModel.UpdateLobbiesList();
+			_connectToGameViewModel.UpdateLobbiesList();			
+		}
 
+		public void OnLobbiesListUpdate()
+		{
 			LobbiesListController.Instance.UpdateLobbiesListDisplay(
 				GameManager.Instance.ConnectToGameDataStore.Lobbies,
 				lobbiesListItemPrefab,
@@ -117,15 +120,21 @@ namespace Assets.Scripts.View
 			}
 		}
 
-		protected override void OnBind(ConnectToGameViewModel connectToGameViewModel)
+		private void OnEnable()
 		{
-			_connectToGameViewModel = connectToGameViewModel;
+			if (_connectToGameViewModel is null) return;
+
 			_connectToGameViewModel.StopHub().Wait();
 
 			connectToGameButton.interactable = false;
 			createGameButton.interactable = false;
 
 			OnUpdateButtonClick();
+		}
+
+		protected override void OnBind(ConnectToGameViewModel connectToGameViewModel)
+		{
+			_connectToGameViewModel = connectToGameViewModel;
 		}
 	}
 }

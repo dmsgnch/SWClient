@@ -34,8 +34,10 @@ namespace Assets.Scripts.View
 			_lobbyViewModel.ExitFromLobby().Wait();
 		}
 
-		private void Init()
+		private void OnEnable()
 		{
+			if (_lobbyViewModel is null) return;
+
 			_lobbyViewModel.DefineButton(startButton, readyButton);
 
 			PlayersListController.Instance.UpdatePlayersList(_lobbyViewModel.GetSampleData());
@@ -44,8 +46,6 @@ namespace Assets.Scripts.View
 		protected override void OnBind(LobbyViewModel lobbyViewModel)
 		{
 			_lobbyViewModel = lobbyViewModel;
-
-			Init();
 		}
 	}
 }

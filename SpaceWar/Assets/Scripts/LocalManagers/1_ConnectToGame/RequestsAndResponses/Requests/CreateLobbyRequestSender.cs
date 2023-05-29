@@ -23,7 +23,7 @@ namespace LocalManagers.ConnectToGame.Requests
 	/// </summary>
 	public class CreateLobbyRequestSender : MonoBehaviour
 	{
-		private const string ConnectionEndpoint = "Lobby/Create";
+		private const string ConnectionEndpoint = "Lobby";
 
 		public void CreateLobby()
 		{

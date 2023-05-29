@@ -44,6 +44,7 @@ namespace Components
 
             Text text = infoPanel.transform.Find("IP_tb_text").GetComponent<Text>();
             text.text = message;
+            Debug.Log($"Information panel outputting: {message}");
 
             infoPanel.name = "InfoPanel";
 

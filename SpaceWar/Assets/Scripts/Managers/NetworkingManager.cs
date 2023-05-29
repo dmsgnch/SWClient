@@ -133,11 +133,11 @@ namespace Scripts.RegisterLoginScripts
 			where T : ResponseBase
 		{
 			using UnityWebRequest request = new UnityWebRequest($"{BaseURL}{requestForm.EndPoint}",
-				requestForm.RequestType.ToString());
-			request.SetRequestHeader("Content-Type", "application/json");
+				requestForm.RequestType.ToString());			
 
 			if (requestForm.JsonData is not null)
 			{
+				request.SetRequestHeader("Content-Type", "application/json");
 				byte[] rowData = Encoding.UTF8.GetBytes(requestForm.JsonData);
 				request.uploadHandler = new UploadHandlerRaw(rowData);
 			}
@@ -146,7 +146,7 @@ namespace Scripts.RegisterLoginScripts
 
 			if (!String.IsNullOrWhiteSpace(requestForm.Token))
 			{
-				AttachHeader(request, "Authorization", $"{requestForm.Token}");
+				AttachHeader(request, "Authorization", $"Bearer {requestForm.Token}");
 			}
 
 			yield return request.SendWebRequest();
