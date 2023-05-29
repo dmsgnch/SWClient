@@ -28,7 +28,7 @@ namespace Scripts.RegisterLoginScripts
 
 		public HubConnection HubConnection { get; set; } = null;
 
-		public async void StartHub(string endpoint)
+		private void CreateHub(string endpoint)
 		{
 			HubConnection = new HubConnectionBuilder()
 				// /hubs/lobby
@@ -38,7 +38,6 @@ namespace Scripts.RegisterLoginScripts
 				}) 
 				.WithAutomaticReconnect()
 				.Build();
-
 			HubConnection.On<string>(ClientHandlers.Lobby.Error,
 				(string errorMessage) =>
 				{
@@ -105,6 +104,14 @@ namespace Scripts.RegisterLoginScripts
 					throw new NotImplementedException();
 				});
 
+		}
+
+		public async Task StartHub(string endpoint)
+        {
+			if(HubConnection is null)
+            {
+				CreateHub(endpoint);
+			}
 			await HubConnection.StartAsync();
 		}
 

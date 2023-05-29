@@ -55,6 +55,8 @@ namespace LocalManagers.ConnectToGame
 				var lobbyView = Instantiate(lobbiesListItemPrefab.transform.GetChild(0).gameObject,
 					gameObject.transform);
 				lobbyView.transform.GetChild(0).GetComponent<Text>().text = lobby.LobbyName;
+				lobbyView.transform.GetChild(1).GetComponent<Text>().text = 
+					$"{lobby.LobbyInfos.Count}/{lobby.MaxHeroNumbers}";
 
 				var lobbyButton = lobbyView.GetComponent<Button>();
 				lobbyButton.onClick.RemoveAllListeners();
@@ -62,7 +64,7 @@ namespace LocalManagers.ConnectToGame
 				{
 					GameManager.Instance.ConnectToGameDataStore.SelectedLobbyId = lobby.Id;
 
-					GameManager.Instance.ConnectToGameDataStore.LobbyName = lobby.LobbyName.ToString();
+					GameManager.Instance.ConnectToGameDataStore.LobbyName = lobby.LobbyName;
 
 					IsSelected = true;
 				});
