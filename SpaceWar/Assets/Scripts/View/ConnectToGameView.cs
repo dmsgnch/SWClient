@@ -120,6 +120,7 @@ namespace Assets.Scripts.View
 		protected override void OnBind(ConnectToGameViewModel connectToGameViewModel)
 		{
 			_connectToGameViewModel = connectToGameViewModel;
+			_connectToGameViewModel.StopHub().Wait();
 
 			connectToGameButton.interactable = false;
 			createGameButton.interactable = false;

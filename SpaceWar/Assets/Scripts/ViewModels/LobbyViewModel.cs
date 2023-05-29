@@ -11,6 +11,7 @@ using ViewModels.Abstract;
 using Microsoft.AspNetCore.SignalR.Client;
 using Scripts.RegisterLoginScripts;
 using SharedLibrary.Contracts.Hubs;
+using System.Threading.Tasks;
 
 namespace Assets.Scripts.ViewModels
 {
@@ -19,11 +20,12 @@ namespace Assets.Scripts.ViewModels
 		public LobbyViewModel()
 		{ }
 
-		public void ExitFromLobby()
+		public async Task ExitFromLobby()
         {
 			HubConnection hubConnection = NetworkingManager.Instance.HubConnection;
 			Guid lobbyId = GameManager.Instance.LobbyDataStore.LobbyId;
-			hubConnection.InvokeAsync(ServerHandlers.Lobby.ExitFromLobby,lobbyId).Wait();
+			await hubConnection.InvokeAsync(ServerHandlers.Lobby.ExitFromLobby,lobbyId);
+
 			GameManager.Instance.ChangeState(GameState.ConnectToGame);
         }
 

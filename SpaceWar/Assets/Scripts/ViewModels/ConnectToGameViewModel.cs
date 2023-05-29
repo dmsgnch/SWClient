@@ -84,12 +84,17 @@ namespace Assets.Scripts.ViewModels
 
 		public async Task ConnectToLobby()
         {
-			//TODO: Hub start listening 
+			NetworkingManager.Instance.StartHub("/hubs/lobby");
 
 			HubConnection hubConnection = NetworkingManager.Instance.HubConnection;
 
 			Guid lobbyId = GameManager.Instance.ConnectToGameDataStore.SelectedLobbyId;
 			await hubConnection.InvokeAsync<Guid>(ServerHandlers.Lobby.ConnectToLobby,lobbyId);
+        }
+
+		public async Task StopHub()
+        {
+			await NetworkingManager.Instance.StopHub();
         }
 
 		#endregion

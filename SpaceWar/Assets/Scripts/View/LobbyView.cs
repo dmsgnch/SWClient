@@ -31,7 +31,7 @@ namespace Assets.Scripts.View
 
 		private void OnQuitButtonClick()
 		{
-			_lobbyViewModel.ExitFromLobby();
+			_lobbyViewModel.ExitFromLobby().Wait();
 		}
 
 		private void Init()
@@ -39,8 +39,6 @@ namespace Assets.Scripts.View
 			_lobbyViewModel.DefineButton(startButton, readyButton);
 
 			PlayersListController.Instance.UpdatePlayersList(_lobbyViewModel.GetSampleData());
-
-			quitButton.GetComponent<UnityEngine.UI.Button>().onClick.AddListener(_lobbyViewModel.ExitFromLobby);
 		}
 
 		protected override void OnBind(LobbyViewModel lobbyViewModel)

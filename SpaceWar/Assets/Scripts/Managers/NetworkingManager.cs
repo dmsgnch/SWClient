@@ -16,6 +16,7 @@ using LocalManagers.ConnectToGame;
 using Assets.Scripts.Components;
 using UnityEngine.Events;
 using Assets.Scripts.Managers;
+using System.Linq;
 
 namespace Scripts.RegisterLoginScripts
 {
@@ -27,7 +28,7 @@ namespace Scripts.RegisterLoginScripts
 
 		public HubConnection HubConnection { get; set; } = null;
 
-		public void StartHub(string endpoint)
+		public async void StartHub(string endpoint)
 		{
 			HubConnection = new HubConnectionBuilder()
 				// /hubs/lobby
@@ -56,7 +57,15 @@ namespace Scripts.RegisterLoginScripts
 			HubConnection.On<Lobby>(ClientHandlers.Lobby.ConnectToLobbyHandler,
 				(Lobby lobby) =>
 				{
-					PlayersListController.Instance.UpdatePlayersList(lobby);
+					if(GameManager.Instance.State is GameState.ConnectToGame)
+                    {
+						GameManager.Instance.ChangeState(GameState.Lobby);
+					}
+
+					if (GameManager.Instance.State is GameState.Lobby)
+					{
+						PlayersListController.Instance.UpdatePlayersList(lobby);
+					}
 				});
 
 			HubConnection.On<LobbyInfo>(ClientHandlers.Lobby.ChangeReadyStatus,
@@ -74,7 +83,14 @@ namespace Scripts.RegisterLoginScripts
 			HubConnection.On<Lobby>(ClientHandlers.Lobby.ExitFromLobbyHandler,
 				(Lobby lobby) =>
 				{
-					PlayersListController.Instance.UpdatePlayersList(lobby);
+                    if (lobby.LobbyInfos.Any(l => l.UserId.Equals(GameManager.Instance.MainDataStore.UserId)))
+					{
+						PlayersListController.Instance.UpdatePlayersList(lobby);
+                    }
+                    else
+					{
+						GameManager.Instance.ChangeState(GameState.ConnectToGame);
+					}
 				});
 
 			HubConnection.On<Lobby>(ClientHandlers.Lobby.ChangeLobbyDataHandler,
@@ -89,10 +105,10 @@ namespace Scripts.RegisterLoginScripts
 					throw new NotImplementedException();
 				});
 
-			HubConnection.StartAsync().Wait();
+			await HubConnection.StartAsync();
 		}
 
-		public async void StopHub()
+		public async Task StopHub()
 		{
 			if (HubConnection is not null)
 			{
