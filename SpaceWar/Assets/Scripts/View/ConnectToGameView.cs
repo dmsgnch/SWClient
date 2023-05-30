@@ -87,7 +87,6 @@ namespace Assets.Scripts.View
 		private void OnUpdateButtonClick()
 		{
 			_connectToGameViewModel.UpdateLobbiesList();
-			OnLobbiesListUpdate();
         }
 
 		public void OnLobbiesListUpdate()

@@ -12,6 +12,8 @@ using System.Threading.Tasks;
 using UnityEngine;
 using Assets.Scripts.ViewModels;
 using LocalManagers.ConnectToGame.Requests;
+using System.IO;
+using LocalManagers.ConnectToGame;
 
 namespace Assets.Scripts.LocalManagers._0_RegisterLoginRequests.ResponseHandlers
 {
@@ -29,8 +31,19 @@ namespace Assets.Scripts.LocalManagers._0_RegisterLoginRequests.ResponseHandlers
 			GameManager.Instance.ConnectToGameDataStore.Lobbies =
 				requestForm.GetResponseResult<GetAllLobbiesResponse>().Lobbies;
 		}
+        public void ProtocolErrorAction<T>(RestRequestForm<T> requestForm)
+            where T : ResponseBase
+        {
+            if (requestForm.Result?.Info is null) throw new InvalidDataException("Information strings must be not null");
 
-		public void OnRequestFinished()
+            foreach (string message in requestForm.Result?.Info)
+            {
+                InformationPanelController.Instance.CreateMessage(InformationPanelController.MessageType.ERROR, message);
+            }
+			LobbiesListController.Instance.ClearList();
+        }
+
+        public void OnRequestFinished()
 		{
 			UnityEngine.Object.Destroy(ConnectToGameViewModel.GetLobbiesListRequestObject);
 		}

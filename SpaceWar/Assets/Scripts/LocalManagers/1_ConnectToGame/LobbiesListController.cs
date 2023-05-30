@@ -12,6 +12,7 @@ using Newtonsoft.Json.Linq;
 using Assets.Scripts.Components;
 using Assets.Scripts.Managers;
 using Assets.Scripts.View;
+using Unity.VisualScripting;
 
 namespace LocalManagers.ConnectToGame
 {
@@ -44,10 +45,7 @@ namespace LocalManagers.ConnectToGame
 			GameObject lobbiesListItemPrefab,
 			Button connectToGameButton)
 		{
-			foreach (Transform child in gameObject.transform)
-			{
-				Destroy(child.gameObject);
-			}
+			ClearList();
 
 			if (lobbies is null) return;
 
@@ -73,5 +71,13 @@ namespace LocalManagers.ConnectToGame
 				});
 			}
 		}
+
+		internal void ClearList()
+        {
+            foreach (Transform child in gameObject.transform)
+            {
+                Destroy(child.gameObject);
+            }
+        }
 	}
 }
