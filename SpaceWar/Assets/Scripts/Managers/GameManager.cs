@@ -1,7 +1,8 @@
 ﻿using Assets.Scripts.Components;
+using Assets.Scripts.Components.DataStores;
 using Assets.Scripts.View;
 using Assets.Scripts.ViewModels;
-using OpenCover.Framework.Model;
+using Scripts.RegisterLoginScripts;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -20,6 +21,8 @@ namespace Assets.Scripts.Managers
 		internal MainDataStore MainDataStore { get; private set; } = new MainDataStore();
 		internal ConnectToGameDataStore ConnectToGameDataStore { get; private set; } = new ConnectToGameDataStore();
 		internal LobbyDataStore LobbyDataStore { get; private set; } = new LobbyDataStore();
+		internal SessionDataStore SessionDataStore { get; private set; } = new SessionDataStore();
+		internal HeroDataStore HeroDataStore { get; private set; } = new HeroDataStore();
 
 		public static event Action<GameState> OnBeforeStateChanged;
 		public static event Action<GameState> OnAfterStateChanged;
@@ -164,8 +167,8 @@ namespace Assets.Scripts.Managers
 		private void HandleLobby()
 		{
 			UiManager.Instance.BindAndShow(new FPSViewModel());
-			UiManager.Instance.BindAndShow(new LobbyViewModel());
 			UiManager.Instance.Hide<ConnectToGameViewModel>();
+			UiManager.Instance.BindAndShow(new LobbyViewModel());
 		}
 
 		private void HandleLoadMainGameScene()

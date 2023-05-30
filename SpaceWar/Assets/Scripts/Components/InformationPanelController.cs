@@ -24,8 +24,8 @@ namespace Components
 		public List<GameObject> InfoPanels { get; set; } = new List<GameObject>();
 
 		private GameObject _parentCanvas = null;
-        
-        public void CreateMessage(MessageType msgType, string message)
+
+		public void CreateMessage(MessageType msgType, string message)
         {
             var parentCanvas = GetParentCanvas(gameObject);
 
@@ -44,6 +44,7 @@ namespace Components
 
             Text text = infoPanel.transform.Find("IP_tb_text").GetComponent<Text>();
             text.text = message;
+            Debug.Log($"Information panel outputting: {message}");
 
             infoPanel.name = "InfoPanel";
 
@@ -79,7 +80,7 @@ namespace Components
             {
                 for (int i = 0; i < infoPanelIndex; i++)
                 {
-					InfoPanels[i].transform.localPosition += new Vector3(0, 50, 0);
+					InfoPanels[i].transform.localPosition += new Vector3(0, 100, 0);
 				}
             }
 		}
@@ -95,7 +96,7 @@ namespace Components
             }
             foreach(GameObject i in InfoPanels)
             {
-               i.transform.localPosition -= new Vector3(0,50,0);
+               i.transform.localPosition -= new Vector3(0, 100, 0);
             }
         }
 

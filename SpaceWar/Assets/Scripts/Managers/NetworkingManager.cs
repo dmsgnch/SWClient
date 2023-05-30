@@ -16,6 +16,10 @@ using LocalManagers.ConnectToGame;
 using Assets.Scripts.Components;
 using UnityEngine.Events;
 using Assets.Scripts.Managers;
+using System.Linq;
+using System.Text.Json;
+using Assets.Scripts.View;
+using SharedLibrary.Responses;
 
 namespace Scripts.RegisterLoginScripts
 {
@@ -27,72 +31,148 @@ namespace Scripts.RegisterLoginScripts
 
 		public HubConnection HubConnection { get; set; } = null;
 
-		public void StartHub(string endpoint)
+		private void CreateHub(string hubName)
 		{
 			HubConnection = new HubConnectionBuilder()
-				// /hubs/lobby
-				.WithUrl($"{BaseURL}{endpoint}", options =>
+				.WithUrl($"{BaseURL}hubs/{hubName}", options =>
 				{
 					options.AccessTokenProvider = () => Task.FromResult(GameManager.Instance.MainDataStore.AccessToken);
-				}) 
+				})
 				.WithAutomaticReconnect()
 				.Build();
 
-			HubConnection.On<string>(ClientHandlers.Lobby.Error,
-				(string errorMessage) =>
+			ConfigureHandlers(HubConnection);
+		}
+		private Lobby ConfigureHandlers(HubConnection hubConnection)
+		{
+			Lobby currentLobby1 = null;
+
+			hubConnection.On<string>(ClientHandlers.Lobby.Error, (errorMessage) =>
+			{
+				UnityMainThreadDispatcher.Instance().Enqueue(() =>
 				{
 					if (Debug.isDebugBuild) Debug.Log($"an error ocured. error message: {errorMessage}");
 					InformationPanelController.Instance.CreateMessage(InformationPanelController.MessageType.ERROR,
 						errorMessage);
 				});
+			});
 
-			HubConnection.On<string>(ClientHandlers.Lobby.DeleteLobbyHandler,
-				(string serverMessage) =>
+			hubConnection.On<string>(ClientHandlers.Lobby.DeleteLobbyHandler, (serverMessage) =>
+			{
+				UnityMainThreadDispatcher.Instance().Enqueue(() =>
 				{
-					InformationPanelController.Instance.CreateMessage(InformationPanelController.MessageType.INFO,
+                    GameManager.Instance.ChangeState(GameState.ConnectToGame);
+
+                    InformationPanelController.Instance.CreateMessage(
+						InformationPanelController.MessageType.WARNING,
 						serverMessage);
-				});
+                });
+			});
 
-			HubConnection.On<Lobby>(ClientHandlers.Lobby.ConnectToLobbyHandler,
-				(Lobby lobby) =>
+			hubConnection.On<Lobby>(ClientHandlers.Lobby.ConnectToLobbyHandler, (lobby) =>
+			{
+				UnityMainThreadDispatcher.Instance().Enqueue(() =>
 				{
-					PlayersListController.Instance.UpdatePlayersList(lobby);
-				});
+					Debug.Log($"Game state on start: {GameManager.Instance.State}");
+					if (GameManager.Instance.State is GameState.ConnectToGame)
+					{
+						Debug.Log($"State is changing to lobby");
+						GameManager.Instance.LobbyDataStore.LobbyId = lobby.Id;
+						GameManager.Instance.ChangeState(GameState.Lobby);
+					}
 
-			HubConnection.On<Lobby>(ClientHandlers.Lobby.ChangeReadyStatus,
-				(Lobby lobby) =>
+					Debug.Log($"Game state before updating: {GameManager.Instance.State}");
+					if (GameManager.Instance.State is GameState.Lobby)
+					{
+						PlayersListController.Instance.UpdatePlayersList(lobby);
+					}
+				});
+			});
+
+			hubConnection.On<Lobby>(ClientHandlers.Lobby.ExitFromLobbyHandler, (lobby) =>
+			{
+				UnityMainThreadDispatcher.Instance().Enqueue(() =>
 				{
-					PlayersListController.Instance.UpdatePlayersList(lobby);
+					if (lobby.LobbyInfos.Any(l => l.UserId.Equals(GameManager.Instance.MainDataStore.UserId)))
+					{
+						FindAnyObjectByType<LobbyView>()?.UpdatePlayersListInLobby(lobby);
+					}
+					else
+					{
+						GameManager.Instance.ChangeState(GameState.ConnectToGame);
+					}
 				});
+			});
 
-			HubConnection.On<Lobby>(ClientHandlers.Lobby.ExitFromLobbyHandler,
-				(Lobby lobby) =>
+			hubConnection.On<Lobby>(ClientHandlers.Lobby.ChangeLobbyDataHandler, (lobby) =>
+			{
+				throw new NotImplementedException();
+			});
+
+			hubConnection.On<LobbyInfo>(ClientHandlers.Lobby.ChangedColor, (info) =>
+			{
+				UnityMainThreadDispatcher.Instance().Enqueue(() =>
 				{
-					PlayersListController.Instance.UpdatePlayersList(lobby);
+					PlayersListController.Instance.ChangeColor(info);
 				});
+			});
 
-			HubConnection.On<Lobby>(ClientHandlers.Lobby.ChangeLobbyDataHandler,
-				(Lobby lobby) =>
+			hubConnection.On<LobbyInfo>(ClientHandlers.Lobby.ChangeReadyStatus, (info) =>
+			{
+				UnityMainThreadDispatcher.Instance().Enqueue(() =>
 				{
-					throw new NotImplementedException();
+                    PlayersListController.Instance.ChangeReadyStatus(info);
+					FindAnyObjectByType<LobbyView>().SetInteractableStartButton();
 				});
+			});
 
-			HubConnection.On<Lobby>(ClientHandlers.Lobby.ChangedColor,
-				(Lobby lobby) =>
-				{
-					throw new NotImplementedException();
-				});
+			hubConnection.On<Guid>(ClientHandlers.Lobby.CreatedSessionHandler, (sessionId) =>
+			{
+				throw new NotImplementedException();
+			});
 
-			HubConnection.On<Hero>(ClientHandlers.Lobby.CreatedSessionHandler,
-				(Hero hero) =>
-				{
-					throw new NotImplementedException();
-				});
+			hubConnection.On<HeroMapView>(ClientHandlers.Session.ResearchedPlanet, (heroMap) =>
+			{
+				throw new NotImplementedException();
+			});
 
-			HubConnection.StartAsync().Wait();
+			hubConnection.On<HeroMapView>(ClientHandlers.Session.ReceiveHeroMap, (heroMap) =>
+			{
+				throw new NotImplementedException();
+			});
+
+			hubConnection.On<string>(ClientHandlers.ErrorHandler, HandleStringMessageOutput());
+			hubConnection.On<string>(ClientHandlers.Session.StartedResearching, HandleStringMessageOutput());
+			hubConnection.On<string>(ClientHandlers.Session.StartedColonizingPlanet, HandleStringMessageOutput());
+			hubConnection.On<string>(ClientHandlers.Session.IterationDone, HandleStringMessageOutput());
+			hubConnection.On<string>(ClientHandlers.Session.PostResearchOrColonizeErrorHandler, HandleStringMessageOutput());
+			hubConnection.On<string>(ClientHandlers.Session.HealthCheckHandler, HandleStringMessageOutput());
+
+			return currentLobby1;
 		}
 
-		public async void StopHub()
+		private Action<string> HandleStringMessageOutput()
+		{
+			return (message) =>
+			{
+				Debug.Log(message);
+			};
+		}
+
+		public async Task StartHub(string endpoint)
+		{
+			if (HubConnection is null)
+			{
+				CreateHub(endpoint);
+			}
+
+			if (HubConnection.State is HubConnectionState.Disconnected)
+			{
+				await HubConnection.StartAsync();
+			}
+		}
+
+		public async Task StopHub()
 		{
 			if (HubConnection is not null)
 			{
@@ -118,10 +198,10 @@ namespace Scripts.RegisterLoginScripts
 		{
 			using UnityWebRequest request = new UnityWebRequest($"{BaseURL}{requestForm.EndPoint}",
 				requestForm.RequestType.ToString());
-			request.SetRequestHeader("Content-Type", "application/json");
 
 			if (requestForm.JsonData is not null)
 			{
+				request.SetRequestHeader("Content-Type", "application/json");
 				byte[] rowData = Encoding.UTF8.GetBytes(requestForm.JsonData);
 				request.uploadHandler = new UploadHandlerRaw(rowData);
 			}
@@ -130,7 +210,7 @@ namespace Scripts.RegisterLoginScripts
 
 			if (!String.IsNullOrWhiteSpace(requestForm.Token))
 			{
-				AttachHeader(request, "Authorization", $"{requestForm.Token}");
+				AttachHeader(request, "Authorization", $"Bearer {requestForm.Token}");
 			}
 
 			yield return request.SendWebRequest();

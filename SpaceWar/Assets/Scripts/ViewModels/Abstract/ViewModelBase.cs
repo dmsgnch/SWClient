@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace ViewModels.Abstract
 {
-    public abstract class ViewModelBase : MonoBehaviour, IViewModel
+    public abstract class ViewModelBase : IViewModel
     {
         public virtual void Dispose()
         {

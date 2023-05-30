@@ -11,6 +11,8 @@ using UnityEngine.Serialization;
 using Newtonsoft.Json.Linq;
 using Assets.Scripts.Components;
 using Assets.Scripts.Managers;
+using Assets.Scripts.View;
+using Unity.VisualScripting;
 
 namespace LocalManagers.ConnectToGame
 {
@@ -43,10 +45,7 @@ namespace LocalManagers.ConnectToGame
 			GameObject lobbiesListItemPrefab,
 			Button connectToGameButton)
 		{
-			foreach (Transform child in gameObject.transform)
-			{
-				Destroy(child.gameObject);
-			}
+			ClearList();
 
 			if (lobbies is null) return;
 
@@ -55,18 +54,30 @@ namespace LocalManagers.ConnectToGame
 				var lobbyView = Instantiate(lobbiesListItemPrefab.transform.GetChild(0).gameObject,
 					gameObject.transform);
 				lobbyView.transform.GetChild(0).GetComponent<Text>().text = lobby.LobbyName;
+				lobbyView.transform.GetChild(1).GetComponent<Text>().text = 
+					$"{lobby.LobbyInfos.Count}/{lobby.MaxHeroNumbers}";
 
 				var lobbyButton = lobbyView.GetComponent<Button>();
 				lobbyButton.onClick.RemoveAllListeners();
 				lobbyButton.onClick.AddListener(() =>
 				{
-					GameManager.Instance.ConnectToGameDataStore.SelectedLobbyId = lobby.Id.ToString();
+					GameManager.Instance.ConnectToGameDataStore.SelectedLobbyId = lobby.Id;
 
-					GameManager.Instance.ConnectToGameDataStore.LobbyName = lobby.LobbyName.ToString();
+					GameManager.Instance.ConnectToGameDataStore.LobbyName = lobby.LobbyName;
 
-					IsSelected = true;
+                    IsSelected = true;
+
+                    FindAnyObjectByType<ConnectToGameView>()?.SetInteractableToButtons();
 				});
 			}
 		}
+
+		internal void ClearList()
+        {
+            foreach (Transform child in gameObject.transform)
+            {
+                Destroy(child.gameObject);
+            }
+        }
 	}
 }

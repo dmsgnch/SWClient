@@ -1,3 +1,4 @@
+using Assets.View.Abstract;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,15 +20,16 @@ public class UiManager : ComponentSingleton<UiManager>
 		_screensMap = screens.ToDictionary(e => e.ModelType, e => e);
 	}
 
-	public void BindAndShow<TModel>(TModel model) where TModel : IViewModel
+	public void BindAndShow<TViewModel>(TViewModel model)
+		where TViewModel : IViewModel
 	{
-		if (_shownScreens.ContainsKey(typeof(TModel))) return;
+		if (_shownScreens.ContainsKey(typeof(TViewModel))) return;
 
-		if (_screensMap.TryGetValue(typeof(TModel), out var screen))
+		if (_screensMap.TryGetValue(typeof(TViewModel), out var screen))
 		{
 			screen.Bind(model);
 			screen.Show();
-			_shownScreens.Add(typeof(TModel), screen);
+			_shownScreens.Add(typeof(TViewModel), screen);
 		}
 	}
 

@@ -4,15 +4,14 @@ using Assets.Scripts.Managers;
 using LocalManagers.RegisterLoginRequests;
 using SharedLibrary.Models;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using UnityEngine;
-using UnityEngine.EventSystems;
-using UnityEngine.Playables;
 using UnityEngine.UI;
 using ViewModels.Abstract;
+using Microsoft.AspNetCore.SignalR.Client;
+using Scripts.RegisterLoginScripts;
+using SharedLibrary.Contracts.Hubs;
+using System.Threading.Tasks;
 
 namespace Assets.Scripts.ViewModels
 {
@@ -21,15 +20,15 @@ namespace Assets.Scripts.ViewModels
 		public LobbyViewModel()
 		{ }
 
-		public void OnStartButtonClick()
-		{
+		public async Task ExitFromLobby()
+        {
+			HubConnection hubConnection = NetworkingManager.Instance.HubConnection;
+			Guid lobbyId = GameManager.Instance.LobbyDataStore.LobbyId;
 
-		}
+			await hubConnection.InvokeAsync(ServerHandlers.Lobby.ExitFromLobby,lobbyId);
 
-		public void OnReadyButtonClick()
-		{
-
-		}
+			GameManager.Instance.ChangeState(GameState.ConnectToGame);
+        }
 
 		/// <summary>
 		/// generates sample data for testing lobby functionality
@@ -71,53 +70,6 @@ namespace Assets.Scripts.ViewModels
 		}
 
 		/// <summary>
-		/// updates list of players with new state of lobby
-		/// </summary>
-		/// <param name="playerList">
-		/// GameObject for list of players that is being updated
-		/// </param>
-		/// <param name="playerListItemPrefab">
-		/// GameObject for a prefab for item in players list
-		/// </param>
-		/// <param name="lobby">
-		/// new state of lobby
-		/// </param>
-		public void UpdatePlayersList(GameObject playerList, GameObject playerListItemPrefab, Lobby lobby)
-		{
-			//Clear players list
-			foreach (Transform child in playerList.transform)
-			{
-				Destroy(child.gameObject);
-			}
-
-			foreach (var lobbyInfo in lobby.LobbyInfos)
-			{
-				//create new player list item based on prefab
-				var lobbyView = Instantiate(playerListItemPrefab.transform.GetChild(0).gameObject,
-					playerList.transform);
-
-				lobbyView.transform.GetChild(0).GetComponent<Text>().text = lobbyInfo.User.Username;
-				GameObject toggle = lobbyView.transform.GetChild(2).gameObject;
-				if (lobbyInfo.LobbyLeader)
-				{
-					toggle.SetActive(false);
-				}
-				else
-				{
-					toggle.GetComponent<Toggle>().interactable = false;
-				}
-
-				GameObject colorButton = lobbyView.transform.GetChild(1).gameObject;
-				colorButton.GetComponent<Image>().color = Color.blue;
-
-				if (lobbyInfo.UserId == GameManager.Instance.MainDataStore.UserId)
-				{
-					colorButton.AddComponent<ColorChanger>().SetButton(colorButton.GetComponent<Button>());
-				}
-			}
-		}
-
-		/// <summary>
 		/// defines whether lobby view should have start button or ready button 
 		/// depending on whether current user is lobby leader
 		/// </summary>
@@ -141,6 +93,33 @@ namespace Assets.Scripts.ViewModels
 				readyButton.SetActive(true);
 				readyButton.GetComponent<Button>().onClick.AddListener(OnReadyButtonClick);
 			}
+		}
+
+		public void SetInteractableStartButton(GameObject startButton)
+		{
+			bool isAllReady = PlayersListController.Instance.IsAllPlayersReady();
+
+            startButton.GetComponent<Button>().interactable = isAllReady;
+		}
+
+		private async void OnStartButtonClick()
+		{
+			//TODO: Check ready status
+
+			HubConnection hubConnection = NetworkingManager.Instance.HubConnection;
+			Guid lobbyId = GameManager.Instance.LobbyDataStore.LobbyId;
+
+			await hubConnection.InvokeAsync(ServerHandlers.Lobby.CreateSession, new Lobby
+			{
+				Id = GameManager.Instance.LobbyDataStore.LobbyId
+			});
+		}
+
+		private async void OnReadyButtonClick()
+		{
+			HubConnection hubConnection = NetworkingManager.Instance.HubConnection;
+			Guid lobbyId = GameManager.Instance.LobbyDataStore.LobbyId;
+			await hubConnection.InvokeAsync(ServerHandlers.Lobby.ChangeReadyStatus,lobbyId);
 		}
 	}
 }
