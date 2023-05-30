@@ -9,6 +9,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using System.Linq;
 using Components;
+using System.Collections.Generic;
 
 namespace LocalManagers.ConnectToGame
 {
@@ -28,15 +29,19 @@ namespace LocalManagers.ConnectToGame
             
             foreach (var lobbyInfo in lobby.LobbyInfos)
 			{
-				//create new player list item based on prefab
+				//Create new player list item based on prefab
 				var lobbyView = Instantiate(playerPrefab.transform.GetChild(0).gameObject,
 					gameObject.transform);
 
+				//Set text as username
 				lobbyView.transform.GetChild(0).GetComponent<Text>().text = lobbyInfo.User.Username;
+
+				//Disactivating toggle if lobbyLeader, otherwise make readonly 
 				GameObject toggle = lobbyView.transform.GetChild(2).gameObject;
 				if (lobbyInfo.LobbyLeader)
-				{
+				{					
 					toggle.SetActive(false);
+					lobbyInfo.Ready = true;
 				}
 				else
 				{
@@ -44,11 +49,12 @@ namespace LocalManagers.ConnectToGame
 					toggle.GetComponent<Toggle>().isOn = lobbyInfo.Ready;
 				}
 
+				//Saving userId as component
 				lobbyView.AddComponent<UserIdStorage>().UserId = lobbyInfo.UserId;
 
 				GameObject colorButton = lobbyView.transform.GetChild(1).gameObject;
-				var colorParser = new ColorParser();
-				colorButton.GetComponent<Image>().color = colorParser.GetColor((ColorStatus)lobbyInfo.ColorStatus);
+				
+				colorButton.GetComponent<Image>().color = ColorParser.GetColor((ColorStatus)lobbyInfo.ColorStatus);
 				if (lobbyInfo.UserId.Equals(GameManager.Instance.MainDataStore.UserId))
 				{
 					colorButton.AddComponent<ColorChanger>();
@@ -61,8 +67,8 @@ namespace LocalManagers.ConnectToGame
 			GameObject lobbyInfoView = GetLobbyInfoView(lobbyInfo.UserId);
 
 			GameObject colorButton = lobbyInfoView.transform.GetChild(1).gameObject;
-			var colorParser = new ColorParser();
-			colorButton.GetComponent<Image>().color = colorParser.GetColor((ColorStatus)lobbyInfo.ColorStatus);
+
+			colorButton.GetComponent<Image>().color = ColorParser.GetColor((ColorStatus)lobbyInfo.ColorStatus);
 		}
 
 		public void ChangeReadyStatus(LobbyInfo lobbyInfo)
@@ -83,6 +89,7 @@ namespace LocalManagers.ConnectToGame
 		private GameObject GetLobbyInfoView(Guid userId)
 		{
 			GameObject lobbyInfoView = null;
+
 			foreach (Transform child in gameObject.transform)
 			{
 				if (child.GetComponent<UserIdStorage>().UserId.Equals(userId))

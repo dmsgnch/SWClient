@@ -44,9 +44,9 @@ namespace Scripts.RegisterLoginScripts
 
 			ConfigureHandlers(HubConnection);
 		}
-		private Lobby? ConfigureHandlers(HubConnection hubConnection)
+		private Lobby ConfigureHandlers(HubConnection hubConnection)
 		{
-			Lobby? currentLobby1 = null;
+			Lobby currentLobby1 = null;
 
 			hubConnection.On<string>(ClientHandlers.Lobby.Error, (errorMessage) =>
 			{

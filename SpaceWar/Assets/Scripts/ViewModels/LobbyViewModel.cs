@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.SignalR.Client;
 using Scripts.RegisterLoginScripts;
 using SharedLibrary.Contracts.Hubs;
 using System.Threading.Tasks;
+using UnityEditor.MemoryProfiler;
 
 namespace Assets.Scripts.ViewModels
 {
@@ -95,9 +96,17 @@ namespace Assets.Scripts.ViewModels
 			}
 		}
 
-		private void OnStartButtonClick()
+		private async void OnStartButtonClick()
 		{
+			//TODO: Check ready status
 
+			HubConnection hubConnection = NetworkingManager.Instance.HubConnection;
+			Guid lobbyId = GameManager.Instance.LobbyDataStore.LobbyId;
+
+			await hubConnection.InvokeAsync(ServerHandlers.Lobby.CreateSession, new Lobby
+			{
+				Id = GameManager.Instance.LobbyDataStore.LobbyId
+			});
 		}
 
 		private async void OnReadyButtonClick()
