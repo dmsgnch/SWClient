@@ -174,11 +174,50 @@ namespace Assets.Scripts.Managers
 		private void HandleLoadMainGameScene()
 		{
 			SceneManager.LoadScene(2);
+
+			SceneManager.sceneLoaded += OnMainGameSceneLoaded;
+		}
+
+		private void OnMainGameSceneLoaded(Scene scene, LoadSceneMode mode)
+		{
+			if (scene.buildIndex != 1) throw new DataException();
+
+#pragma warning disable CS0618 // Тип или член устарел
+			GameObject[] canvases = FindObjectsOfTypeAll(typeof(Canvas))
+				.Select(o => (o as Canvas).gameObject).ToArray();
+#pragma warning restore CS0618 // Тип или член устарел
+
+			if (canvases is null || canvases.Length.Equals(0))
+			{
+				throw new DataException();
+			}
+
+			//FPSView fpsView = canvases.FirstOrDefault(c => c.name == "cnvs_FPS")?
+			//	.GetComponent<FPSView>();
+
+			//ConnectToGameView connectToGameView = canvases.FirstOrDefault(c => c.name == "cnvs_connectToGame")?
+			//	.GetComponent<ConnectToGameView>();
+
+			HUDView lobbyView = canvases.FirstOrDefault(c => c.name == "cnvs_HUD")?
+				.GetComponent<HUDView>();
+
+			if (lobbyView is null/* || connectToGameView is null || lobbyView is null*/)
+			{
+				throw new DataException();
+			}
+
+			List<BaseScreen> screens = new List<BaseScreen>() { lobbyView };
+
+			UiManager.Instance.Init(screens);
+
+			SceneManager.sceneLoaded -= OnMainGameSceneLoaded;
+
+			ChangeState(GameState.MainGame);
 		}
 
 		private void HandleMainGame()
 		{
-
+			UiManager.Instance.BindAndShow(new HUDViewModel());
 		}
 
 		private void HandleMainGameMenu()

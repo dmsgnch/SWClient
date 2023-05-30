@@ -11,6 +11,8 @@ using System.Text;
 using System.Threading.Tasks;
 using SharedLibrary.Models;
 using System.Data;
+using UnityEngine.UI;
+using Assets.Scripts.View;
 
 namespace Assets.Scripts.LocalManagers._2_MainGameScripts.RequestsAndResponses.ResponseHandlers
 {
@@ -48,12 +50,16 @@ namespace Assets.Scripts.LocalManagers._2_MainGameScripts.RequestsAndResponses.R
 
 			#endregion
 
-			//TODO: Execute next GetHeroRequest
+			HUDView view = UnityEngine.Object.FindAnyObjectByType<HUDView>();
+
+			if (view is null) throw new InvalidOperationException();
+
+			view.UpdateHero();
 		}
 
 		public void OnRequestFinished()
 		{
-			//UnityEngine.Object.Destroy(ConnectToGameViewModel.GetLobbiesListRequestObject);
+			UnityEngine.Object.Destroy(HUDViewModel.CreateGetSessionRequestObject);
 		}
 	}
 }

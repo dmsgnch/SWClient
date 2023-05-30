@@ -23,12 +23,14 @@ namespace Assets.Scripts.LocalManagers._2_MainGameScripts.RequestsAndResponses.R
 		public void PostConnectionSuccessAction<T>(RestRequestForm<T> requestForm)
 			where T : ResponseBase
 		{
-			//TODO: Display hero and heroMapView data
+			var session = requestForm.GetResponseResult<GetHeroResponse>().Hero;
+
+			GameManager.Instance.HeroDataStore.HeroId = session.HeroId;
 		}
 
 		public void OnRequestFinished()
 		{
-			//UnityEngine.Object.Destroy(ConnectToGameViewModel.GetLobbiesListRequestObject);
+			UnityEngine.Object.Destroy(HUDViewModel.CreateGetHeroRequestObject);
 		}
 	}
 }

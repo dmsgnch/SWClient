@@ -31,11 +31,21 @@ namespace Assets.Scripts.View
 			//Reference on view model
 		}
 
+		public void UpdateSession()
+		{
+			_hudViewModel.GetSessionRequestCreate();
+		}
+
+		public void UpdateHero()
+		{
+			_hudViewModel.GetHeroRequestCreate();
+		}
+
 		private void OnEnable()
 		{
 			if (_hudViewModel is null) return;
 
-			//Functionality
+			UpdateSession();
 		}
 
 		protected override void OnBind(HUDViewModel hudViewModel)

@@ -14,6 +14,7 @@ public class OnMouseTextsValuesSetter : MonoBehaviour
     public TMP_Text usedResearchShipsText;
     public TMP_Text totalColonizationShipsText;
     public TMP_Text usedColonizationShipsText;
+
     void Start()
     {
         

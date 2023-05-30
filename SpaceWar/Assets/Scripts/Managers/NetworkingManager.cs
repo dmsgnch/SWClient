@@ -128,7 +128,12 @@ namespace Scripts.RegisterLoginScripts
 
 			hubConnection.On<Guid>(ClientHandlers.Lobby.CreatedSessionHandler, (sessionId) =>
 			{
-				throw new NotImplementedException();
+				UnityMainThreadDispatcher.Instance().Enqueue(() =>
+				{
+					GameManager.Instance.SessionDataStore.SessionId = sessionId;
+
+					GameManager.Instance.ChangeState(GameState.LoadMainGameScene);
+				});
 			});
 
 			hubConnection.On<HeroMapView>(ClientHandlers.Session.ResearchedPlanet, (heroMap) =>
