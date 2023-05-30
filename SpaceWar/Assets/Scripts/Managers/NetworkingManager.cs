@@ -61,7 +61,9 @@ namespace Scripts.RegisterLoginScripts
 			{
 				UnityMainThreadDispatcher.Instance().Enqueue(() =>
 				{
-					InformationPanelController.Instance.CreateMessage(InformationPanelController.MessageType.INFO,
+					GameManager.Instance.ChangeState(GameState.ConnectToGame);
+
+					InformationPanelController.Instance.CreateMessage(InformationPanelController.MessageType.WARNING,
 						serverMessage);
 				});
 			});

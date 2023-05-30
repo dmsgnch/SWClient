@@ -134,6 +134,8 @@ namespace Assets.Scripts.View
             SetInteractableToButtons();
 
             OnUpdateButtonClick();
+
+
 		}
 
 		protected override void OnBind(ConnectToGameViewModel connectToGameViewModel)
