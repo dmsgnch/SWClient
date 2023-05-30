@@ -37,7 +37,7 @@ namespace Assets.Scripts.ViewModels
 		{
 			GetLobbiesListRequestObject = new GameObject("GetLobbiesRequest");
 
-			var getLobbiesListRequest = GetLobbiesListRequestObject.AddComponent<GetLobbiesListRequest>();
+			var getLobbiesListRequest = GetLobbiesListRequestObject.AddComponent<GetLobbiesListRequestSender>();
 
 			getLobbiesListRequest.GetLobbyList();
 		}

@@ -80,7 +80,7 @@ namespace Components
             {
                 for (int i = 0; i < infoPanelIndex; i++)
                 {
-					InfoPanels[i].transform.localPosition += new Vector3(0, 50, 0);
+					InfoPanels[i].transform.localPosition += new Vector3(0, 100, 0);
 				}
             }
 		}
@@ -96,7 +96,7 @@ namespace Components
             }
             foreach(GameObject i in InfoPanels)
             {
-               i.transform.localPosition -= new Vector3(0,50,0);
+               i.transform.localPosition -= new Vector3(0, 100, 0);
             }
         }
 
