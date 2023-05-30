@@ -1801,7 +1801,7 @@ MonoBehaviour:
   infoIcon: {fileID: 21300000, guid: baf7058f58517714bbcd3b7bc8a02597, type: 3}
   errorIcon: {fileID: 21300000, guid: 2ccbc9613693d1e4ab540b50be88ccb9, type: 3}
   warningIcon: {fileID: 21300000, guid: 307b38010d6a4ff44823b0b4bf452101, type: 3}
-  infoPanelPrefab: {fileID: 3198058697112333065, guid: 2aabfc05576cff341942a8505cbb5d6d, type: 3}
+  infoPanelPrefab: {fileID: 2114616350185926299, guid: 2aabfc05576cff341942a8505cbb5d6d, type: 3}
 --- !u!1 &643585121
 GameObject:
   m_ObjectHideFlags: 0
