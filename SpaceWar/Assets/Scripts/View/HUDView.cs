@@ -12,17 +12,17 @@ namespace Assets.Scripts.View
 {
 	public class HUDView : AbstractScreen<HUDViewModel>
 	{
-		[SerializeField] private GameObject playerList;
-		[SerializeField] private GameObject playerListItemPrefab;
-		[SerializeField] private Button startButton;
-		[SerializeField] private GameObject readyButton;
+		[SerializeField] private GameObject pnl_onMouseTexts;
+		[SerializeField] private GameObject pnl_Turn;
+		[SerializeField] private GameObject pnl_StatusBar;
 
 		private HUDViewModel _hudViewModel;
+		//private OnMouseTextsValuesSetter
 
-		private void Awake()
+        private void Awake()
 		{
-			startButton.onClick.AddListener(OnStartButtonClick);
-
+			var pnl_onMouseTextsScript = pnl_onMouseTexts.AddComponent<OnMouseTextsValuesSetter>();
+			_hudViewModel.UpdateStatusBar(ref pnl_StatusBar);
 		}
 
 		public void OnStartButtonClick()

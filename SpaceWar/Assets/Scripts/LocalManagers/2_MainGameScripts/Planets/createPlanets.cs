@@ -3,10 +3,14 @@ using System.Collections.Generic;
 using UnityEngine;
 using SharedLibrary.Models;
 using System;
+using UnityEngine;
+using UnityEngine.UI;
+using UnityEngine.UIElements;
 
 public class createPlanets : MonoBehaviour
 {
-    public List<GameObject> planetsPrefabs;
+    [SerializeField] private List<GameObject> planetsPrefabs;
+    [SerializeField] private GameObject dropdownPrefab;
     public HeroMapView heroMapView = new HeroMapView();
     public float ConnectionsThickness;
    
@@ -32,7 +36,9 @@ public class createPlanets : MonoBehaviour
         foreach (var planet in heroMapView.Planets) {
         var index = UnityEngine.Random.Range(0, planetsPrefabs.Count);
             GameObject newPlanet = Instantiate(planetsPrefabs[index]);
-            newPlanet.AddComponent<PlanetRotation>();
+           var comp = newPlanet.AddComponent<PlanetController>();
+            comp.dropdownPrefab = dropdownPrefab;
+            comp.planetPrefab = planetsPrefabs[index];
             newPlanet.transform.SetParent(transform);
             float randomX = planet.X;
             float randomY = planet.Y;
@@ -42,10 +48,21 @@ public class createPlanets : MonoBehaviour
             newPlanet.name = planet.Id.ToString();
             newPlanet.SetActive(true);
         }
-        var res = GameObject.Find("Connections");
-        createConnections cr = res.AddComponent<createConnections>();
-        cr.connections = heroMapView.Connections;
-        cr.scale = ConnectionsThickness;
+        var cnvs_connections = GameObject.Find("cnvs_connections");
+        foreach (var connection in heroMapView.Connections)
+        {
+            var cylinder = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
+            cylinder.transform.SetParent(cnvs_connections.transform);
+            cylinder.name = connection.Id.ToString();
+            transformCylinder script = cylinder.AddComponent<transformCylinder>();
+            script.cylinder = cylinder;
+            // TODO: search by name instestead of id
+            script.fromPlanet = GameObject.Find(connection.From.Id.ToString()); ;
+            script.toPlanet = GameObject.Find(connection.To.Id.ToString()); ;
+            script.scale = ConnectionsThickness;
+
+        }
+
     }
 
     // Update is called once per frame

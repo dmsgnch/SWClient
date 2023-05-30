@@ -10,13 +10,24 @@ public class StatusBarValuesSetter : MonoBehaviour
     public TMP_Text soldiersText;
     public TMP_Text researchShipsText;
     public TMP_Text colonizationShipsText;
-    void Start()
+
+    void OnEnable()
     {
-        
+        HUD_values.OnValuesChanged += UpdateTextValues;
     }
 
-    // Update is called once per frame
-    void Update()
+    void OnDisable()
+    {
+        HUD_values.OnValuesChanged -= UpdateTextValues;
+    }
+
+    void Start()
+    {
+        // Обновляем текстовые значения при старте
+        UpdateTextValues();
+    }
+
+    void UpdateTextValues()
     {
         resourcesText.text = HUD_values.totalNumResourses.ToString();
         soldiersText.text = HUD_values.totalNumSoldiers.ToString();

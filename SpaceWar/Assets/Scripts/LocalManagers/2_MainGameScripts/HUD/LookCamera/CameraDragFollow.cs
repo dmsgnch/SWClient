@@ -4,7 +4,6 @@ public class CameraDragFollow : MonoBehaviour
 {
     public float dragSpeed = 10;
     public float maxSpeed = 5000;
-    public float dragThreshold = 30;
     public float minX = 0;
     public float maxX = 600;
     public float minY = 0;
@@ -16,7 +15,7 @@ public class CameraDragFollow : MonoBehaviour
 
     void Start()
     {
-        dragThreshold *= Screen.width / 1080;
+       
     }
         void Update()
     {

@@ -5,13 +5,14 @@ using UnityEngine;
 
 public class CameraDragSlide : MonoBehaviour
 {
-    private Vector3 previousMousePosition;
-    public float dragSpeed = 2f;
+    public float dragSpeed = 10f;
     public float minX = -1000f;
     public float maxX = 1000f;
     public float minY = -1000f;
     public float maxY = 1000f;
     public CameraMove cameraMove;
+
+    private Vector3 previousMousePosition;
 
     private void Update()
     {
@@ -19,7 +20,6 @@ public class CameraDragSlide : MonoBehaviour
         {
             previousMousePosition = Input.mousePosition;
         }
-        
 
         if (Input.GetMouseButton(0))
         {
@@ -38,6 +38,9 @@ public class CameraDragSlide : MonoBehaviour
 
             previousMousePosition = currentMousePosition;
         }
-        else cameraMove.enabled = true;
+        else
+        {
+            cameraMove.enabled = true;
+        }
     }
 }

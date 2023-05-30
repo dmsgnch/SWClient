@@ -15,5 +15,8 @@ namespace Assets.Scripts.ViewModels
 		{
             UnityEngine.Debug.Log("Message");
 		}
+		public void UpdateStatusBar(ref GameObject statusBar) {
+		
+		}
 	}
 }
