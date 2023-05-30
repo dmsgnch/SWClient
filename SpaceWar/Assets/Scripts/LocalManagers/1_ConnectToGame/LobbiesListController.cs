@@ -11,6 +11,7 @@ using UnityEngine.Serialization;
 using Newtonsoft.Json.Linq;
 using Assets.Scripts.Components;
 using Assets.Scripts.Managers;
+using Assets.Scripts.View;
 
 namespace LocalManagers.ConnectToGame
 {
@@ -66,7 +67,9 @@ namespace LocalManagers.ConnectToGame
 
 					GameManager.Instance.ConnectToGameDataStore.LobbyName = lobby.LobbyName;
 
-					IsSelected = true;
+                    IsSelected = true;
+
+                    FindAnyObjectByType<ConnectToGameView>()?.SetInteractableToButtons();
 				});
 			}
 		}

@@ -69,17 +69,17 @@ namespace Assets.Scripts.View
 		{
 			_connectToGameViewModel.OnHeroNameValueChanged(_heroIcon, _validSprite, _errorSprite, value);
 
-			_connectToGameViewModel.SetInteractableToButtons(connectToGameButton, createGameButton);
-		}
+            SetInteractableToButtons();
+        }
 
-		private void GameNameValueChanged(string value)
+        private void GameNameValueChanged(string value)
 		{
 			_connectToGameViewModel.OnLobbyNameValueChanged(_gameIcon, _validSprite, _errorSprite, value);
 
-			_connectToGameViewModel.SetInteractableToButtons(connectToGameButton, createGameButton);
-		}
+            SetInteractableToButtons();
+        }
 
-		private void OnQuitButtonClick()
+        private void OnQuitButtonClick()
 		{
 			_connectToGameViewModel.CloseApplication();
 		}
@@ -96,10 +96,15 @@ namespace Assets.Scripts.View
 				lobbiesListItemPrefab,
 				connectToGameButton);
 
-			_connectToGameViewModel.SetInteractableToButtons(connectToGameButton, createGameButton);
+			SetInteractableToButtons(); 
 		}
 
-		private void OnCreateGameButtonClick()
+		public void SetInteractableToButtons()
+		{
+            _connectToGameViewModel.SetInteractableToButtons(connectToGameButton, createGameButton);
+        }
+
+        private void OnCreateGameButtonClick()
 		{
 			//Sending CreateLobbyRequest
 			_connectToGameViewModel.CreateLobby();
@@ -114,7 +119,7 @@ namespace Assets.Scripts.View
 		{
 			if (Input.GetKey(KeyCode.Escape))
 			{
-				//TODO: Add confirm window			 
+				//TODO: Add confirm window
 
 				_connectToGameViewModel.CloseApplication();
 			}
@@ -126,10 +131,9 @@ namespace Assets.Scripts.View
 
 			await _connectToGameViewModel.StopHub();
 
-			connectToGameButton.interactable = false;
-			createGameButton.interactable = false;
+            SetInteractableToButtons();
 
-			OnUpdateButtonClick();
+            OnUpdateButtonClick();
 		}
 
 		protected override void OnBind(ConnectToGameViewModel connectToGameViewModel)
