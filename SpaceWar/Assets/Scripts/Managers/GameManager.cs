@@ -2,7 +2,6 @@
 using Assets.Scripts.Components.DataStores;
 using Assets.Scripts.View;
 using Assets.Scripts.ViewModels;
-using OpenCover.Framework.Model;
 using Scripts.RegisterLoginScripts;
 using System;
 using System.Collections;
