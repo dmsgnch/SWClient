@@ -1,4 +1,5 @@
 ﻿using Assets.Scripts.Components;
+using Assets.Scripts.Components.DataStores;
 using Assets.Scripts.View;
 using Assets.Scripts.ViewModels;
 using OpenCover.Framework.Model;
@@ -21,6 +22,8 @@ namespace Assets.Scripts.Managers
 		internal MainDataStore MainDataStore { get; private set; } = new MainDataStore();
 		internal ConnectToGameDataStore ConnectToGameDataStore { get; private set; } = new ConnectToGameDataStore();
 		internal LobbyDataStore LobbyDataStore { get; private set; } = new LobbyDataStore();
+		internal SessionDataStore SessionDataStore { get; private set; } = new SessionDataStore();
+		internal HeroDataStore HeroDataStore { get; private set; } = new HeroDataStore();
 
 		public static event Action<GameState> OnBeforeStateChanged;
 		public static event Action<GameState> OnAfterStateChanged;
