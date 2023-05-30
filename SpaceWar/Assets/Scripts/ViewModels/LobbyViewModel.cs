@@ -12,7 +12,6 @@ using Microsoft.AspNetCore.SignalR.Client;
 using Scripts.RegisterLoginScripts;
 using SharedLibrary.Contracts.Hubs;
 using System.Threading.Tasks;
-using UnityEditor.MemoryProfiler;
 
 namespace Assets.Scripts.ViewModels
 {

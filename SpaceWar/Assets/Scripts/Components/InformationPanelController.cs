@@ -24,8 +24,8 @@ namespace Components
 		public List<GameObject> InfoPanels { get; set; } = new List<GameObject>();
 
 		private GameObject _parentCanvas = null;
-        
-        public void CreateMessage(MessageType msgType, string message)
+
+		public void CreateMessage(MessageType msgType, string message)
         {
             var parentCanvas = GetParentCanvas(gameObject);
 
