@@ -148,7 +148,7 @@ namespace Assets.Scripts.ViewModels
 
 				if (!string.IsNullOrEmpty(message))
 					InformationPanelController.Instance.CreateMessage(
-							InformationPanelController.MessageType.ERROR, message);
+						InformationPanelController.MessageType.ERROR, message);
 			}
 			else
 			{

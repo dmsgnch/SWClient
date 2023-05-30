@@ -96,6 +96,13 @@ namespace Assets.Scripts.ViewModels
 			}
 		}
 
+		public void SetInteractableStartButton(GameObject startButton)
+		{
+			bool isAllReady = PlayersListController.Instance.IsAllPlayersReady();
+
+            startButton.GetComponent<Button>().interactable = isAllReady;
+		}
+
 		private async void OnStartButtonClick()
 		{
 			//TODO: Check ready status

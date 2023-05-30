@@ -38,16 +38,8 @@ namespace LocalManagers.ConnectToGame
 
 				//Disactivating toggle if lobbyLeader, otherwise make readonly 
 				GameObject toggle = lobbyView.transform.GetChild(2).gameObject;
-				if (lobbyInfo.LobbyLeader)
-				{					
-					toggle.SetActive(false);
-					lobbyInfo.Ready = true;
-				}
-				else
-				{
-					toggle.GetComponent<Toggle>().interactable = false;
-					toggle.GetComponent<Toggle>().isOn = lobbyInfo.Ready;
-				}
+                toggle.GetComponent<Toggle>().interactable = false;
+                toggle.GetComponent<Toggle>().isOn = lobbyInfo.LobbyLeader? true : lobbyInfo.Ready;
 
 				//Saving userId as component
 				lobbyView.AddComponent<UserIdStorage>().UserId = lobbyInfo.UserId;
@@ -85,6 +77,15 @@ namespace LocalManagers.ConnectToGame
 			Toggle toggle = lobbyInfoView.transform.GetChild(2).gameObject.GetComponent<Toggle>();
 			return toggle.isOn;
 		}
+
+		public bool IsAllPlayersReady()
+		{
+            foreach (Transform child in gameObject.transform)
+            {
+				if (!child.transform.GetChild(2).GetComponent<Toggle>().isOn) return false;
+            }
+			return true;
+        }
 
 		private GameObject GetLobbyInfoView(Guid userId)
 		{

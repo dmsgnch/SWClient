@@ -119,7 +119,8 @@ namespace Scripts.RegisterLoginScripts
 			{
 				UnityMainThreadDispatcher.Instance().Enqueue(() =>
 				{
-					PlayersListController.Instance.ChangeReadyStatus(info);
+                    PlayersListController.Instance.ChangeReadyStatus(info);
+					FindAnyObjectByType<LobbyView>().SetInteractableStartButton();
 				});
 			});
 
