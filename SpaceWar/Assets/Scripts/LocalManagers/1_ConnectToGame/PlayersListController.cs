@@ -39,14 +39,15 @@ namespace LocalManagers.ConnectToGame
 				//Disactivating toggle if lobbyLeader, otherwise make readonly 
 				GameObject toggle = lobbyView.transform.GetChild(2).gameObject;
                 toggle.GetComponent<Toggle>().interactable = false;
-                toggle.GetComponent<Toggle>().isOn = lobbyInfo.LobbyLeader? true : lobbyInfo.Ready;
+                toggle.GetComponent<Toggle>().isOn = lobbyInfo.Ready;
 
 				//Saving userId as component
 				lobbyView.AddComponent<UserIdStorage>().UserId = lobbyInfo.UserId;
 
 				GameObject colorButton = lobbyView.transform.GetChild(1).gameObject;
 				
-				colorButton.GetComponent<Image>().color = ColorParser.GetColor((ColorStatus)lobbyInfo.ColorStatus);
+				colorButton.GetComponent<Image>().color = ColorParser.GetColor(
+					(ColorStatus)lobbyInfo.ColorStatus);
 				if (lobbyInfo.UserId.Equals(GameManager.Instance.MainDataStore.UserId))
 				{
 					colorButton.AddComponent<ColorChanger>();
@@ -60,7 +61,8 @@ namespace LocalManagers.ConnectToGame
 
 			GameObject colorButton = lobbyInfoView.transform.GetChild(1).gameObject;
 
-			colorButton.GetComponent<Image>().color = ColorParser.GetColor((ColorStatus)lobbyInfo.ColorStatus);
+			colorButton.GetComponent<Image>().color = ColorParser.GetColor(
+				(ColorStatus)lobbyInfo.ColorStatus);
 		}
 
 		public void ChangeReadyStatus(LobbyInfo lobbyInfo)

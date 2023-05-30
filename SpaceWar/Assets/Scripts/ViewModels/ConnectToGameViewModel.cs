@@ -29,7 +29,9 @@ namespace Assets.Scripts.ViewModels
 		public static GameObject CreateLobbyRequestSenderObject { get; set; }
 
 		public ConnectToGameViewModel()
-		{ }
+		{
+			
+		}
 
 		#region Rest Requests
 
