@@ -93,7 +93,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 20.1
+  m_fontSize: 43.05
   m_fontSizeBase: 14
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -146,14 +146,14 @@ GameObject:
   - component: {fileID: 1259020614547905821}
   - component: {fileID: 1259020614547905823}
   - component: {fileID: 1259020614547905820}
-  - component: {fileID: 1259020614547905822}
+  - component: {fileID: 723718277451692430}
   m_Layer: 5
   m_Name: pnl_resourcesInfo
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1259020614547905821
 RectTransform:
   m_ObjectHideFlags: 0
@@ -172,8 +172,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.5601839}
   m_AnchorMax: {x: 0.20771006, y: 1}
-  m_AnchoredPosition: {x: -0.26464844, y: 0.000061035156}
-  m_SizeDelta: {x: -0.5292015, y: 0}
+  m_AnchoredPosition: {x: -0.26464844, y: -24.99997}
+  m_SizeDelta: {x: -0.5292015, y: -50.00006}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1259020614547905823
 CanvasRenderer:
@@ -213,7 +213,7 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &1259020614547905822
+--- !u!114 &723718277451692430
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -222,7 +222,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1259020614547905818}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bd34bfd310e4df44183d5a4c10036120, type: 3}
+  m_Script: {fileID: 11500000, guid: 615c7c0ae4295094d97737a3b7b3165a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   offsetPercentage: {x: 0, y: -0.035}
@@ -319,7 +319,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 16.6
+  m_fontSize: 34
   m_fontSizeBase: 16
   m_fontWeight: 400
   m_enableAutoSizing: 1

@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
 using ViewModels.Abstract;
+using Object = UnityEngine.Object;
 
 namespace Assets.Scripts.ViewModels
 {
@@ -16,7 +17,13 @@ namespace Assets.Scripts.ViewModels
 		public static GameObject CreateGetSessionRequestObject { get; set; }
 		public static GameObject CreateGetHeroRequestObject { get; set; }
 
-		public void UpdateStatusBar(ref GameObject statusBar) {
+		private GameObject _resourcesInfoPanel;
+		private GameObject _soldiersInfoPanel;
+        private GameObject _researchShipInfoPanel;
+        private GameObject _colonizeShipInfoPanel;
+
+
+        public void UpdateStatusBar(ref GameObject statusBar) {
 		
 		}
 
@@ -38,9 +45,61 @@ namespace Assets.Scripts.ViewModels
 			createGetHeroRequest.CreateRequest();
 		}
 
-		public void CreateResourcePanel(GameObject ResourcesInfoPanelPrefab)
+		public void CreateResourcePanel(GameObject resourcesInfoPanelPrefab, Transform parent)
 		{
-			MonoBehaviour.Instantiate(ResourcesInfoPanelPrefab);
+            if(_resourcesInfoPanel is null)
+            {
+                _resourcesInfoPanel = MonoBehaviour.Instantiate(resourcesInfoPanelPrefab, parent);
+            }
 		}
-	}
+
+		public void CreateSoldiersPanel(GameObject soldiersInfoPanelPrefab, Transform parent)
+		{
+            if(_soldiersInfoPanel is null)
+            {
+                _soldiersInfoPanel = MonoBehaviour.Instantiate(soldiersInfoPanelPrefab,parent);
+            }
+        }
+
+        public void CreateResearchShipPanel(GameObject researchShipInfoPanelPrefab, Transform parent)
+        {
+            if(_researchShipInfoPanel is null)
+            {
+                _researchShipInfoPanel = MonoBehaviour.Instantiate(researchShipInfoPanelPrefab,parent);
+            }
+        }
+
+        public void CreateColonizeShipPanel(GameObject colonizeShipInfoPanelPrefab, Transform parent)
+        {
+            if(_colonizeShipInfoPanel is null)
+            {
+                _colonizeShipInfoPanel = MonoBehaviour.Instantiate(colonizeShipInfoPanelPrefab, parent);
+            }
+        }
+
+		public void DeleteResourcePanel()
+		{
+			Object.Destroy(_resourcesInfoPanel);
+            _resourcesInfoPanel= null;
+        }
+
+        public void DeleteSoldiersPanel()
+        {
+            Object.Destroy(_soldiersInfoPanel);
+            _soldiersInfoPanel= null;
+        }
+
+        public void DeleteResearchShipPanel()
+        {
+            Object.Destroy(_researchShipInfoPanel);
+            _researchShipInfoPanel= null;
+        }
+
+        public void DeleteColonizeShipPanel()
+        {
+            Object.Destroy(_colonizeShipInfoPanel);
+            _colonizeShipInfoPanel= null;
+        }
+
+    }
 }

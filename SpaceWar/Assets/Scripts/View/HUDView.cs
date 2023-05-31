@@ -31,7 +31,7 @@ namespace Assets.Scripts.View
 		private void Awake()
 		{
 			AddHoverListeners(ResourcesPanel, OnResourcesPanelHoverEnter, OnResourcesPanelHoverExit);
-			AddHoverListeners(SoldiersPanel, OnSoldiersPanelHoverEnter, OnSoldiersPanelHoverExit);
+			//AddHoverListeners(SoldiersPanel, OnSoldiersPanelHoverEnter, OnSoldiersPanelHoverExit);
 			AddHoverListeners(ResearchShipPanel, OnResearchShipPanelHoverEnter, OnResearchShipPanelHoverExit);
 			AddHoverListeners(ColonizeShipPanel, OnColonizeShipPanelHoverEnter, OnColonizeShipPanelHoverExit);
 		}
@@ -57,42 +57,42 @@ namespace Assets.Scripts.View
 
 		#region Event handlers
 
-		private void OnResourcesPanelHoverEnter(PointerEventData eventData)
+		public void OnResourcesPanelHoverEnter(PointerEventData eventData)
 		{
-			_hudViewModel.CreateResourcePanel(ResourcesInfoPanelPrefab);
+			_hudViewModel.CreateResourcePanel(ResourcesInfoPanelPrefab,gameObject.transform);
 		}
 
-		private void OnResourcesPanelHoverExit(PointerEventData eventData)
+        public void OnResourcesPanelHoverExit(PointerEventData eventData)
 		{
 			_hudViewModel.DeleteResourcePanel();
 		}
 
-		private void OnSoldiersPanelHoverEnter(PointerEventData eventData)
-		{
-			_hudViewModel.CreateSoldiersPanel(SoldiersInfoPanelPrefab);
-		}
+        public void OnSoldiersPanelHoverEnter()
+        {
+            _hudViewModel.CreateSoldiersPanel(SoldiersInfoPanelPrefab, gameObject.transform);
+        }
 
-		private void OnSoldiersPanelHoverExit(PointerEventData eventData)
+        public void OnSoldiersPanelHoverExit()
 		{
 			_hudViewModel.DeleteSoldiersPanel();
 		}
 
-		private void OnResearchShipPanelHoverEnter(PointerEventData eventData)
+        public void OnResearchShipPanelHoverEnter(PointerEventData eventData)
 		{
-			_hudViewModel.CreateResearchShipPanel(ResearchShipInfoPanelPrefab);
+			_hudViewModel.CreateResearchShipPanel(ResearchShipInfoPanelPrefab,gameObject.transform);
 		}
 
-		private void OnResearchShipPanelHoverExit(PointerEventData eventData)
+        public void OnResearchShipPanelHoverExit(PointerEventData eventData)
 		{
 			_hudViewModel.DeleteResearchShipPanel();
 		}
 
-		private void OnColonizeShipPanelHoverEnter(PointerEventData eventData)
+        public void OnColonizeShipPanelHoverEnter(PointerEventData eventData)
 		{
-			_hudViewModel.CreateColonizeShipPanel(ColonizeShipInfoPanelPrefab);
+			_hudViewModel.CreateColonizeShipPanel(ColonizeShipInfoPanelPrefab, gameObject.transform);
 		}
 
-		private void OnColonizeShipPanelHoverExit(PointerEventData eventData)
+        public void OnColonizeShipPanelHoverExit(PointerEventData eventData)
 		{
 			_hudViewModel.DeleteColonizeShipPanel();
 		}

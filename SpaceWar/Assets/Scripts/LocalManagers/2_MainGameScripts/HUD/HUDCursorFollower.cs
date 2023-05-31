@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class HUDCursorFollower : MonoBehaviour
 {
@@ -19,9 +20,11 @@ public class HUDCursorFollower : MonoBehaviour
         Vector2 offsetPixels = new Vector2(screenWidth * offsetPercentage.x, screenHeight * offsetPercentage.y);
 
         Vector2 localCursorPos;
-        RectTransformUtility.ScreenPointToLocalPointInRectangle(rectTransform.parent as RectTransform, cursorPosition, null, out localCursorPos);
+        RectTransformUtility.ScreenPointToLocalPointInRectangle(
+            rectTransform.parent as RectTransform, cursorPosition, null, out localCursorPos);
 
-        Vector3 position = new Vector3(localCursorPos.x + (elementSize.x / 2f) + offsetPixels.x, localCursorPos.y - (elementSize.y / 2f) + offsetPixels.y, 0f);
+        Vector3 position = new Vector3(localCursorPos.x + (elementSize.x / 2f) + offsetPixels.x,
+            localCursorPos.y - (elementSize.y / 2f) + offsetPixels.y, 0f);
 
         transform.localPosition = position;
     }
