@@ -6,13 +6,9 @@ namespace Assets.Resourses.MainGame
 {
     public static class HUD_values
     {
-        // Определение делегата события
         public delegate void ValuesChangedEventHandler();
-
-        // Событие, вызываемое при изменении значений
         public static event ValuesChangedEventHandler OnValuesChanged;
 
-        // Переменные HUD_values
 
         private static int _totalNumResourses = 34524;
         public static int totalNumResourses

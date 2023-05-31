@@ -1,10 +1,12 @@
-﻿using Assets.Scripts.ViewModels;
+﻿using Assets.Resourses.MainGame;
+using Assets.Scripts.ViewModels;
 using Assets.View.Abstract;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
@@ -28,9 +30,9 @@ namespace Assets.Scripts.View
 
 		private HUDViewModel _hudViewModel;
 
-		private void Awake()
+        private void Awake()
 		{
-			AddHoverListeners(ResourcesPanel, OnResourcesPanelHoverEnter, OnResourcesPanelHoverExit);
+            AddHoverListeners(ResourcesPanel, OnResourcesPanelHoverEnter, OnResourcesPanelHoverExit);
 			//AddHoverListeners(SoldiersPanel, OnSoldiersPanelHoverEnter, OnSoldiersPanelHoverExit);
 			AddHoverListeners(ResearchShipPanel, OnResearchShipPanelHoverEnter, OnResearchShipPanelHoverExit);
 			AddHoverListeners(ColonizeShipPanel, OnColonizeShipPanelHoverEnter, OnColonizeShipPanelHoverExit);
@@ -110,14 +112,28 @@ namespace Assets.Scripts.View
 			_hudViewModel.GetHeroRequestCreate();
 		}
 
+		private void UpdateTextValues() {
+			_hudViewModel.UpdatePanelTexts(ResourcesPanel, SoldiersPanel, ResearchShipPanel, ColonizeShipPanel, pnl_Turn);
+        }
+
 		private void OnEnable()
 		{
 			if (_hudViewModel is null) return;
-
-			UpdateSession();
+            HUD_values.OnValuesChanged += UpdateTextValues;
+            UpdateSession();
 		}
 
-		protected override void OnBind(HUDViewModel hudViewModel)
+        private void OnDisable()
+        {
+            HUD_values.OnValuesChanged -= UpdateTextValues;
+        }
+
+        private void Start()
+        {
+            _hudViewModel.UpdatePanelTexts(ResourcesPanel, SoldiersPanel, ResearchShipPanel, ColonizeShipPanel, pnl_Turn);
+        }
+
+        protected override void OnBind(HUDViewModel hudViewModel)
 		{
 			_hudViewModel = hudViewModel;
 		}

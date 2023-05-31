@@ -90,7 +90,7 @@ GameObject:
   - component: {fileID: 3071834163890804269}
   - component: {fileID: 3071834163890804268}
   m_Layer: 5
-  m_Name: txt_title
+  m_Name: txt_totalSoldiersTitle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -171,7 +171,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 35.55
+  m_fontSize: 31.75
   m_fontSizeBase: 16
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -225,7 +225,7 @@ GameObject:
   - component: {fileID: 3071834164077598911}
   - component: {fileID: 3071834164077598910}
   m_Layer: 5
-  m_Name: txt_value
+  m_Name: txt_totalSoldiersValue
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -452,7 +452,7 @@ GameObject:
   - component: {fileID: 3071834164493216005}
   - component: {fileID: 3071834164493216004}
   m_Layer: 5
-  m_Name: txt_value
+  m_Name: txt_usedSoldiersValue
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -665,7 +665,7 @@ GameObject:
   - component: {fileID: 3071834164947944329}
   - component: {fileID: 3071834164947944328}
   m_Layer: 5
-  m_Name: txt_title
+  m_Name: txt_usedSoldiersTitle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -746,7 +746,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 35.85
+  m_fontSize: 32
   m_fontSizeBase: 16
   m_fontWeight: 400
   m_enableAutoSizing: 1

@@ -90,7 +90,7 @@ GameObject:
   - component: {fileID: 1178361435993800075}
   - component: {fileID: 1178361435993800068}
   m_Layer: 5
-  m_Name: txt_value
+  m_Name: txt_usedShipsValue
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -171,7 +171,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 69.3
+  m_fontSize: 61.75
   m_fontSizeBase: 14
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -317,7 +317,7 @@ GameObject:
   - component: {fileID: 1178361436263797122}
   - component: {fileID: 1178361436263797123}
   m_Layer: 5
-  m_Name: txt_title
+  m_Name: txt_usedShipsTitle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -398,7 +398,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 35.25
+  m_fontSize: 31.5
   m_fontSizeBase: 16
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -452,7 +452,7 @@ GameObject:
   - component: {fileID: 1178361436637341019}
   - component: {fileID: 1178361436637341012}
   m_Layer: 5
-  m_Name: txt_value
+  m_Name: txt_totalShipsValue
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -587,7 +587,7 @@ GameObject:
   - component: {fileID: 1178361436689349871}
   - component: {fileID: 1178361436689349864}
   m_Layer: 5
-  m_Name: txt_title
+  m_Name: txt_totalShipsTitle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -668,7 +668,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 35.55
+  m_fontSize: 31.75
   m_fontSizeBase: 16
   m_fontWeight: 400
   m_enableAutoSizing: 1

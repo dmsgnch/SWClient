@@ -47,6 +47,7 @@ public class PlanetController : MonoBehaviour
 
     void CreateActMenu()
     {
+      
         actMenu = Instantiate(dropdownPrefab);
         actMenu.name = "actMenu_" + transform.name;
         actMenu.transform.position = Input.mousePosition;

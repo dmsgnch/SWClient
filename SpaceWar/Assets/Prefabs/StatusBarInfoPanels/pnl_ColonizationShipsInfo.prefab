@@ -182,7 +182,7 @@ GameObject:
   - component: {fileID: 8387410819334031780}
   - component: {fileID: 8387410819334031781}
   m_Layer: 5
-  m_Name: txt_value
+  m_Name: txt_usedShipsValue
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -317,7 +317,7 @@ GameObject:
   - component: {fileID: 8387410819795974346}
   - component: {fileID: 8387410819795974347}
   m_Layer: 5
-  m_Name: txt_value
+  m_Name: txt_totalShipsValue
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -530,7 +530,7 @@ GameObject:
   - component: {fileID: 8387410820159947474}
   - component: {fileID: 8387410820159947475}
   m_Layer: 5
-  m_Name: txt_title
+  m_Name: txt_totalShipsTitle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -665,7 +665,7 @@ GameObject:
   - component: {fileID: 8387410820374878531}
   - component: {fileID: 8387410820374878528}
   m_Layer: 5
-  m_Name: txt_title
+  m_Name: txt_usedShipsTitle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
