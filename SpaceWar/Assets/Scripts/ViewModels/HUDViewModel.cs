@@ -16,10 +16,6 @@ namespace Assets.Scripts.ViewModels
 		public static GameObject CreateGetSessionRequestObject { get; set; }
 		public static GameObject CreateGetHeroRequestObject { get; set; }
 
-		public void CreateMessage()
-		{
-            UnityEngine.Debug.Log("Message");
-		}
 		public void UpdateStatusBar(ref GameObject statusBar) {
 		
 		}

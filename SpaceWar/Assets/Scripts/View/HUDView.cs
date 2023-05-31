@@ -21,14 +21,8 @@ namespace Assets.Scripts.View
 
         private void Awake()
 		{
-			var pnl_onMouseTextsScript = pnl_onMouseTexts.AddComponent<OnMouseTextsValuesSetter>();
-			_hudViewModel.UpdateStatusBar(ref pnl_StatusBar);
-		}
-
-		public void OnStartButtonClick()
-		{
-			_hudViewModel.CreateMessage();
-			//Reference on view model
+			//var pnl_onMouseTextsScript = pnl_onMouseTexts.AddComponent<OnMouseTextsValuesSetter>();
+			//_hudViewModel.UpdateStatusBar(ref pnl_StatusBar);
 		}
 
 		public void UpdateSession()

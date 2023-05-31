@@ -124,10 +124,8 @@ namespace Assets.Scripts.Managers
 		{
 			if(scene.buildIndex != 1) throw new DataException();
 
-#pragma warning disable CS0618 // Тип или член устарел
-            GameObject[] canvases = FindObjectsOfTypeAll(typeof(Canvas))
+            GameObject[] canvases = Resources.FindObjectsOfTypeAll(typeof(Canvas))
                 .Select(o => (o as Canvas).gameObject).ToArray();
-#pragma warning restore CS0618 // Тип или член устарел
 
 			if (canvases is null || canvases.Length.Equals(0))
 			{
@@ -180,33 +178,30 @@ namespace Assets.Scripts.Managers
 
 		private void OnMainGameSceneLoaded(Scene scene, LoadSceneMode mode)
 		{
-			if (scene.buildIndex != 1) throw new DataException();
+			if (scene.buildIndex != 2) throw new DataException("Index is not match");
 
-#pragma warning disable CS0618 // Тип или член устарел
-			GameObject[] canvases = FindObjectsOfTypeAll(typeof(Canvas))
+			GameObject[] canvases = Resources.FindObjectsOfTypeAll(typeof(Canvas))
 				.Select(o => (o as Canvas).gameObject).ToArray();
-#pragma warning restore CS0618 // Тип или член устарел
 
 			if (canvases is null || canvases.Length.Equals(0))
 			{
-				throw new DataException();
+				throw new DataException("Canvases were not found");
 			}
 
-			//FPSView fpsView = canvases.FirstOrDefault(c => c.name == "cnvs_FPS")?
-			//	.GetComponent<FPSView>();
+			FPSView fpsView = canvases.FirstOrDefault(c => c.name.Equals("cnvs_FPS"))
+				?.GetComponent<FPSView>();
 
-			//ConnectToGameView connectToGameView = canvases.FirstOrDefault(c => c.name == "cnvs_connectToGame")?
-			//	.GetComponent<ConnectToGameView>();
+			MainGameCameraView mainGameCameraView = GameObject.Find("Look_Camera")?.GetComponent<MainGameCameraView>();
 
-			HUDView lobbyView = canvases.FirstOrDefault(c => c.name == "cnvs_HUD")?
-				.GetComponent<HUDView>();
+			HUDView lobbyView = canvases.FirstOrDefault(c => c.name.Equals("cnvs_HUD"))
+				?.GetComponent<HUDView>();
 
-			if (lobbyView is null/* || connectToGameView is null || lobbyView is null*/)
+			if (fpsView is null || lobbyView is null)
 			{
-				throw new DataException();
+				throw new DataException("Views were not found");
 			}
 
-			List<BaseScreen> screens = new List<BaseScreen>() { lobbyView };
+			List<BaseScreen> screens = new List<BaseScreen>() { fpsView, lobbyView, mainGameCameraView };
 
 			UiManager.Instance.Init(screens);
 
@@ -218,6 +213,8 @@ namespace Assets.Scripts.Managers
 		private void HandleMainGame()
 		{
 			UiManager.Instance.BindAndShow(new HUDViewModel());
+			UiManager.Instance.BindAndShow(new FPSViewModel());
+			UiManager.Instance.BindAndShow(new MainGameCameraViewModel());
 		}
 
 		private void HandleMainGameMenu()

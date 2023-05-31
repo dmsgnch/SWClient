@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using SharedLibrary.Models;
 using System;
-using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.UIElements;
 
@@ -48,11 +47,11 @@ public class createPlanets : MonoBehaviour
             newPlanet.name = planet.Id.ToString();
             newPlanet.SetActive(true);
         }
-        var cnvs_connections = GameObject.Find("cnvs_connections");
+        var connectionsObject = GameObject.Find("Connections");
         foreach (var connection in heroMapView.Connections)
         {
             var cylinder = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
-            cylinder.transform.SetParent(cnvs_connections.transform);
+            cylinder.transform.SetParent(connectionsObject.transform);
             cylinder.name = connection.Id.ToString();
             transformCylinder script = cylinder.AddComponent<transformCylinder>();
             script.cylinder = cylinder;
