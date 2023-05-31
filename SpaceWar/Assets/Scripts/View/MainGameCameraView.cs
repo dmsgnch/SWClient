@@ -15,7 +15,7 @@ namespace Assets.Scripts.View
 		[SerializeField]
 		private GameObject _camera;
 
-		private bool MouseMoove { get; set; } = false;
+		private bool MouseMove { get; set; } = false;
 		private Vector3 MousePosition;
 		private float ScrollInput;
 		private float CurrentDistance;
@@ -37,22 +37,21 @@ namespace Assets.Scripts.View
 		{
 			if (_mainGameCameraViewModel is null) return;
 
-			MousePosition = Input.mousePosition;
-
-			if (Input.GetMouseButton(0))
+            if (Input.GetMouseButton(0))
 			{
-				MouseMoove = true;
+				MouseMove = true;
 
 				_mainGameCameraViewModel.OnMouseMove(_camera, ref MousePosition);
 			}
 			else
 			{
-				MouseMoove = false;
+				MouseMove = false;
 			}
 
-			if (!MouseMoove)
-			{
-				_mainGameCameraViewModel.OnBorderMove(_camera, ref MousePosition);
+			if (!MouseMove)
+            {
+                MousePosition = Input.mousePosition;
+                _mainGameCameraViewModel.OnBorderMove(_camera, ref MousePosition);
 			}
 
 			ScrollInput = Input.GetAxis("Mouse ScrollWheel");

@@ -12,8 +12,8 @@ namespace Assets.Scripts.ViewModels
 	public class MainGameCameraViewModel : ViewModelBase
 	{
 		private float edgeThreshold = 25f;
-		private float moveSpeed = 1000f;
-		private float dragSpeed = 250f;
+		private float moveSpeed = 1500f;
+		private float dragSpeed = 1f;
 		private float minX = -1000f;
 		private float maxX = 1000f;
 		private float minY = -1000f;
