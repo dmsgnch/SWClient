@@ -30,6 +30,8 @@ namespace Assets.Scripts.LocalManagers._2_MainGameScripts.RequestsAndResponses.R
 			var session = requestForm.GetResponseResult<GetSessionResponse>().Session;
 
 			GameManager.Instance.SessionDataStore.SessionId = session.Id;
+			GameManager.Instance.SessionDataStore.TurnNumber = session.TurnNumber;
+			GameManager.Instance.SessionDataStore.TurnTimeLimit = session.TurnTimeLimit;
 
 			//TODO: Move to method in viewModel
 			#region ToMethod

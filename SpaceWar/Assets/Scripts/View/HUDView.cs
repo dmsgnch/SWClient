@@ -1,5 +1,4 @@
-﻿using Assets.Resourses.MainGame;
-using Assets.Scripts.ViewModels;
+﻿using Assets.Scripts.ViewModels;
 using Assets.View.Abstract;
 using System;
 using System.Collections.Generic;
@@ -16,7 +15,7 @@ namespace Assets.Scripts.View
 {
 	public class HUDView : AbstractScreen<HUDViewModel>
 	{
-		[SerializeField] private GameObject pnl_Turn;
+		[SerializeField] private GameObject TurnPanel;
 
 		[SerializeField] private GameObject ResourcesPanel;
 		[SerializeField] private GameObject SoldiersPanel;
@@ -30,10 +29,10 @@ namespace Assets.Scripts.View
 
 		private HUDViewModel _hudViewModel;
 
-        private void Awake()
+		private void Awake()
 		{
-            AddHoverListeners(ResourcesPanel, OnResourcesPanelHoverEnter, OnResourcesPanelHoverExit);
-			//AddHoverListeners(SoldiersPanel, OnSoldiersPanelHoverEnter, OnSoldiersPanelHoverExit);
+			AddHoverListeners(ResourcesPanel, OnResourcesPanelHoverEnter, OnResourcesPanelHoverExit);
+			AddHoverListeners(SoldiersPanel, OnSoldiersPanelHoverEnter, OnSoldiersPanelHoverExit);
 			AddHoverListeners(ResearchShipPanel, OnResearchShipPanelHoverEnter, OnResearchShipPanelHoverExit);
 			AddHoverListeners(ColonizeShipPanel, OnColonizeShipPanelHoverEnter, OnColonizeShipPanelHoverExit);
 		}
@@ -61,40 +60,40 @@ namespace Assets.Scripts.View
 
 		public void OnResourcesPanelHoverEnter(PointerEventData eventData)
 		{
-			_hudViewModel.CreateResourcePanel(ResourcesInfoPanelPrefab,gameObject.transform);
+			_hudViewModel.CreateResourcePanel(ResourcesInfoPanelPrefab, gameObject.transform);
 		}
 
-        public void OnResourcesPanelHoverExit(PointerEventData eventData)
+		public void OnResourcesPanelHoverExit(PointerEventData eventData)
 		{
 			_hudViewModel.DeleteResourcePanel();
 		}
 
-        public void OnSoldiersPanelHoverEnter()
-        {
-            _hudViewModel.CreateSoldiersPanel(SoldiersInfoPanelPrefab, gameObject.transform);
-        }
+		public void OnSoldiersPanelHoverEnter(PointerEventData eventData)
+		{
+			_hudViewModel.CreateSoldiersPanel(SoldiersInfoPanelPrefab, gameObject.transform);
+		}
 
-        public void OnSoldiersPanelHoverExit()
+		public void OnSoldiersPanelHoverExit(PointerEventData eventData)
 		{
 			_hudViewModel.DeleteSoldiersPanel();
 		}
 
-        public void OnResearchShipPanelHoverEnter(PointerEventData eventData)
+		public void OnResearchShipPanelHoverEnter(PointerEventData eventData)
 		{
-			_hudViewModel.CreateResearchShipPanel(ResearchShipInfoPanelPrefab,gameObject.transform);
+			_hudViewModel.CreateResearchShipPanel(ResearchShipInfoPanelPrefab, gameObject.transform);
 		}
 
-        public void OnResearchShipPanelHoverExit(PointerEventData eventData)
+		public void OnResearchShipPanelHoverExit(PointerEventData eventData)
 		{
 			_hudViewModel.DeleteResearchShipPanel();
 		}
 
-        public void OnColonizeShipPanelHoverEnter(PointerEventData eventData)
+		public void OnColonizeShipPanelHoverEnter(PointerEventData eventData)
 		{
 			_hudViewModel.CreateColonizeShipPanel(ColonizeShipInfoPanelPrefab, gameObject.transform);
 		}
 
-        public void OnColonizeShipPanelHoverExit(PointerEventData eventData)
+		public void OnColonizeShipPanelHoverExit(PointerEventData eventData)
 		{
 			_hudViewModel.DeleteColonizeShipPanel();
 		}
@@ -112,28 +111,23 @@ namespace Assets.Scripts.View
 			_hudViewModel.GetHeroRequestCreate();
 		}
 
-		private void UpdateTextValues() {
-			_hudViewModel.UpdatePanelTexts(ResourcesPanel, SoldiersPanel, ResearchShipPanel, ColonizeShipPanel, pnl_Turn);
-        }
+		public void UpdateHUDValues()
+		{
+			_hudViewModel.UpdatePanelTexts(ResourcesPanel, SoldiersPanel, ResearchShipPanel, ColonizeShipPanel, TurnPanel);
+		}
 
 		private void OnEnable()
 		{
 			if (_hudViewModel is null) return;
-            HUD_values.OnValuesChanged += UpdateTextValues;
-            UpdateSession();
+			UpdateSession();
 		}
 
-        private void OnDisable()
-        {
-            HUD_values.OnValuesChanged -= UpdateTextValues;
-        }
+		//private void OnDisable()
+		//{
+		//    HUD_values.OnValuesChanged -= UpdateTextValues;
+		//}
 
-        private void Start()
-        {
-            _hudViewModel.UpdatePanelTexts(ResourcesPanel, SoldiersPanel, ResearchShipPanel, ColonizeShipPanel, pnl_Turn);
-        }
-
-        protected override void OnBind(HUDViewModel hudViewModel)
+		protected override void OnBind(HUDViewModel hudViewModel)
 		{
 			_hudViewModel = hudViewModel;
 		}
