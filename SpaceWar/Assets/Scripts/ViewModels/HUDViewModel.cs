@@ -37,5 +37,10 @@ namespace Assets.Scripts.ViewModels
 
 			createGetHeroRequest.CreateRequest();
 		}
+
+		public void CreateResourcePanel(GameObject ResourcesInfoPanelPrefab)
+		{
+			MonoBehaviour.Instantiate(ResourcesInfoPanelPrefab);
+		}
 	}
 }
