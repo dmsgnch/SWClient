@@ -2,6 +2,7 @@
 using Assets.Scripts.Components.DataStores;
 using Assets.Scripts.View;
 using Assets.Scripts.ViewModels;
+using LocalManagers.RegisterLoginRequests;
 using Scripts.RegisterLoginScripts;
 using System;
 using System.Collections;
@@ -115,7 +116,10 @@ namespace Assets.Scripts.Managers
 
 		private void HandleLoadConnectToGameScene()
 		{
-			SceneManager.LoadScene(1);
+			LoadingManager loadingManager = new GameObject("LoadingManager").AddComponent<LoadingManager>();
+
+			loadingManager.LoadScene(1);
+			//SceneManager.LoadScene(1);
 
 			SceneManager.sceneLoaded += OnConnectToGameSceneLoaded;
 		}
