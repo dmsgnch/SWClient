@@ -14,13 +14,13 @@ namespace Assets.Scripts.ViewModels
 		private float edgeThreshold = 25f;
 		private float moveSpeed = 1500f;
 		private float dragSpeed = 1f;
-		private float minX = -1000f;
-		private float maxX = 1000f;
-		private float minY = -1000f;
-		private float maxY = 1000f;
+		private float minX = -25f;
+		private float maxX = 750f;
+		private float minY = -25f;
+		private float maxY = 650f;
 
 		private float zoomSpeed = 250.0f;
-		private float minDistance = -900.0f;
+		private float minDistance = -450.0f;
 		private float maxDistance = -200.0f;
 
 		public void OnBorderMove(GameObject camera, ref Vector3 mousePosition)

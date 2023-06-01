@@ -31,6 +31,9 @@ namespace Assets.Scripts.LocalManagers._2_MainGameScripts.RequestsAndResponses.R
 			GameManager.Instance.HeroDataStore.HeroId = hero.HeroId;
 			GameManager.Instance.HeroDataStore.Name = hero.Name;
 			GameManager.Instance.HeroDataStore.Resourses = hero.Resourses;
+			GameManager.Instance.HeroDataStore.SoldiersLimit = hero.SoldiersLimit;
+			GameManager.Instance.HeroDataStore.AvailableSoldiers = hero.AvailableSoldiers;
+			GameManager.Instance.HeroDataStore.Resourses = hero.Resourses;
 			GameManager.Instance.HeroDataStore.ResearchShipLimit = hero.ResearchShipLimit;
 			GameManager.Instance.HeroDataStore.AvailableResearchShips = hero.AvailableResearchShips;
 			GameManager.Instance.HeroDataStore.ColonizationShipLimit = hero.ColonizationShipLimit;

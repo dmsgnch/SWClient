@@ -25,7 +25,7 @@ namespace Assets.Scripts.View
 
 		void Start()
 		{
-			CurrentDistance = _camera.transform.position.z;
+			CurrentDistance = -400;
 		}
 
 		public void Awake()
