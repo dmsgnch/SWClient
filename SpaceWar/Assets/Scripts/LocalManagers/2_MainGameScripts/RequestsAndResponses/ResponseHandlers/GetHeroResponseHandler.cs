@@ -42,10 +42,10 @@ namespace Assets.Scripts.LocalManagers._2_MainGameScripts.RequestsAndResponses.R
 			if (hudView is null) throw new InvalidOperationException();
 			hudView.UpdateHUDValues();
 
-			//PlanetsView planetsView = UnityEngine.Object.FindAnyObjectByType<PlanetsView>();
-            //if (planetsView is null) throw new InvalidOperationException();
-			//planetsView.GeneratePlanetsWithConnections();
-        }
+			PlanetsView planetsView = UnityEngine.Object.FindAnyObjectByType<PlanetsView>();
+			if (planetsView is null) throw new InvalidOperationException();
+			planetsView.GeneratePlanetsWithConnections();
+		}
 
 		public void OnRequestFinished()
 		{

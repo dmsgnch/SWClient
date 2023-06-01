@@ -27,13 +27,12 @@ namespace Assets.Scripts.View
         private void Awake()
         {
             if (_viewModel is null) return;
-            GeneratePlanetsWithConnections();
+
         }
 
         protected override void OnBind(PlanetsViewModel model)
         {
             _viewModel = model;
-            GeneratePlanetsWithConnections();
         }
     }
 }

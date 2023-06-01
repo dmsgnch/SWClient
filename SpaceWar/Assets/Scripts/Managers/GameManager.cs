@@ -189,7 +189,7 @@ namespace Assets.Scripts.Managers
 
             PlanetsView planetsView = GameObject.Find("cnvs_mainGame")?.GetComponent<PlanetsView>();
 
-            if (fpsView is null || hudView is null || planetsView is null)
+            if (fpsView is null || hudView is null || planetsView is null || mainGameCameraView is null)
 			{
 				throw new DataException("Views were not found");
 			}
@@ -214,7 +214,8 @@ namespace Assets.Scripts.Managers
 			UiManager.Instance.BindAndShow(new HUDViewModel());
 			UiManager.Instance.BindAndShow(new FPSViewModel());
 			UiManager.Instance.BindAndShow(new MainGameCameraViewModel());
-		}
+            UiManager.Instance.BindAndShow(new PlanetsViewModel());
+        }
 
 		private void HandleMainGameMenu()
 		{

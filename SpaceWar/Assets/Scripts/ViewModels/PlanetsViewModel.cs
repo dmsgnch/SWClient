@@ -12,11 +12,13 @@ namespace Assets.Scripts.ViewModels
 {
     public class PlanetsViewModel : ViewModelBase
     {
-        private const float ConnectionThickness = 6f;
+        private const float ConnectionThickness = 0.5f;
 
         public GameObject[] GeneratePlanets(GameObject[] planetPrefabs,GameObject planetsParent,
             GameObject dropdownPrefab)
         {
+            ClearChildren(planetsParent);
+
             HeroMapView heroMapView = GameManager.Instance.HeroDataStore.HeroMapView;
 
             List<GameObject> planets = new List<GameObject>();
@@ -43,6 +45,8 @@ namespace Assets.Scripts.ViewModels
 
         public void CreateConnections(GameObject connectionsParent, GameObject[] planets)
         {
+            ClearChildren(connectionsParent);
+
             HeroMapView heroMapView = GameManager.Instance.HeroDataStore.HeroMapView;
 
             foreach (var connection in heroMapView.Connections)
@@ -50,21 +54,29 @@ namespace Assets.Scripts.ViewModels
                 var cylinder = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
                 cylinder.transform.SetParent(connectionsParent.transform);
                 cylinder.name = connection.Id.ToString();
-                var connectionController = cylinder.AddComponent<ConnectionController>();
                 // TODO: search by name instestead of id
                 GameObject fromPlanet = planets.FirstOrDefault(
-                    p => p.name.Equals(connection.From.Id.ToString()));
+                    p => p.name.Equals(connection.FromPlanetId.ToString()));
                 GameObject toPlanet = planets.FirstOrDefault(
-                    p => p.name.Equals(connection.To.Id.ToString()));
+                    p => p.name.Equals(connection.ToPlanetId.ToString()));
                 
                 if(fromPlanet is null || toPlanet is null)
                 {
                     throw new ArgumentException("connection contains planet that does not exist!");
                 }
 
+                var connectionController = cylinder.AddComponent<ConnectionController>();
                 connectionController.fromPlanet = fromPlanet;
                 connectionController.toPlanet = toPlanet;
                 connectionController.thickness = ConnectionThickness;
+            }
+        }
+
+        private void ClearChildren(GameObject parent)
+        {
+            foreach (GameObject child in parent.transform)
+            {
+                UnityEngine.Object.Destroy(child);
             }
         }
     }
