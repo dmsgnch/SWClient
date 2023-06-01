@@ -59,7 +59,7 @@ namespace Assets.Scripts.ViewModels
 
                 GameObject newIcon = MonoBehaviour.Instantiate(iconPrefab);
                 newIcon.transform.SetParent(planetGO.transform);
-                newIcon.transform.GetComponent<Image>().color = GameManager.Instance.HeroDataStore.Color;
+                newIcon.transform.GetComponent<SpriteRenderer>().color = GameManager.Instance.HeroDataStore.Color;
 				var text = newIcon.transform.GetComponentInChildren<TMP_Text>();
 				if (text is not null) text.text = planet.IterationsLeftToNextStatus.ToString();				
 
@@ -171,7 +171,7 @@ namespace Assets.Scripts.ViewModels
 				case PlanetStatus.Researching:
 					return planetsIconsPrefabs.First(p => p.name.Equals("ResearchingIcon"));
                 case PlanetStatus.Researched:
-                    return planetsIconsPrefabs.First(p => p.name.Equals("ResearchedIcon"));
+                    return planetsIconsPrefabs.First(p => p.name.Equals("ColonizingIcon"));
                 case PlanetStatus.HasStation:
                     return planetsIconsPrefabs.First(p => p.name.Equals("HasStationIcon"));
                 case PlanetStatus.Colonizing:
