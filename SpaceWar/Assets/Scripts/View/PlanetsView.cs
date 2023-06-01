@@ -11,7 +11,7 @@ namespace Assets.Scripts.View
 {
     public class PlanetsView : AbstractScreen<PlanetsViewModel>
     {
-        private PlanetsViewModel _viewModel;
+        private PlanetsViewModel _planetsViewModel;
 
         [SerializeField] private GameObject planetsParent;
         [SerializeField] private GameObject connectionsParent;
@@ -20,19 +20,24 @@ namespace Assets.Scripts.View
 
         public void GeneratePlanetsWithConnections()
         {
-            GameObject[] planets = _viewModel.GeneratePlanets(planetPrefabs, planetsParent, dropdownPrefab);
-            _viewModel.CreateConnections(connectionsParent, planets);
+            GameObject[] planets = _planetsViewModel.GeneratePlanets(planetPrefabs, planetsParent, dropdownPrefab);
+            _planetsViewModel.CreateConnections(connectionsParent, planets);
         }
 
         private void Awake()
         {
-            if (_viewModel is null) return;
+            if (_planetsViewModel is null) return;
 
         }
 
+        public GameObject GetPrefabByPlanetType()
+        {
+            return _planetsViewModel.GetPrefabByPlanetType();
+		}
+
         protected override void OnBind(PlanetsViewModel model)
         {
-            _viewModel = model;
+			_planetsViewModel = model;
         }
     }
 }

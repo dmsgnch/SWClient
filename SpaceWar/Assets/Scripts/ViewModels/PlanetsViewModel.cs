@@ -2,6 +2,7 @@
 using SharedLibrary.Models;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Numerics;
 using System.Text;
@@ -12,111 +13,158 @@ using Vector3 = UnityEngine.Vector3;
 
 namespace Assets.Scripts.ViewModels
 {
-    public class PlanetsViewModel : ViewModelBase
-    {
-        private const float ConnectionThickness = 0.5f;
+	public class PlanetsViewModel : ViewModelBase
+	{
+		private const float ConnectionThickness = 0.5f;
 
-        public GameObject[] GeneratePlanets(GameObject[] planetPrefabs,GameObject planetsParent,
-            GameObject dropdownPrefab)
-        {
-            ClearChildren(planetsParent);
+		public GameObject[] GeneratePlanets(GameObject[] planetPrefabs, GameObject planetsParent,
+			GameObject dropdownPrefab)
+		{
+			ClearChildren(planetsParent);
 
-            HeroMapView heroMapView = GameManager.Instance.HeroDataStore.HeroMapView;
+			HeroMapView heroMapView = GameManager.Instance.HeroDataStore.HeroMapView;
 
-            List<GameObject> planets = new List<GameObject>();
-            foreach (var planet in heroMapView.Planets)
-            {
-                var index = UnityEngine.Random.Range(0, planetPrefabs.Length);
-                GameObject newPlanet = MonoBehaviour.Instantiate(planetPrefabs[index]);
-                newPlanet.transform.SetParent(planetsParent.transform);
-                newPlanet.transform.localScale = GetPlanetScale(planet.Size);
+			List<GameObject> planets = new List<GameObject>();
+			foreach (var planet in heroMapView.Planets)
+			{
+				//Create Object for planet and image
+				var planetGO = new GameObject(planet.PlanetName);
+				planetGO.transform.SetParent(planetsParent.transform);
 
-                var planetController = newPlanet.AddComponent<PlanetController>();
-                planetController.dropdownPrefab = dropdownPrefab;
+				//Create planet
+				GameObject prefab = GetPrefabByPlanetType(planet.PlanetType, planetPrefabs);
+				GameObject newPlanet = MonoBehaviour.Instantiate(prefab);
 
-                planetController.planetPrefab = planetPrefabs[index];
-                var planetPosition = new Vector3(planet.X, planet.Y, 0);
-                newPlanet.transform.position = planetPosition;
-                // TODO: use planet name instead of id
-                newPlanet.name = planet.Id.ToString();
-                newPlanet.SetActive(true);
+				newPlanet.transform.SetParent(planetGO.transform);
+				newPlanet.transform.localScale = GetPlanetScale(planet.Size);
 
-                planets.Add(newPlanet);
-            }
+				var planetController = newPlanet.AddComponent<PlanetController>();
+				planetController.dropdownPrefab = dropdownPrefab;
 
-            return planets.ToArray();
-        }
+				var planetPosition = new Vector3(planet.X, planet.Y, 0);
+				newPlanet.transform.position = planetPosition;
 
-        public void CreateConnections(GameObject connectionsParent, GameObject[] planets)
-        {
-            ClearChildren(connectionsParent);
+				newPlanet.name = planet.Id.ToString();
+				newPlanet.SetActive(true);
 
-            HeroMapView heroMapView = GameManager.Instance.HeroDataStore.HeroMapView;
+				planets.Add(newPlanet);
 
-            foreach (var connection in heroMapView.Connections)
-            {
-                var cylinder = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
-                cylinder.transform.SetParent(connectionsParent.transform);
-                cylinder.name = connection.Id.ToString();
-                // TODO: search by name instestead of id
-                GameObject fromPlanet = planets.FirstOrDefault(
-                    p => p.name.Equals(connection.FromPlanetId.ToString()));
-                GameObject toPlanet = planets.FirstOrDefault(
-                    p => p.name.Equals(connection.ToPlanetId.ToString()));
-                
-                if(fromPlanet is null || toPlanet is null)
-                {
-                    throw new ArgumentException("connection contains planet that does not exist!");
-                }
+				//Create image
 
-                var connectionController = cylinder.AddComponent<ConnectionController>();
-                connectionController.fromPlanet = fromPlanet;
-                connectionController.toPlanet = toPlanet;
-                connectionController.thickness = ConnectionThickness;
-            }
-        }
+				GameObject iconPrefab = GetPrefabByPlanetStatus(planet.Status, planetIconsPrefabs);
 
-        private Vector3 GetPlanetScale(int size)
-        {
-            size = Math.Clamp(size, 1, 25);
-            float scale;
-            if(size >= 1 && size <= 5)
-            {
-                scale = 15f;
-            }
-            else if (size >= 6 && size <= 10)
-            {
-                scale = 20f;
-            }
-            else if (size >= 11 && size <= 15)
-            {
-                scale = 25f;
-            }
-            else if (size >= 16 && size <= 20)
-            {
-                scale = 30f;
-            }
-            else
-            {
-                scale = 35f;
-            }
+				GameObject newIcon = MonoBehaviour.Instantiate(iconPrefab);
+				newIcon.transform.SetParent(planetGO.transform);
 
-            return new Vector3(scale,scale,scale);
-        }
+				//TODO: Change color of prefab using GameManager Store
+			}
 
-        private Planet GetPlanetById(Guid id)
-        {
-            List<Planet> planets = GameManager.Instance.HeroDataStore.HeroMapView.Planets;
-            return planets.FirstOrDefault(p => p.Id.Equals(id))??
-                throw new ArgumentException($"planet with id {id} was not found");
-        }
+			return planets.ToArray();
+		}
 
-        private void ClearChildren(GameObject parent)
-        {
-            foreach (GameObject child in parent.transform)
-            {
-                UnityEngine.Object.Destroy(child);
-            }
-        }
-    }
+		public void CreateConnections(GameObject connectionsParent, GameObject[] planets)
+		{
+			ClearChildren(connectionsParent);
+
+			HeroMapView heroMapView = GameManager.Instance.HeroDataStore.HeroMapView;
+
+			foreach (var connection in heroMapView.Connections)
+			{
+				var cylinder = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
+				cylinder.transform.SetParent(connectionsParent.transform);
+				cylinder.name = connection.Id.ToString();
+				// TODO: search by name instestead of id
+				GameObject fromPlanet = planets.FirstOrDefault(
+					p => p.name.Equals(connection.FromPlanetId.ToString()));
+				GameObject toPlanet = planets.FirstOrDefault(
+					p => p.name.Equals(connection.ToPlanetId.ToString()));
+
+				if (fromPlanet is null || toPlanet is null)
+				{
+					throw new ArgumentException("connection contains planet that does not exist!");
+				}
+
+				var connectionController = cylinder.AddComponent<ConnectionController>();
+				connectionController.fromPlanet = fromPlanet;
+				connectionController.toPlanet = toPlanet;
+				connectionController.thickness = ConnectionThickness;
+			}
+		}
+
+		private Vector3 GetPlanetScale(int size)
+		{
+			size = Math.Clamp(size, 1, 25);
+			float scale;
+			if (size >= 1 && size <= 5)
+			{
+				scale = 15f;
+			}
+			else if (size >= 6 && size <= 10)
+			{
+				scale = 20f;
+			}
+			else if (size >= 11 && size <= 15)
+			{
+				scale = 25f;
+			}
+			else if (size >= 16 && size <= 20)
+			{
+				scale = 30f;
+			}
+			else
+			{
+				scale = 35f;
+			}
+
+			return new Vector3(scale, scale, scale);
+		}
+
+		private Planet GetPlanetById(Guid id)
+		{
+			List<Planet> planets = GameManager.Instance.HeroDataStore.HeroMapView.Planets;
+			return planets.FirstOrDefault(p => p.Id.Equals(id)) ??
+				throw new ArgumentException($"planet with id {id} was not found");
+		}
+
+		private void ClearChildren(GameObject parent)
+		{
+			foreach (GameObject child in parent.transform)
+			{
+				UnityEngine.Object.Destroy(child);
+			}
+		}
+
+		public GameObject GetPrefabByPlanetType(PlanetType planetType, GameObject[] prefabs)
+		{
+			switch (planetType)
+			{
+				case PlanetType.Mars:
+					return prefabs.First(p => p.name.Equals("Mars"));
+				case PlanetType.Moon:
+					return prefabs.First(p => p.name.Equals("Moon"));
+				case PlanetType.Mercury:
+					return prefabs.First(p => p.name.Equals("Mercury"));
+				case PlanetType.Jupiter:
+					return prefabs.First(p => p.name.Equals("Jupiter"));
+				case PlanetType.Sun:
+					return prefabs.First(p => p.name.Equals("Sun"));
+				case PlanetType.Earth:
+					return prefabs.First(p => p.name.Equals("Earth"));
+				case PlanetType.Venus:
+					return prefabs.First(p => p.name.Equals("Venus"));
+				default:
+					throw new DataException();
+			}
+		}
+
+		private GameObject GetPrefabByPlanetStatus(PlanetStatus planetStatus, GameObject[] planetsIconsPrefabs)
+		{
+			switch (planetStatus)
+			{
+				case PlanetStatus.Researching:
+					return planetsIconsPrefabs.First(p => p.name.Equals("SomeName"));
+			}
+
+		}
+	}
 }

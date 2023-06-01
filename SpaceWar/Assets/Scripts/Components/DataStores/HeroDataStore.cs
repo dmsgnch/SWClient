@@ -26,5 +26,7 @@ namespace Assets.Scripts.Components.DataStores
 		public byte AvailableColonizationShips { get; set; } = 0;
 		public Color Color { get; set; }
 		public HeroMapView HeroMapView { get; set; }
+
+		public Guid CapitalPlanetId { get; set; }
 	}
 }
