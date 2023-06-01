@@ -60,8 +60,8 @@ namespace Assets.Scripts.ViewModels
                 GameObject newIcon = MonoBehaviour.Instantiate(iconPrefab);
                 newIcon.transform.SetParent(planetGO.transform);
                 newIcon.transform.GetComponent<Image>().color = GameManager.Instance.HeroDataStore.Color;
-				newIcon.transform.GetChild(0)?.GetComponent<TMP_Text>().text = planet.IterationsLeftToNextStatus.ToString();
-				
+				var text = newIcon.transform.GetComponentInChildren<TMP_Text>();
+				if (text is not null) text.text = planet.IterationsLeftToNextStatus.ToString();				
 
                 newIcon.transform.position = newPlanet.transform.position + (Vector3.up * 30);
             }
