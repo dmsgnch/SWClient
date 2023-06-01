@@ -1,4 +1,5 @@
-﻿using Assets.Scripts.ViewModels;
+﻿using Assets.Scripts.Managers;
+using Assets.Scripts.ViewModels;
 using Assets.View.Abstract;
 using System;
 using System.Collections.Generic;
@@ -17,10 +18,11 @@ namespace Assets.Scripts.View
         [SerializeField] private GameObject connectionsParent;
         [SerializeField] private GameObject dropdownPrefab;
         [SerializeField] private GameObject[] planetPrefabs;
+        [SerializeField] private GameObject[] planetIconsPrefabs;
 
         public void GeneratePlanetsWithConnections()
         {
-            GameObject[] planets = _planetsViewModel.GeneratePlanets(planetPrefabs, planetsParent, dropdownPrefab);
+            GameObject[] planets = _planetsViewModel.GeneratePlanets(planetPrefabs, planetsParent, dropdownPrefab, planetIconsPrefabs);
             _planetsViewModel.CreateConnections(connectionsParent, planets);
         }
 
@@ -30,10 +32,10 @@ namespace Assets.Scripts.View
 
         }
 
-        public GameObject GetPrefabByPlanetType()
-        {
-            return _planetsViewModel.GetPrefabByPlanetType();
-		}
+  //      public GameObject GetPrefabByPlanetType()
+  //      {
+  //          return _planetsViewModel.GetPrefabByPlanetType();
+		//}
 
         protected override void OnBind(PlanetsViewModel model)
         {

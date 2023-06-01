@@ -7,7 +7,10 @@ using System.Linq;
 using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
+using TMPro;
+using UnityEditor;
 using UnityEngine;
+using UnityEngine.UI;
 using ViewModels.Abstract;
 using Vector3 = UnityEngine.Vector3;
 
@@ -18,7 +21,7 @@ namespace Assets.Scripts.ViewModels
 		private const float ConnectionThickness = 0.5f;
 
 		public GameObject[] GeneratePlanets(GameObject[] planetPrefabs, GameObject planetsParent,
-			GameObject dropdownPrefab)
+			GameObject dropdownPrefab, GameObject[] planetIconsPrefabs)
 		{
 			ClearChildren(planetsParent);
 
@@ -49,15 +52,19 @@ namespace Assets.Scripts.ViewModels
 
 				planets.Add(newPlanet);
 
-				//Create image
+                //Create image
 
-				GameObject iconPrefab = GetPrefabByPlanetStatus(planet.Status, planetIconsPrefabs);
+                GameObject iconPrefab = GetPrefabByPlanetStatus((PlanetStatus)Enum.ToObject(typeof(PlanetStatus), planet.Status), planetIconsPrefabs);
+				if (iconPrefab is null) continue;	
 
-				GameObject newIcon = MonoBehaviour.Instantiate(iconPrefab);
-				newIcon.transform.SetParent(planetGO.transform);
+                GameObject newIcon = MonoBehaviour.Instantiate(iconPrefab);
+                newIcon.transform.SetParent(planetGO.transform);
+                newIcon.transform.GetComponent<Image>().color = GameManager.Instance.HeroDataStore.Color;
+				newIcon.transform.GetChild(0)?.GetComponent<TMP_Text>().text = planet.IterationsLeftToNextStatus.ToString();
+				
 
-				//TODO: Change color of prefab using GameManager Store
-			}
+                newIcon.transform.position = newPlanet.transform.position + (Vector3.up * 30);
+            }
 
 			return planets.ToArray();
 		}
@@ -162,8 +169,20 @@ namespace Assets.Scripts.ViewModels
 			switch (planetStatus)
 			{
 				case PlanetStatus.Researching:
-					return planetsIconsPrefabs.First(p => p.name.Equals("SomeName"));
-			}
+					return planetsIconsPrefabs.First(p => p.name.Equals("ResearchingIcon"));
+                case PlanetStatus.Researched:
+                    return planetsIconsPrefabs.First(p => p.name.Equals("ResearchedIcon"));
+                case PlanetStatus.HasStation:
+                    return planetsIconsPrefabs.First(p => p.name.Equals("HasStationIcon"));
+                case PlanetStatus.Colonizing:
+                    return planetsIconsPrefabs.First(p => p.name.Equals("ColonizingIcon"));
+                case PlanetStatus.Colonized:
+                    return planetsIconsPrefabs.First(p => p.name.Equals("ColonizedIcon"));
+                case PlanetStatus.Known:
+					return null;
+                default:
+                    throw new DataException();
+            }
 
 		}
 	}
