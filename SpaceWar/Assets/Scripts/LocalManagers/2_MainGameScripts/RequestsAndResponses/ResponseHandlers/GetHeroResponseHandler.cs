@@ -25,25 +25,27 @@ namespace Assets.Scripts.LocalManagers._2_MainGameScripts.RequestsAndResponses.R
 		public void PostConnectionSuccessAction<T>(RestRequestForm<T> requestForm)
 			where T : ResponseBase
 		{
-			var session = requestForm.GetResponseResult<GetHeroResponse>().Hero;
+			GetHeroResponse response = requestForm.GetResponseResult<GetHeroResponse>();
+            Hero hero = response.Hero;
 
+			GameManager.Instance.HeroDataStore.HeroId = hero.HeroId;
+			GameManager.Instance.HeroDataStore.Name = hero.Name;
+			GameManager.Instance.HeroDataStore.Resourses = hero.Resourses;
+			GameManager.Instance.HeroDataStore.ResearchShipLimit = hero.ResearchShipLimit;
+			GameManager.Instance.HeroDataStore.AvailableResearchShips = hero.AvailableResearchShips;
+			GameManager.Instance.HeroDataStore.ColonizationShipLimit = hero.ColonizationShipLimit;
+			GameManager.Instance.HeroDataStore.AvailableColonizationShips = hero.AvailableColonizationShips;
+			GameManager.Instance.HeroDataStore.Color = ColorParser.GetColor((ColorStatus)hero.ColorStatus);
+			GameManager.Instance.HeroDataStore.HeroMapView = response.Map;
 
-			GameManager.Instance.HeroDataStore.HeroId = session.HeroId;
-			GameManager.Instance.HeroDataStore.Name = session.Name;
-			GameManager.Instance.HeroDataStore.Resourses = session.Resourses;
-			GameManager.Instance.HeroDataStore.ResearchShipLimit = session.ResearchShipLimit;
-			GameManager.Instance.HeroDataStore.AvailableResearchShips = session.AvailableResearchShips;
-			GameManager.Instance.HeroDataStore.ColonizationShipLimit = session.ColonizationShipLimit;
-			GameManager.Instance.HeroDataStore.AvailableColonizationShips = session.AvailableColonizationShips;
-			GameManager.Instance.HeroDataStore.Color = ColorParser.GetColor((ColorStatus)session.ColorStatus);
-						
+            HUDView hudView = UnityEngine.Object.FindAnyObjectByType<HUDView>();
+			if (hudView is null) throw new InvalidOperationException();
+			hudView.UpdateHUDValues();
 
-			HUDView view = UnityEngine.Object.FindAnyObjectByType<HUDView>();
-
-			if (view is null) throw new InvalidOperationException();
-
-			view.UpdateHUDValues();
-		}
+			//PlanetsView planetsView = UnityEngine.Object.FindAnyObjectByType<PlanetsView>();
+            //if (planetsView is null) throw new InvalidOperationException();
+			//planetsView.GeneratePlanetsWithConnections();
+        }
 
 		public void OnRequestFinished()
 		{

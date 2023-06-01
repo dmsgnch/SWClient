@@ -1,4 +1,5 @@
 ﻿using Assets.Scripts.Components.Abstract;
+using SharedLibrary.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,5 +25,6 @@ namespace Assets.Scripts.Components.DataStores
 		public byte ColonizationShipLimit { get; set; }
 		public byte AvailableColonizationShips { get; set; } = 0;
 		public Color Color { get; set; }
+		public HeroMapView HeroMapView { get; set; }
 	}
 }

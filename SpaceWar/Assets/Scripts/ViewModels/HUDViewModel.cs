@@ -53,7 +53,7 @@ namespace Assets.Scripts.ViewModels
 		{
 			CreateGetHeroRequestObject = new GameObject("GetHeroRequest");
 
-			var createGetHeroRequest = CreateGetHeroRequestObject.AddComponent<GetHeroRequestCreator>();
+			var createGetHeroRequest = CreateGetHeroRequestObject.AddComponent<GetHeroRequest>();
 
 			createGetHeroRequest.CreateRequest();
 		}

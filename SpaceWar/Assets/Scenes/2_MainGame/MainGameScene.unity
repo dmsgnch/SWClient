@@ -608,6 +608,7 @@ GameObject:
   - component: {fileID: 222742996}
   - component: {fileID: 222742995}
   - component: {fileID: 222742994}
+  - component: {fileID: 222742997}
   m_Layer: 0
   m_Name: cnvs_mainGame
   m_TagString: Untagged
@@ -698,6 +699,29 @@ Canvas:
   m_SortingLayerID: 0
   m_SortingOrder: 0
   m_TargetDisplay: 0
+--- !u!114 &222742997
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 222742992}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 76bf70b42192971439b75fcccbdceacd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  planetsParent: {fileID: 1430277822}
+  connectionsParent: {fileID: 1301584073}
+  dropdownPrefab: {fileID: 7509516478028689195, guid: 45e297ca21b25ee4dbb6581e8cf0763f, type: 3}
+  planetPrefabs:
+  - {fileID: 2371065684879110567, guid: 54ee9447f75ece94ab974359fc955790, type: 3}
+  - {fileID: 2810235516688826659, guid: d5f9dd7874785f04ebf97fb81eb47690, type: 3}
+  - {fileID: 9164348739927886117, guid: 63e7598fc6f76554e91b590108cbaa9c, type: 3}
+  - {fileID: 9027466112740532577, guid: 34926f232a0208c48b117404801b4850, type: 3}
+  - {fileID: 4556296298675213611, guid: f211243791ce8404583773e54fc73ea3, type: 3}
+  - {fileID: 6218076201357157367, guid: df000786c15c3e14e92e989bb75bc5e6, type: 3}
+  - {fileID: 6205676447205969418, guid: 27bcd4c77b7ee1c49a52df7ec1f93671, type: 3}
 --- !u!1 &223981704
 GameObject:
   m_ObjectHideFlags: 0
@@ -1716,7 +1740,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 983347300}
-  - component: {fileID: 983347301}
   m_Layer: 5
   m_Name: pnl_onMouseTexts(Delete)
   m_TagString: Untagged
@@ -1744,18 +1767,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0.0024414062, y: 0.03857422}
   m_SizeDelta: {x: -0.0049438, y: 0.07718086}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &983347301
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 983347299}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bdc3989ef7639dd4db151b02f2956202, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &1016782741
 GameObject:
   m_ObjectHideFlags: 0
@@ -2216,7 +2227,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1430277823}
-  - component: {fileID: 1430277824}
   m_Layer: 0
   m_Name: Planets
   m_TagString: Untagged
@@ -2239,28 +2249,6 @@ Transform:
   m_Father: {fileID: 222742993}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1430277824
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1430277822}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e28d948b4c7d12e41b4bb0be8975bb8b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  planetsPrefabs:
-  - {fileID: 2371065684879110567, guid: 54ee9447f75ece94ab974359fc955790, type: 3}
-  - {fileID: 2810235516688826659, guid: d5f9dd7874785f04ebf97fb81eb47690, type: 3}
-  - {fileID: 9164348739927886117, guid: 63e7598fc6f76554e91b590108cbaa9c, type: 3}
-  - {fileID: 9027466112740532577, guid: 34926f232a0208c48b117404801b4850, type: 3}
-  - {fileID: 4556296298675213611, guid: f211243791ce8404583773e54fc73ea3, type: 3}
-  - {fileID: 6218076201357157367, guid: df000786c15c3e14e92e989bb75bc5e6, type: 3}
-  - {fileID: 6205676447205969418, guid: 27bcd4c77b7ee1c49a52df7ec1f93671, type: 3}
-  dropdownPrefab: {fileID: 7509516478028689195, guid: 45e297ca21b25ee4dbb6581e8cf0763f, type: 3}
-  ConnectionsThickness: 4
 --- !u!1 &1473761134
 GameObject:
   m_ObjectHideFlags: 0

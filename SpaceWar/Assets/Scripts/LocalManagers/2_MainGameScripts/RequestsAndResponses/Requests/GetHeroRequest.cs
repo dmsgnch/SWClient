@@ -15,7 +15,7 @@ using UnityEngine;
 
 namespace Assets.Scripts.LocalManagers._2_MainGameScripts.RequestsAndResponses.Requests
 {
-	public class GetHeroRequestCreator : MonoBehaviour
+	public class GetHeroRequest : MonoBehaviour
 	{
 		private const string ConnectionEndpoint = "hero/";
 
