@@ -3,10 +3,12 @@ using SharedLibrary.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
 using ViewModels.Abstract;
+using Vector3 = UnityEngine.Vector3;
 
 namespace Assets.Scripts.ViewModels
 {
@@ -26,17 +28,19 @@ namespace Assets.Scripts.ViewModels
             {
                 var index = UnityEngine.Random.Range(0, planetPrefabs.Length);
                 GameObject newPlanet = MonoBehaviour.Instantiate(planetPrefabs[index]);
+                newPlanet.transform.SetParent(planetsParent.transform);
+                newPlanet.transform.localScale = GetPlanetScale(planet.Size);
+
                 var planetController = newPlanet.AddComponent<PlanetController>();
                 planetController.dropdownPrefab = dropdownPrefab;
+
                 planetController.planetPrefab = planetPrefabs[index];
-                newPlanet.transform.SetParent(planetsParent.transform);
-                float randomX = planet.X;
-                float randomY = planet.Y;
-                Vector3 randomPosition = new Vector3(randomX, randomY, 0);
-                newPlanet.transform.position = randomPosition;
+                var planetPosition = new Vector3(planet.X, planet.Y, 0);
+                newPlanet.transform.position = planetPosition;
                 // TODO: use planet name instead of id
                 newPlanet.name = planet.Id.ToString();
                 newPlanet.SetActive(true);
+
                 planets.Add(newPlanet);
             }
 
@@ -70,6 +74,41 @@ namespace Assets.Scripts.ViewModels
                 connectionController.toPlanet = toPlanet;
                 connectionController.thickness = ConnectionThickness;
             }
+        }
+
+        private Vector3 GetPlanetScale(int size)
+        {
+            size = Math.Clamp(size, 1, 25);
+            float scale;
+            if(size >= 1 && size <= 5)
+            {
+                scale = 15f;
+            }
+            else if (size >= 6 && size <= 10)
+            {
+                scale = 20f;
+            }
+            else if (size >= 11 && size <= 15)
+            {
+                scale = 25f;
+            }
+            else if (size >= 16 && size <= 20)
+            {
+                scale = 30f;
+            }
+            else
+            {
+                scale = 35f;
+            }
+
+            return new Vector3(scale,scale,scale);
+        }
+
+        private Planet GetPlanetById(Guid id)
+        {
+            List<Planet> planets = GameManager.Instance.HeroDataStore.HeroMapView.Planets;
+            return planets.FirstOrDefault(p => p.Id.Equals(id))??
+                throw new ArgumentException($"planet with id {id} was not found");
         }
 
         private void ClearChildren(GameObject parent)
