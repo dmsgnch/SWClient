@@ -9,6 +9,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using SharedLibrary.Models;
+using Assets.Scripts.View;
 
 namespace Assets.Scripts.LocalManagers._2_MainGameScripts.RequestsAndResponses.ResponseHandlers
 {
@@ -23,9 +25,26 @@ namespace Assets.Scripts.LocalManagers._2_MainGameScripts.RequestsAndResponses.R
 		public void PostConnectionSuccessAction<T>(RestRequestForm<T> requestForm)
 			where T : ResponseBase
 		{
-			var session = requestForm.GetResponseResult<GetHeroResponse>().Hero;
+			GetHeroResponse response = requestForm.GetResponseResult<GetHeroResponse>();
+            Hero hero = response.Hero;
 
-			GameManager.Instance.HeroDataStore.HeroId = session.HeroId;
+			GameManager.Instance.HeroDataStore.HeroId = hero.HeroId;
+			GameManager.Instance.HeroDataStore.Name = hero.Name;
+			GameManager.Instance.HeroDataStore.Resourses = hero.Resourses;
+			GameManager.Instance.HeroDataStore.ResearchShipLimit = hero.ResearchShipLimit;
+			GameManager.Instance.HeroDataStore.AvailableResearchShips = hero.AvailableResearchShips;
+			GameManager.Instance.HeroDataStore.ColonizationShipLimit = hero.ColonizationShipLimit;
+			GameManager.Instance.HeroDataStore.AvailableColonizationShips = hero.AvailableColonizationShips;
+			GameManager.Instance.HeroDataStore.Color = ColorParser.GetColor((ColorStatus)hero.ColorStatus);
+			GameManager.Instance.HeroDataStore.HeroMapView = response.Map;
+
+            HUDView hudView = UnityEngine.Object.FindAnyObjectByType<HUDView>();
+			if (hudView is null) throw new InvalidOperationException();
+			hudView.UpdateHUDValues();
+
+			PlanetsView planetsView = UnityEngine.Object.FindAnyObjectByType<PlanetsView>();
+			if (planetsView is null) throw new InvalidOperationException();
+			planetsView.GeneratePlanetsWithConnections();
 		}
 
 		public void OnRequestFinished()

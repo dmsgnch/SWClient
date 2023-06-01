@@ -1,4 +1,3 @@
-using Assets.Resourses.MainGame;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -47,6 +46,7 @@ public class PlanetController : MonoBehaviour
 
     void CreateActMenu()
     {
+      
         actMenu = Instantiate(dropdownPrefab);
         actMenu.name = "actMenu_" + transform.name;
         actMenu.transform.position = Input.mousePosition;

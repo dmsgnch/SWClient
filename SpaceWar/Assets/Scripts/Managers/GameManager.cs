@@ -180,28 +180,27 @@ namespace Assets.Scripts.Managers
 		{
 			if (scene.buildIndex != 2) throw new DataException("Index is not match");
 
-			GameObject[] canvases = Resources.FindObjectsOfTypeAll(typeof(Canvas))
-				.Select(o => (o as Canvas).gameObject).ToArray();
+			FPSView fpsView = GameObject.Find("cnvs_FPS")?.GetComponent<FPSView>();
 
-			if (canvases is null || canvases.Length.Equals(0))
-			{
-				throw new DataException("Canvases were not found");
-			}
+            MainGameCameraView mainGameCameraView = 
+				GameObject.Find("Look_Camera")?.GetComponent<MainGameCameraView>();
 
-			FPSView fpsView = canvases.FirstOrDefault(c => c.name.Equals("cnvs_FPS"))
-				?.GetComponent<FPSView>();
+			HUDView hudView = GameObject.Find("cnvs_HUD")?.GetComponent<HUDView>();
 
-			MainGameCameraView mainGameCameraView = GameObject.Find("Look_Camera")?.GetComponent<MainGameCameraView>();
+            PlanetsView planetsView = GameObject.Find("cnvs_mainGame")?.GetComponent<PlanetsView>();
 
-			HUDView lobbyView = canvases.FirstOrDefault(c => c.name.Equals("cnvs_HUD"))
-				?.GetComponent<HUDView>();
-
-			if (fpsView is null || lobbyView is null)
+            if (fpsView is null || hudView is null || planetsView is null || mainGameCameraView is null)
 			{
 				throw new DataException("Views were not found");
 			}
 
-			List<BaseScreen> screens = new List<BaseScreen>() { fpsView, lobbyView, mainGameCameraView };
+			List<BaseScreen> screens = new List<BaseScreen>() 
+			{
+				fpsView, 
+				hudView, 
+				mainGameCameraView, 
+				planetsView 
+			};
 
 			UiManager.Instance.Init(screens);
 
@@ -215,7 +214,8 @@ namespace Assets.Scripts.Managers
 			UiManager.Instance.BindAndShow(new HUDViewModel());
 			UiManager.Instance.BindAndShow(new FPSViewModel());
 			UiManager.Instance.BindAndShow(new MainGameCameraViewModel());
-		}
+            UiManager.Instance.BindAndShow(new PlanetsViewModel());
+        }
 
 		private void HandleMainGameMenu()
 		{
