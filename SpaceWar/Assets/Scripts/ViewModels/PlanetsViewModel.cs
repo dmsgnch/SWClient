@@ -54,7 +54,7 @@ namespace Assets.Scripts.ViewModels
 
                 //Create image
 
-                GameObject iconPrefab = GetPrefabByPlanetStatus((PlanetStatus)Enum.ToObject(typeof(PlanetStatus), planet.Status), planetIconsPrefabs);
+                GameObject iconPrefab = GetPrefabByPlanetStatus((PlanetStatus)planet.Status, planetIconsPrefabs);
 				if (iconPrefab is null) continue;	
 
                 GameObject newIcon = MonoBehaviour.Instantiate(iconPrefab);
