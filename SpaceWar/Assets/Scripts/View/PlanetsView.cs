@@ -22,11 +22,12 @@ namespace Assets.Scripts.View
         [SerializeField] private GameObject ButtonPrefab;
         [SerializeField] private GameObject textPrefab;
         [SerializeField] private GameObject healthbarPrefab;
+        [SerializeField] private GameObject PlanetInfoPanelPrefab;
 
         public void GeneratePlanetsWithConnections()
         {
             GameObject[] planets = _planetsViewModel.GeneratePlanets(planetPrefabs, 
-                planetsParent, dropdownPrefab, planetIconsPrefabs, ButtonPrefab, textPrefab, healthbarPrefab);
+                planetsParent, PlanetInfoPanelPrefab, planetIconsPrefabs, ButtonPrefab, textPrefab, healthbarPrefab);
             _planetsViewModel.CreateConnections(connectionsParent, planets);
         }
 

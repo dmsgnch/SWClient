@@ -22,7 +22,7 @@ namespace Assets.Scripts.ViewModels
 		private const float ConnectionThickness = 0.5f;
 
 		public GameObject[] GeneratePlanets(GameObject[] planetPrefabs, GameObject planetsParent,
-			GameObject dropdownPrefab, GameObject[] planetIconsPrefabs, GameObject buttonPrefab,
+			GameObject planetInfoPanelPrefab, GameObject[] planetIconsPrefabs, GameObject buttonPrefab,
 			GameObject planetTextPrefab, GameObject healthbarPrefab)
 		{
 			ClearChildren(planetsParent);
@@ -37,7 +37,7 @@ namespace Assets.Scripts.ViewModels
 				planetGO.transform.SetParent(planetsParent.transform);
 
 				//Create planet
-				GameObject newPlanet = CreatePlanet(planet, planetPrefabs, planetGO, buttonPrefab); 
+				GameObject newPlanet = CreatePlanet(planet, planetPrefabs, planetGO, buttonPrefab, planetInfoPanelPrefab); 
 				planets.Add(newPlanet);
 
                 //Create image
@@ -90,7 +90,7 @@ namespace Assets.Scripts.ViewModels
 
         #region PlanetBuilding
         private GameObject CreatePlanet(Planet planet, GameObject[] planetPrefabs,GameObject planetParent,
-			GameObject buttonPrefab)
+			GameObject buttonPrefab, GameObject planetInfoPlanetPrefab)
         {
             GameObject prefab = GetPlanetPrefabByPlanetType(planet.PlanetType, planetPrefabs);
             GameObject newPlanet = Object.Instantiate(prefab);
@@ -101,6 +101,7 @@ namespace Assets.Scripts.ViewModels
             var planetController = newPlanet.AddComponent<PlanetController>();
             planetController.planet = planet;
             planetController.ButtonPrefab = buttonPrefab;
+			planetController.InfoPanelPrefab = planetInfoPlanetPrefab;
 
             var planetPosition = new Vector3(planet.X, planet.Y, 0);
             newPlanet.transform.position = planetPosition;

@@ -37,37 +37,7 @@ public class PlanetController : MonoBehaviour
     {
         if (createNewObject && InfoPanel is null)
         {
-           InfoPanel = Instantiate(InfoPanelPrefab, GameObject.Find("cnvs_HUD").transform);
-            InfoPanel.transform.position = Input.mousePosition;
-           for(int i = 0; i < InfoPanel.transform.childCount; i++) {
-                var child = InfoPanel.transform.GetChild(i);
-                switch (child.name) {
-                    case "Name":
-                child.transform.GetComponentsInChildren<TMP_Text>()
-                            .FirstOrDefault(t => t.name == "Value").text = planet.PlanetName;
-                        break;
-                    case "Fortification":
-                        child.transform.GetComponentsInChildren<TMP_Text>()
-                            .FirstOrDefault(t => t.name == "Value").text = planet.FortificationLevel.ToString();
-                        break;
-                    case "Size":
-                        child.transform.GetComponentsInChildren<TMP_Text>()
-                            .FirstOrDefault(t => t.name == "Value").text = planet.Size.ToString();
-                        break;
-                    case "Status":
-                        child.transform.GetComponentsInChildren<TMP_Text>()
-                            .FirstOrDefault(t => t.name == "Value").text = planet.Status.ToString();
-                        break;
-                    case "Resources":
-                        child.transform.GetComponentsInChildren<TMP_Text>()
-                            .FirstOrDefault(t => t.name == "Value").text = "res-type";
-                        break;
-                    default:
-                        throw new DataException();
-                }
-                 
-
-            }
+            CreateInfoPanel();
             createNewObject = false;
         }
 
@@ -91,6 +61,40 @@ public class PlanetController : MonoBehaviour
             }
         }
     }
+
+    void CreateInfoPanel() {
+        InfoPanel = Instantiate(InfoPanelPrefab, GameObject.Find("cnvs_HUD").transform);
+        InfoPanel.transform.position = Input.mousePosition;
+        for (int i = 0; i < InfoPanel.transform.childCount; i++)
+        {
+            var child = InfoPanel.transform.GetChild(i);
+            switch (child.name)
+            {
+                case "Name":
+                    child.transform.GetComponentsInChildren<TMP_Text>()
+                                .FirstOrDefault(t => t.name == "Value").text = planet.PlanetName;
+                    break;
+                case "Fortification":
+                    child.transform.GetComponentsInChildren<TMP_Text>()
+                        .FirstOrDefault(t => t.name == "Value").text = planet.FortificationLevel.ToString();
+                    break;
+                case "Size":
+                    child.transform.GetComponentsInChildren<TMP_Text>()
+                        .FirstOrDefault(t => t.name == "Value").text = planet.Size.ToString();
+                    break;
+                case "Status":
+                    child.transform.GetComponentsInChildren<TMP_Text>()
+                        .FirstOrDefault(t => t.name == "Value").text = planet.Status.ToString();
+                    break;
+                case "Resources":
+                    child.transform.GetComponentsInChildren<TMP_Text>()
+                        .FirstOrDefault(t => t.name == "Value").text = "res-type";
+                    break;
+                default:
+                    throw new DataException();
+            }
+        }
+        }
 
     void CreateActMenu()
     {
