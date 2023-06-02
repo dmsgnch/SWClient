@@ -713,7 +713,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   planetsParent: {fileID: 1007345832}
   connectionsParent: {fileID: 1301584073}
-  dropdownPrefab: {fileID: 7509516478028689195, guid: 45e297ca21b25ee4dbb6581e8cf0763f, type: 3}
   planetPrefabs:
   - {fileID: 2371065684879110567, guid: 54ee9447f75ece94ab974359fc955790, type: 3}
   - {fileID: 2810235516688826659, guid: d5f9dd7874785f04ebf97fb81eb47690, type: 3}
@@ -732,6 +731,7 @@ MonoBehaviour:
   - {fileID: 6549255697755675864, guid: 0eccaa2bcbd2ab54e9eb6b0fe46c475c, type: 3}
   - {fileID: 2664042884964684233, guid: 8b48ae359da1b7b468dc91b2a66678b1, type: 3}
   ButtonPrefab: {fileID: 4030092777037534551, guid: 74a69d20f30ad6e409cec72aa0dafa9a, type: 3}
+  InfoPanelPrefab: {fileID: 4559352972712032284, guid: 1a8daeb38a4042b4d93f79c569edf018, type: 3}
 --- !u!1 &223981704
 GameObject:
   m_ObjectHideFlags: 0
