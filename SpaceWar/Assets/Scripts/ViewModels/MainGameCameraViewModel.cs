@@ -11,7 +11,7 @@ namespace Assets.Scripts.ViewModels
 {
 	public class MainGameCameraViewModel : ViewModelBase
 	{
-		private float edgeThreshold = 25f;
+		private float edgeThreshold = 1f;
 		private float moveSpeed = 1500f;
 		private float dragSpeed = 1f;
 		private float minX = -25f;
@@ -38,7 +38,7 @@ namespace Assets.Scripts.ViewModels
 			{
 				camera.transform.Translate(Vector3.down * moveSpeed * Time.deltaTime);
 			}
-			else if (camera.transform.position.y < maxY && mousePosition.y > Screen.height - edgeThreshold - 50 && !IsCursorOverUI())
+			else if (camera.transform.position.y < maxY && mousePosition.y > Screen.height - edgeThreshold && !IsCursorOverUI())
 			{
 				camera.transform.Translate(Vector3.up * moveSpeed * Time.deltaTime);
 			}

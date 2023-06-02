@@ -27,8 +27,9 @@ namespace Assets.Scripts.View
 		[SerializeField] private GameObject SoldiersInfoPanelPrefab;
 		[SerializeField] private GameObject ResearchShipInfoPanelPrefab;
 		[SerializeField] private GameObject ColonizeShipInfoPanelPrefab;
+		
 
-		private HUDViewModel _hudViewModel;
+        private HUDViewModel _hudViewModel;
 
 		private void Awake()
 		{

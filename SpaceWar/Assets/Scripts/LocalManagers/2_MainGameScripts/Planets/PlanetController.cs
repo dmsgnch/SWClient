@@ -1,5 +1,8 @@
+using Assets.Scripts.Managers;
+using SharedLibrary.Models;
 using System.Collections;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using TMPro;
 using Unity.VisualScripting;
@@ -9,17 +12,19 @@ using UnityEngine.UI;
 public class PlanetController : MonoBehaviour
 {
     public float rotationSpeed = 10f;
-    public GameObject dropdownPrefab;
+    public Planet planet;
     public GameObject planetPrefab;
+    public GameObject ButtonPrefab;
 
     private GameObject actMenu;
     private MonoBehaviour[] scripts;
     private bool actMenuEnabled = false;
-
+    private List<string> actionNames;
 
     private void Start()
     {
         scripts = GameObject.Find("Look_Camera").GetComponents<MonoBehaviour>();
+        actMenu = GameObject.Find("ActionsMenu");
     }
     private void Update()
     {
@@ -46,20 +51,77 @@ public class PlanetController : MonoBehaviour
 
     void CreateActMenu()
     {
-      
-        actMenu = Instantiate(dropdownPrefab);
-        actMenu.name = "actMenu_" + transform.name;
         actMenu.transform.position = Input.mousePosition;
-        actMenu.transform.SetParent(GameObject.Find("cnvs_HUD").transform);
-        actMenu.transform.Find("bt_research").GetComponent<Button>().onClick.AddListener(onResearchClick);
-        actMenu.transform.Find("bt_colonize").GetComponent<Button>().onClick.AddListener(onColonizeClick);
-        actMenuEnabled = true;
+
+
+		for (int i = 0; i < actionNames.Count; i++)
+		{
+			GameObject buttonObject = Instantiate(ButtonPrefab, actMenu.transform);
+			Button button = buttonObject.GetComponent<Button>();
+
+			TMP_Text buttonText = buttonObject.GetComponentInChildren<TMP_Text>();
+			buttonText.text = actionNames[i];
+
+			buttonObject.transform.localPosition = new Vector3(0f, -i * 30f, 0f);
+
+			int index = i;
+			button.onClick.AddListener(() => OnActionButtonClick(index));
+		}
+		actMenuEnabled = true;
         DisableScripts();
+    }
+
+    private List<string> GetButtonsListByPlanetStatus()
+    {
+		switch ((PlanetStatus)planet.Status)
+		{
+			case PlanetStatus.Known:
+				return new List<string> { "Research" };
+			case PlanetStatus.Researching:
+				return new List<string> { };
+			case PlanetStatus.Researched:
+				return new List<string> { "Colonize" };
+			case PlanetStatus.HasStation:
+				return new List<string> { };
+			case PlanetStatus.Colonizing:
+				return new List<string> { };
+			case PlanetStatus.Colonized:
+                return GetButtonsListByPlanetFortification();
+
+			case PlanetStatus.Enemy:
+                //TODO: Add checking for availability
+				return new List<string> { "Attack" };
+			default:
+				throw new DataException();
+		}
+	}
+
+	private List<string> GetButtonsListByPlanetFortification() 
+    {
+		switch ((Fortification)planet.FortificationLevel)
+		{
+			case Fortification.None:
+				return new List<string> { "Build low level fortifications (R)" };
+			case Fortification.Weak:
+				return new List<string> { "Build medium level fortifications (R)" };
+			case Fortification.Reliable:
+				return new List<string> { "Build total fortifications (R)" };
+			case Fortification.Strong:
+				return new List<string> { };
+			default:
+				throw new DataException();
+		}
+	}
+
+	private void OnActionButtonClick(int index)
+    {
+        Debug.Log($"Action button \"{actionNames[index]}\" clicked on planet \"{gameObject.name}\"");
+        DestroyActMenu();
     }
 
     void DestroyActMenu()
     {
-        Destroy(actMenu);
+        actMenu.transform.DestroyChildren();
         EnableScripts();
         actMenuEnabled = false;
     }
@@ -78,17 +140,6 @@ public class PlanetController : MonoBehaviour
         {
             script.enabled = true;
         }
-    }
-
-    void onResearchClick()
-    {
-        Debug.Log($"Button \"research\" clicked on planet \"{transform.name}\"");
-        DestroyActMenu();
-    }
-    void onColonizeClick()
-    {
-        Debug.Log($"Button \"colonize\" clicked on planet \"{transform.name}\"");
-        DestroyActMenu();
     }
 
 }
