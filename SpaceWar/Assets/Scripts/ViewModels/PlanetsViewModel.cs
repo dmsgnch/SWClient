@@ -61,9 +61,13 @@ namespace Assets.Scripts.ViewModels
                 newIcon.transform.SetParent(planetGO.transform);
                 newIcon.transform.GetComponent<SpriteRenderer>().color = GameManager.Instance.HeroDataStore.Color;
 				var text = newIcon.transform.GetComponentInChildren<TMP_Text>();
-				if (text is not null) text.text = planet.IterationsLeftToNextStatus.ToString();				
+				if (text is not null) text.text = planet.IterationsLeftToNextStatus.ToString();
 
-                newIcon.transform.position = newPlanet.transform.position + (Vector3.up * 30);
+                MeshRenderer sphereRenderer = newPlanet.GetComponent<MeshRenderer>();
+                Vector3 size = sphereRenderer.bounds.size;
+                float diameter = Mathf.Max(size.x, size.y, size.z);
+                newIcon.transform.position = newPlanet.transform.position + (Vector3.up * diameter/1.5f);
+				newIcon.transform.localScale = Vector3.one * diameter / 10;
             }
 
 			return planets.ToArray();
@@ -171,7 +175,7 @@ namespace Assets.Scripts.ViewModels
 				case PlanetStatus.Researching:
 					return planetsIconsPrefabs.First(p => p.name.Equals("ResearchingIcon"));
                 case PlanetStatus.Researched:
-                    return planetsIconsPrefabs.First(p => p.name.Equals("ColonizingIcon"));
+                    return planetsIconsPrefabs.First(p => p.name.Equals("ResearchedIcon"));
                 case PlanetStatus.HasStation:
                     return planetsIconsPrefabs.First(p => p.name.Equals("HasStationIcon"));
                 case PlanetStatus.Colonizing:
