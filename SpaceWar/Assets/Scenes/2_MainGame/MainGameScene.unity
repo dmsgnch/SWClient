@@ -731,6 +731,7 @@ MonoBehaviour:
   - {fileID: 8259747695014396821, guid: d7d4d96420a658e49bba257c8941ef28, type: 3}
   - {fileID: 6549255697755675864, guid: 0eccaa2bcbd2ab54e9eb6b0fe46c475c, type: 3}
   - {fileID: 2664042884964684233, guid: 8b48ae359da1b7b468dc91b2a66678b1, type: 3}
+  ButtonPrefab: {fileID: 4030092777037534551, guid: 74a69d20f30ad6e409cec72aa0dafa9a, type: 3}
 --- !u!1 &223981704
 GameObject:
   m_ObjectHideFlags: 0
@@ -1750,7 +1751,7 @@ GameObject:
   m_Component:
   - component: {fileID: 983347300}
   m_Layer: 5
-  m_Name: pnl_onMouseTexts(Delete)
+  m_Name: ActionsMenu
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

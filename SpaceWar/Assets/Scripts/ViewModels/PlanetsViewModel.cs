@@ -21,7 +21,7 @@ namespace Assets.Scripts.ViewModels
 		private const float ConnectionThickness = 0.5f;
 
 		public GameObject[] GeneratePlanets(GameObject[] planetPrefabs, GameObject planetsParent,
-			GameObject dropdownPrefab, GameObject[] planetIconsPrefabs)
+			GameObject dropdownPrefab, GameObject[] planetIconsPrefabs, GameObject buttonPrefab)
 		{
 			ClearChildren(planetsParent);
 
@@ -42,7 +42,8 @@ namespace Assets.Scripts.ViewModels
 				newPlanet.transform.localScale = GetPlanetScale(planet.Size);
 
 				var planetController = newPlanet.AddComponent<PlanetController>();
-				planetController.dropdownPrefab = dropdownPrefab;
+				planetController.planet = planet;
+				planetController.ButtonPrefab = buttonPrefab;
 
 				var planetPosition = new Vector3(planet.X, planet.Y, 0);
 				newPlanet.transform.position = planetPosition;
