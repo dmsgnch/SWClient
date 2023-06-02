@@ -12,8 +12,8 @@ namespace Assets.Scripts.View
 {
 	public class MainGameCameraView : AbstractScreen<MainGameCameraViewModel>
 	{
-		[SerializeField]
-		private GameObject _camera;
+		//[SerializeField]
+		//private GameObject _camera;
 
 		private bool MouseMove { get; set; } = false;
 		private Vector3 MousePosition;
@@ -25,7 +25,7 @@ namespace Assets.Scripts.View
 
 		void Start()
 		{
-			CurrentDistance = -400;
+			CurrentDistance = -200;
 		}
 
 		public void Awake()
@@ -41,7 +41,7 @@ namespace Assets.Scripts.View
 			{
 				MouseMove = true;
 
-				_mainGameCameraViewModel.OnMouseMove(_camera, ref MousePosition);
+				_mainGameCameraViewModel.OnMouseMove(gameObject, ref MousePosition);
 			}
 			else
 			{
@@ -51,15 +51,15 @@ namespace Assets.Scripts.View
 			if (!MouseMove)
             {
                 MousePosition = Input.mousePosition;
-                _mainGameCameraViewModel.OnBorderMove(_camera, ref MousePosition);
+                _mainGameCameraViewModel.OnBorderMove(gameObject, ref MousePosition);
 			}
 
 			ScrollInput = Input.GetAxis("Mouse ScrollWheel");
 
-			_mainGameCameraViewModel.OnZoom(ref ScrollInput, ref CurrentDistance, _camera);
+			_mainGameCameraViewModel.OnZoom(ref ScrollInput, ref CurrentDistance, gameObject);
 		}
 
-		private async void OnEnable()
+		private void OnEnable()
 		{
 			if (_mainGameCameraViewModel is null) return;
 		}

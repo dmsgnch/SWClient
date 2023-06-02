@@ -29,6 +29,8 @@ namespace Components
         {
             var parentCanvas = GetParentCanvas(gameObject);
 
+            if (parentCanvas is null) return;
+
             if (_parentCanvas is not null && !_parentCanvas.Equals(parentCanvas))
             {
 				InfoPanels = new List<GameObject>();
@@ -61,7 +63,9 @@ namespace Components
                     return canvases.transform.GetChild(i).gameObject;
             }
 
-            throw new ApplicationException("Active canvas was not found on the scene");
+            Debug.Log("Active canvas was not found on the scene");
+            return null;
+            //throw new ApplicationException("Active canvas was not found on the scene");
         }
 
         public void DeleteIpUtem(GameObject infoPanelObject)

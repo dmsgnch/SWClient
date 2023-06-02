@@ -1,25 +1,19 @@
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.Text;
 using Microsoft.AspNetCore.SignalR.Client;
 using Newtonsoft.Json;
 using SharedLibrary.Responses.Abstract;
 using UnityEngine.Networking;
 using Components;
-using JetBrains.Annotations;
 using SharedLibrary.Models;
 using UnityEngine;
-using System.Threading.Tasks;
 using SharedLibrary.Contracts.Hubs;
 using LocalManagers.ConnectToGame;
-using Assets.Scripts.Components;
-using UnityEngine.Events;
 using Assets.Scripts.Managers;
 using System.Linq;
-using System.Text.Json;
 using Assets.Scripts.View;
-using SharedLibrary.Responses;
+using Task = System.Threading.Tasks.Task;
 
 namespace Scripts.RegisterLoginScripts
 {
@@ -131,7 +125,7 @@ namespace Scripts.RegisterLoginScripts
 				UnityMainThreadDispatcher.Instance().Enqueue(() =>
 				{
 					GameManager.Instance.SessionDataStore.SessionId = sessionId;
-
+					
 					GameManager.Instance.ChangeState(GameState.LoadMainGameScene);
 				});
 			});
@@ -164,7 +158,7 @@ namespace Scripts.RegisterLoginScripts
 			};
 		}
 
-		public async Task StartHub(string endpoint)
+		public async System.Threading.Tasks.Task StartHub(string endpoint)
 		{
 			if (HubConnection is null)
 			{
@@ -177,7 +171,7 @@ namespace Scripts.RegisterLoginScripts
 			}
 		}
 
-		public async Task StopHub()
+		public async System.Threading.Tasks.Task StopHub()
 		{
 			if (HubConnection is not null)
 			{

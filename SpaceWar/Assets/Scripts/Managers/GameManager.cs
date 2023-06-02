@@ -2,6 +2,7 @@
 using Assets.Scripts.Components.DataStores;
 using Assets.Scripts.View;
 using Assets.Scripts.ViewModels;
+using Components;
 using Scripts.RegisterLoginScripts;
 using System;
 using System.Collections;
@@ -29,7 +30,6 @@ namespace Assets.Scripts.Managers
 
 		public GameState State { get; private set; }
 
-		//TODO: return starting state to normal after testing
 		void Start() => ChangeState(GameState.Starting);
 
 		public void ChangeState(GameState newState)
@@ -90,7 +90,10 @@ namespace Assets.Scripts.Managers
 			LoginView loginView = GameObject.Find("cnvs_login")?.GetComponent<LoginView>();
 			RegisterView registerView = GameObject.Find("cnvs_register")?.GetComponent<RegisterView>();
 
-			if (fpsView is null || loginView is null || registerView is null) throw new DataException();
+			if (fpsView is null || loginView is null || registerView is null)
+			{
+				throw new DataException();
+			}
 
 			List<BaseScreen> screens = new List<BaseScreen>() { fpsView, loginView, registerView };
 

@@ -182,7 +182,9 @@ namespace Assets.Scripts.ViewModels
                     return planetsIconsPrefabs.First(p => p.name.Equals("ColonizingIcon"));
                 case PlanetStatus.Colonized:
                     return planetsIconsPrefabs.First(p => p.name.Equals("ColonizedIcon"));
-                case PlanetStatus.Known:
+				case PlanetStatus.Enemy:
+					return planetsIconsPrefabs.First(p => p.name.Equals("ColonizedIcon"));
+				case PlanetStatus.Known:
 					return null;
                 default:
                     throw new DataException();
