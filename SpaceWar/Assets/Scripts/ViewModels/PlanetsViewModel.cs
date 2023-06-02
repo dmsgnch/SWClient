@@ -22,7 +22,8 @@ namespace Assets.Scripts.ViewModels
 		private const float ConnectionThickness = 0.5f;
 
 		public GameObject[] GeneratePlanets(GameObject[] planetPrefabs, GameObject planetsParent,
-			GameObject dropdownPrefab, GameObject[] planetIconsPrefabs, GameObject buttonPrefab)
+			GameObject dropdownPrefab, GameObject[] planetIconsPrefabs, GameObject buttonPrefab,
+			GameObject planetTextPrefab, GameObject healthbarPrefab)
 		{
 			ClearChildren(planetsParent);
 
@@ -36,56 +37,23 @@ namespace Assets.Scripts.ViewModels
 				planetGO.transform.SetParent(planetsParent.transform);
 
 				//Create planet
-				GameObject prefab = GetPlanetPrefabByPlanetType(planet.PlanetType, planetPrefabs);
-				GameObject newPlanet = MonoBehaviour.Instantiate(prefab);
-
-				newPlanet.transform.SetParent(planetGO.transform);
-				newPlanet.transform.localScale = GetPlanetScale(planet.Size);
-
-                MeshRenderer sphereRenderer = newPlanet.GetComponent<MeshRenderer>();
-
-				var planetController = newPlanet.AddComponent<PlanetController>();
-				planetController.planet = planet;
-				planetController.ButtonPrefab = buttonPrefab;
-
-				var planetPosition = new Vector3(planet.X, planet.Y, 0);
-				newPlanet.transform.position = planetPosition;
-
-				newPlanet.name = planet.Id.ToString();
-				newPlanet.SetActive(true);
-
+				GameObject newPlanet = CreatePlanet(planet, planetPrefabs, planetGO, buttonPrefab); 
 				planets.Add(newPlanet);
 
                 //Create image
-
-                GameObject iconPrefab = GetIconPrefabByPlanetStatus(planet.Status, planetIconsPrefabs);
-				if (iconPrefab is null) continue;	
-
-                GameObject statusIcon = Object.Instantiate(iconPrefab);
-                statusIcon.transform.SetParent(planetGO.transform);
-                statusIcon.transform.GetComponent<SpriteRenderer>().color = 
-					GameManager.Instance.HeroDataStore.Color;
-				var text = statusIcon.transform.GetComponentInChildren<TMP_Text>();
-				if (text is not null) text.text = planet.IterationsLeftToNextStatus.ToString();
-
+                MeshRenderer sphereRenderer = newPlanet.GetComponent<MeshRenderer>();
                 Vector3 size = sphereRenderer.bounds.size;
                 float diameter = Mathf.Max(size.x, size.y, size.z);
-                statusIcon.transform.position = newPlanet.transform.position 
-					+ (Vector3.up * diameter/1.5f) + (Vector3.left * diameter/1.5f);
-				statusIcon.transform.localScale = Vector3.one * diameter / 10;
 
-                GameObject fortPrefab = GetFortificationPrefab(planet.FortificationLevel, planetIconsPrefabs);
-                if (fortPrefab is null) continue;
+				AddStatusIconToPlanet(planet, newPlanet, planetGO, diameter, planetIconsPrefabs);
 
-                GameObject fortificationIcon = Object.Instantiate(fortPrefab);
-                fortificationIcon.transform.SetParent(planetGO.transform);
-                fortificationIcon.transform.GetComponent<SpriteRenderer>().color =
-                    GameManager.Instance.HeroDataStore.Color;
+				AddFortIconToPlanet(planet, newPlanet,planetGO, diameter, planetIconsPrefabs);
 
-                Vector3 fortificationIconSize = sphereRenderer.bounds.size;
-                fortificationIcon.transform.position = newPlanet.transform.position
-                    + (Vector3.up * diameter / 1.5f) + (Vector3.right * diameter / 1.5f);
-                fortificationIcon.transform.localScale = Vector3.one * diameter / 10;
+				AddSizeTextToPlanet(planet, newPlanet, planetGO, diameter, planetTextPrefab);
+
+				AddResourceTextToPlanet(planet, newPlanet, planetGO, diameter, planetTextPrefab);
+
+				AddHealthbarToPlanet(planet, newPlanet, planetGO, diameter, healthbarPrefab);
             }
 
 			return planets.ToArray();
@@ -120,7 +88,121 @@ namespace Assets.Scripts.ViewModels
 			}
 		}
 
-		private Vector3 GetPlanetScale(int size)
+        #region PlanetBuilding
+        private GameObject CreatePlanet(Planet planet, GameObject[] planetPrefabs,GameObject planetParent,
+			GameObject buttonPrefab)
+        {
+            GameObject prefab = GetPlanetPrefabByPlanetType(planet.PlanetType, planetPrefabs);
+            GameObject newPlanet = Object.Instantiate(prefab);
+
+            newPlanet.transform.SetParent(planetParent.transform);
+            newPlanet.transform.localScale = GetPlanetScale(planet.Size);
+
+            var planetController = newPlanet.AddComponent<PlanetController>();
+            planetController.planet = planet;
+            planetController.ButtonPrefab = buttonPrefab;
+
+            var planetPosition = new Vector3(planet.X, planet.Y, 0);
+            newPlanet.transform.position = planetPosition;
+
+            newPlanet.name = planet.Id.ToString();
+            newPlanet.SetActive(true);
+
+			return newPlanet;
+        }
+
+		private void AddStatusIconToPlanet(Planet planet, GameObject newPlanet,
+			GameObject planetGO, float diameter,GameObject[] planetIconsPrefabs)
+		{
+            GameObject iconPrefab = GetIconPrefabByPlanetStatus(planet.Status, planetIconsPrefabs);
+            if (iconPrefab is not null)
+            {
+                GameObject statusIcon = Object.Instantiate(iconPrefab);
+                statusIcon.transform.SetParent(planetGO.transform);
+                statusIcon.transform.GetComponent<SpriteRenderer>().color =
+                    GameManager.Instance.HeroDataStore.Color;
+                var text = statusIcon.transform.GetComponentInChildren<TMP_Text>();
+                if (text is not null) text.text = planet.IterationsLeftToNextStatus.ToString();
+                statusIcon.transform.position = newPlanet.transform.position
+                    + (Vector3.up * diameter / 1.1f) + (Vector3.left * diameter / 2f);
+                statusIcon.transform.localScale = Vector3.one * diameter / 12;
+            }
+        }
+
+		private void AddFortIconToPlanet(Planet planet, GameObject newPlanet,
+            GameObject planetGO, float diameter, GameObject[] planetIconsPrefabs)
+		{
+
+            GameObject fortPrefab = GetFortificationPrefab(planet.FortificationLevel, planetIconsPrefabs);
+            if (fortPrefab is not null)
+            {
+                GameObject fortificationIcon = Object.Instantiate(fortPrefab);
+                fortificationIcon.transform.SetParent(planetGO.transform);
+                fortificationIcon.transform.GetComponent<SpriteRenderer>().color =
+                    GameManager.Instance.HeroDataStore.Color;
+                fortificationIcon.transform.position = newPlanet.transform.position
+                    + (Vector3.up * diameter / 1.1f) + (Vector3.right * diameter / 2f);
+                fortificationIcon.transform.localScale = Vector3.one * diameter / 12;
+            }
+        }
+
+		private void AddSizeTextToPlanet(Planet planet, GameObject newPlanet,
+            GameObject planetGO, float diameter, GameObject planetTextPrefab)
+		{
+            GameObject sizeText = Object.Instantiate(planetTextPrefab);
+            sizeText.GetComponent<TextMesh>().text = $"S:{planet.Size}";
+            sizeText.transform.SetParent(planetGO.transform);
+            sizeText.GetComponent<TextMesh>().color = Color.white;
+            sizeText.transform.position = newPlanet.transform.position
+                + (Vector3.down * diameter / 2f) + (Vector3.left * diameter / 1.5f);
+			sizeText.name = "sizeText";
+        }
+
+		private void AddResourceTextToPlanet(Planet planet, GameObject newPlanet,
+            GameObject planetGO, float diameter, GameObject planetTextPrefab)
+		{
+            GameObject rightDownText = Object.Instantiate(planetTextPrefab);
+            rightDownText.GetComponent<TextMesh>().text = "";
+            rightDownText.transform.SetParent(planetGO.transform);
+            rightDownText.GetComponent<TextMesh>().color = Color.white;
+            rightDownText.transform.position = newPlanet.transform.position
+                + (Vector3.down * diameter / 2f) + (Vector3.right * diameter / 3f);
+            rightDownText.name = "resourceText";
+
+            if (planet.Status is PlanetStatus.Colonized)
+			{
+                rightDownText.GetComponent<TextMesh>().color =
+                    GameManager.Instance.HeroDataStore.Color;
+            }
+
+            if (planet.Status is PlanetStatus.Researching)
+            {
+                rightDownText.GetComponent<TextMesh>().text = $"RS:{planet.IterationsLeftToNextStatus}";
+            }
+            else if (planet.Status is PlanetStatus.Colonizing)
+            {
+                rightDownText.GetComponent<TextMesh>().text = $"CS:{planet.IterationsLeftToNextStatus}";
+            }
+            else if (planet.Status is PlanetStatus.Colonized)
+            {
+                rightDownText.GetComponent<TextMesh>().text = $"R:{planet.Size}";
+            }
+        }
+
+		private void AddHealthbarToPlanet(Planet planet, GameObject newPlanet,
+            GameObject planetGO, float diameter, GameObject planetHealthbarPrefab)
+		{
+			if (planet.OwnerId is not null && planet.Status is PlanetStatus.Colonized)
+            {
+                GameObject healthbar = Object.Instantiate(planetHealthbarPrefab);
+                healthbar.transform.SetParent(planetGO.transform);
+                healthbar.transform.position = newPlanet.transform.position
+                    + (Vector3.up * diameter / 2f);
+            }
+		}
+        #endregion
+
+        private Vector3 GetPlanetScale(int size)
 		{
 			size = Math.Clamp(size, 1, 25);
 			float scale;
@@ -144,6 +226,7 @@ namespace Assets.Scripts.ViewModels
 			{
 				scale = 35f;
 			}
+			scale /= 1.5f;
 
 			return new Vector3(scale, scale, scale);
 		}
@@ -159,11 +242,12 @@ namespace Assets.Scripts.ViewModels
 		{
 			foreach (GameObject child in parent.transform)
 			{
-				UnityEngine.Object.Destroy(child);
+				Object.Destroy(child);
 			}
 		}
 
-		private GameObject GetPlanetPrefabByPlanetType(PlanetType planetType, GameObject[] prefabs)
+        #region ParsingPrefabs
+        private GameObject GetPlanetPrefabByPlanetType(PlanetType planetType, GameObject[] prefabs)
 		{
 			switch (planetType)
 			{
@@ -227,5 +311,6 @@ namespace Assets.Scripts.ViewModels
                     throw new DataException();
             }
         }
-	}
+        #endregion
+    }
 }

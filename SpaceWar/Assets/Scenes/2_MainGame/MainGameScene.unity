@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.031442195, g: 0.009468702, b: 0.013107872, a: 1}
+  m_IndirectSpecularColor: {r: 0.031483587, g: 0.009458372, b: 0.013140744, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -732,6 +732,8 @@ MonoBehaviour:
   - {fileID: 6549255697755675864, guid: 0eccaa2bcbd2ab54e9eb6b0fe46c475c, type: 3}
   - {fileID: 2664042884964684233, guid: 8b48ae359da1b7b468dc91b2a66678b1, type: 3}
   ButtonPrefab: {fileID: 4030092777037534551, guid: 74a69d20f30ad6e409cec72aa0dafa9a, type: 3}
+  textPrefab: {fileID: 5653605300139628338, guid: 98ece849cb71f3b47bb90205fa57e051, type: 3}
+  healthbarPrefab: {fileID: 8595157710949786121, guid: 85c0edce866200b4e893d53e59a3f90e, type: 3}
 --- !u!1 &223981704
 GameObject:
   m_ObjectHideFlags: 0
@@ -3401,7 +3403,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dcbf30ecded8aaf49b8c005b2f97efab, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _camera: {fileID: 1934022034}
 --- !u!1 &1963360904
 GameObject:
   m_ObjectHideFlags: 0

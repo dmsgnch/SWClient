@@ -20,10 +20,13 @@ namespace Assets.Scripts.View
         [SerializeField] private GameObject[] planetPrefabs;
         [SerializeField] private GameObject[] planetIconsPrefabs;
         [SerializeField] private GameObject ButtonPrefab;
+        [SerializeField] private GameObject textPrefab;
+        [SerializeField] private GameObject healthbarPrefab;
 
         public void GeneratePlanetsWithConnections()
         {
-            GameObject[] planets = _planetsViewModel.GeneratePlanets(planetPrefabs, planetsParent, dropdownPrefab, planetIconsPrefabs, ButtonPrefab);
+            GameObject[] planets = _planetsViewModel.GeneratePlanets(planetPrefabs, 
+                planetsParent, dropdownPrefab, planetIconsPrefabs, ButtonPrefab, textPrefab, healthbarPrefab);
             _planetsViewModel.CreateConnections(connectionsParent, planets);
         }
 
