@@ -13,6 +13,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using ViewModels.Abstract;
 using Vector3 = UnityEngine.Vector3;
+using Object = UnityEngine.Object;
 
 namespace Assets.Scripts.ViewModels
 {
@@ -35,11 +36,13 @@ namespace Assets.Scripts.ViewModels
 				planetGO.transform.SetParent(planetsParent.transform);
 
 				//Create planet
-				GameObject prefab = GetPrefabByPlanetType(planet.PlanetType, planetPrefabs);
+				GameObject prefab = GetPlanetPrefabByPlanetType(planet.PlanetType, planetPrefabs);
 				GameObject newPlanet = MonoBehaviour.Instantiate(prefab);
 
 				newPlanet.transform.SetParent(planetGO.transform);
 				newPlanet.transform.localScale = GetPlanetScale(planet.Size);
+
+                MeshRenderer sphereRenderer = newPlanet.GetComponent<MeshRenderer>();
 
 				var planetController = newPlanet.AddComponent<PlanetController>();
 				planetController.planet = planet;
@@ -55,20 +58,34 @@ namespace Assets.Scripts.ViewModels
 
                 //Create image
 
-                GameObject iconPrefab = GetPrefabByPlanetStatus((PlanetStatus)planet.Status, planetIconsPrefabs);
+                GameObject iconPrefab = GetIconPrefabByPlanetStatus(planet.Status, planetIconsPrefabs);
 				if (iconPrefab is null) continue;	
 
-                GameObject newIcon = MonoBehaviour.Instantiate(iconPrefab);
-                newIcon.transform.SetParent(planetGO.transform);
-                newIcon.transform.GetComponent<SpriteRenderer>().color = GameManager.Instance.HeroDataStore.Color;
-				var text = newIcon.transform.GetComponentInChildren<TMP_Text>();
+                GameObject statusIcon = Object.Instantiate(iconPrefab);
+                statusIcon.transform.SetParent(planetGO.transform);
+                statusIcon.transform.GetComponent<SpriteRenderer>().color = 
+					GameManager.Instance.HeroDataStore.Color;
+				var text = statusIcon.transform.GetComponentInChildren<TMP_Text>();
 				if (text is not null) text.text = planet.IterationsLeftToNextStatus.ToString();
 
-                MeshRenderer sphereRenderer = newPlanet.GetComponent<MeshRenderer>();
                 Vector3 size = sphereRenderer.bounds.size;
                 float diameter = Mathf.Max(size.x, size.y, size.z);
-                newIcon.transform.position = newPlanet.transform.position + (Vector3.up * diameter/1.5f);
-				newIcon.transform.localScale = Vector3.one * diameter / 10;
+                statusIcon.transform.position = newPlanet.transform.position 
+					+ (Vector3.up * diameter/1.5f) + (Vector3.left * diameter/1.5f);
+				statusIcon.transform.localScale = Vector3.one * diameter / 10;
+
+                GameObject fortPrefab = GetFortificationPrefab(planet.FortificationLevel, planetIconsPrefabs);
+                if (fortPrefab is null) continue;
+
+                GameObject fortificationIcon = Object.Instantiate(fortPrefab);
+                fortificationIcon.transform.SetParent(planetGO.transform);
+                fortificationIcon.transform.GetComponent<SpriteRenderer>().color =
+                    GameManager.Instance.HeroDataStore.Color;
+
+                Vector3 fortificationIconSize = sphereRenderer.bounds.size;
+                fortificationIcon.transform.position = newPlanet.transform.position
+                    + (Vector3.up * diameter / 1.5f) + (Vector3.right * diameter / 1.5f);
+                fortificationIcon.transform.localScale = Vector3.one * diameter / 10;
             }
 
 			return planets.ToArray();
@@ -146,7 +163,7 @@ namespace Assets.Scripts.ViewModels
 			}
 		}
 
-		public GameObject GetPrefabByPlanetType(PlanetType planetType, GameObject[] prefabs)
+		private GameObject GetPlanetPrefabByPlanetType(PlanetType planetType, GameObject[] prefabs)
 		{
 			switch (planetType)
 			{
@@ -169,7 +186,8 @@ namespace Assets.Scripts.ViewModels
 			}
 		}
 
-		private GameObject GetPrefabByPlanetStatus(PlanetStatus planetStatus, GameObject[] planetsIconsPrefabs)
+		private GameObject GetIconPrefabByPlanetStatus(PlanetStatus planetStatus, 
+			GameObject[] planetsIconsPrefabs)
 		{
 			switch (planetStatus)
 			{
@@ -190,7 +208,24 @@ namespace Assets.Scripts.ViewModels
                 default:
                     throw new DataException();
             }
-
 		}
+
+		private GameObject GetFortificationPrefab(Fortification fortStatus, GameObject[] fortPrefabs)
+        {
+            switch (fortStatus)
+            {
+                case Fortification.None:
+                    return fortPrefabs.First(p => p.name.Equals("LightDefenceIcon"));
+                    //return null;
+                case Fortification.Weak:
+                    return fortPrefabs.First(p => p.name.Equals("LightDefenceIcon"));
+                case Fortification.Reliable:
+                    return fortPrefabs.First(p => p.name.Equals("MediumDefenceIcon"));
+                case Fortification.Strong:
+                    return fortPrefabs.First(p => p.name.Equals("TotalDefenceIcon"));
+                default:
+                    throw new DataException();
+            }
+        }
 	}
 }
