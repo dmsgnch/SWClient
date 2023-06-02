@@ -1,6 +1,7 @@
 ﻿using Assets.Scripts.Components;
 using Assets.Scripts.View;
 using Assets.Scripts.ViewModels;
+using LocalManagers.RegisterLoginRequests;
 using OpenCover.Framework.Model;
 using System;
 using System.Collections;
@@ -112,9 +113,11 @@ namespace Assets.Scripts.Managers
 
 		private void HandleLoadConnectToGameScene()
 		{
-			SceneManager.LoadScene(1);
 
-			SceneManager.sceneLoaded += OnConnectToGameSceneLoaded;
+            LoadingManager loadingManager = new GameObject("LoadingManager").AddComponent<LoadingManager>();
+            loadingManager.LoadScene(1);
+
+            SceneManager.sceneLoaded += OnConnectToGameSceneLoaded;
 		}
 
         private void OnConnectToGameSceneLoaded(Scene scene, LoadSceneMode mode)
@@ -170,8 +173,9 @@ namespace Assets.Scripts.Managers
 
 		private void HandleLoadMainGameScene()
 		{
-			SceneManager.LoadScene(2);
-		}
+            LoadingManager loadingManager = new GameObject("LoadingManager").AddComponent<LoadingManager>();
+			loadingManager.LoadScene(2);
+        }
 
 		private void HandleMainGame()
 		{
