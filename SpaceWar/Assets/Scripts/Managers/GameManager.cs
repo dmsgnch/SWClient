@@ -183,10 +183,9 @@ namespace Assets.Scripts.Managers
 		{
 			if (scene.buildIndex != 2) throw new DataException("Index is not match");
 
-			FPSView fpsView = GameObject.Find("cnvs_FPS")?.GetComponent<FPSView>();
+			FPSView fpsView = GameObject.Find("cnvs_FPS")?.GetComponent<FPSView>(); 
 
-            MainGameCameraView mainGameCameraView = 
-				GameObject.Find("Look_Camera")?.GetComponent<MainGameCameraView>();
+            MainGameCameraView mainGameCameraView = GameObject.Find("Look_Camera")?.GetComponent<MainGameCameraView>();
 
 			HUDView hudView = GameObject.Find("cnvs_HUD")?.GetComponent<HUDView>();
 
@@ -194,6 +193,23 @@ namespace Assets.Scripts.Managers
 
             if (fpsView is null || hudView is null || planetsView is null || mainGameCameraView is null)
 			{
+				if(fpsView is null)
+				{
+					InformationPanelController.Instance.CreateMessage(InformationPanelController.MessageType.ERROR, "fpsView was not found");
+				}
+				if (hudView is null)
+				{
+					InformationPanelController.Instance.CreateMessage(InformationPanelController.MessageType.ERROR, "hudView was not found");
+				}
+				if (planetsView is null)
+				{
+					InformationPanelController.Instance.CreateMessage(InformationPanelController.MessageType.ERROR, "planetsView was not found");
+				}
+				if (mainGameCameraView is null)
+				{
+					InformationPanelController.Instance.CreateMessage(InformationPanelController.MessageType.ERROR, "mainGameCameraView was not found");
+				}
+
 				throw new DataException("Views were not found");
 			}
 
