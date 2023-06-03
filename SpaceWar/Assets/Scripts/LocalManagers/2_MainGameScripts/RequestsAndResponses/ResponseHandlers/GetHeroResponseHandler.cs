@@ -11,6 +11,7 @@ using System.Text;
 using System.Threading.Tasks;
 using SharedLibrary.Models;
 using Assets.Scripts.View;
+using SharedLibrary.Models.Enums;
 
 namespace Assets.Scripts.LocalManagers._2_MainGameScripts.RequestsAndResponses.ResponseHandlers
 {

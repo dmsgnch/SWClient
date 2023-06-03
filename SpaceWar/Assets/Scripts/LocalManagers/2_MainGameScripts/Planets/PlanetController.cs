@@ -14,6 +14,7 @@ using Assets.Scripts.View;
 using Components;
 using UnityEngine.UIElements;
 using Button = UnityEngine.UI.Button;
+using SharedLibrary.Models.Enums;
 
 public class PlanetController : MonoBehaviour
 {
@@ -151,7 +152,7 @@ public class PlanetController : MonoBehaviour
 
 		CountOfButtons++;
 
-		if (CountOfButtons.Equals(0))
+		if (CountOfButtons.Equals(1))
 		{
 			actMenuEnabled = true;
 			DisableScripts();

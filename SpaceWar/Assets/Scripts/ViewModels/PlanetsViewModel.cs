@@ -19,6 +19,7 @@ using Scripts.RegisterLoginScripts;
 using SharedLibrary.Contracts.Hubs;
 using SharedLibrary.Requests;
 using static SharedLibrary.Routes.ApiRoutes;
+using SharedLibrary.Models.Enums;
 
 namespace Assets.Scripts.ViewModels
 {
@@ -232,7 +233,7 @@ namespace Assets.Scripts.ViewModels
 			HubConnection hubConnection = NetworkingManager.Instance.HubConnection;
 			Guid lobbyId = GameManager.Instance.LobbyDataStore.LobbyId;
 
-			var request = new ResearchColonizePlanetRequest
+			var request = new UpdatePlanetStatusRequest
 			{
 				HeroId = GameManager.Instance.HeroDataStore.HeroId,
 				SessionId = GameManager.Instance.SessionDataStore.SessionId,

@@ -10,6 +10,7 @@ using UnityEngine.UI;
 using System.Linq;
 using Components;
 using System.Collections.Generic;
+using SharedLibrary.Models.Enums;
 
 namespace LocalManagers.ConnectToGame
 {

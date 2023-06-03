@@ -141,9 +141,8 @@ namespace Scripts.RegisterLoginScripts
 			});
 
 			hubConnection.On<string>(ClientHandlers.ErrorHandler, HandleStringMessageOutput());
-			hubConnection.On<string>(ClientHandlers.Session.StartedResearching, HandleStringMessageOutput());
-			hubConnection.On<string>(ClientHandlers.Session.StartedColonizingPlanet, HandleStringMessageOutput());
-			hubConnection.On<string>(ClientHandlers.Session.IterationDone, HandleStringMessageOutput());
+			hubConnection.On<string>(ClientHandlers.Session.ResearchingPlanet, HandleStringMessageOutput());
+			hubConnection.On<string>(ClientHandlers.Session.ColonizingPlanet, HandleStringMessageOutput());
 			hubConnection.On<string>(ClientHandlers.Session.PostResearchOrColonizeErrorHandler, HandleStringMessageOutput());
 			hubConnection.On<string>(ClientHandlers.Session.HealthCheckHandler, HandleStringMessageOutput());
 

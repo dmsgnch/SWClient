@@ -1,4 +1,5 @@
 ﻿using SharedLibrary.Models;
+using SharedLibrary.Models.Enums;
 using System;
 using System.Collections;
 using System.Collections.Generic;

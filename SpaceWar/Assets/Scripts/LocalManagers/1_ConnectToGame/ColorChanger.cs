@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.SignalR.Client;
 using Scripts.RegisterLoginScripts;
 using SharedLibrary.Contracts.Hubs;
 using SharedLibrary.Models;
+using SharedLibrary.Models.Enums;
 using System;
 using System.Collections;
 using System.Linq;
