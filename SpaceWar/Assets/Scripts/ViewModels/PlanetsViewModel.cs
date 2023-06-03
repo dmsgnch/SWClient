@@ -247,8 +247,44 @@ namespace Assets.Scripts.ViewModels
 			}
 		}
 
-        #region ParsingPrefabs
-        private GameObject GetPlanetPrefabByPlanetType(PlanetType planetType, GameObject[] prefabs)
+		public void Attack(Planet planet)
+		{
+			Debug.Log("Attack");
+		}
+
+		public void Defend(Planet planet)
+		{
+			Debug.Log("Attack");
+		}
+
+		public void Research()
+		{
+			_planetsViewModel.ExecuteNextAction();
+		}
+
+		public void Colonize()
+		{
+			_planetsViewModel.ExecuteNextAction();
+		}
+
+		public void BuiltLightDefence()
+		{
+			_planetsViewModel.ExecuteNextAction();
+		}
+
+		public void BuiltMidleDefence()
+		{
+			_planetsViewModel.ExecuteNextAction();
+		}
+
+		public void BuiltStrongDefence()
+		{
+			_planetsViewModel.ExecuteNextAction();
+		}
+
+		#region ParsingPrefabs
+
+		private GameObject GetPlanetPrefabByPlanetType(PlanetType planetType, GameObject[] prefabs)
 		{
 			switch (planetType)
 			{
@@ -312,6 +348,7 @@ namespace Assets.Scripts.ViewModels
                     throw new DataException();
             }
         }
+
         #endregion
     }
 }

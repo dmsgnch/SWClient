@@ -1,6 +1,7 @@
 ﻿using Assets.Scripts.Managers;
 using Assets.Scripts.ViewModels;
 using Assets.View.Abstract;
+using SharedLibrary.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -37,12 +38,42 @@ namespace Assets.Scripts.View
 
         }
 
-  //      public GameObject GetPrefabByPlanetType()
-  //      {
-  //          return _planetsViewModel.GetPrefabByPlanetType();
-		//}
+		public void Attack()
+		{
+			_planetsViewModel.ExecuteNextAction();
+		}
 
-        protected override void OnBind(PlanetsViewModel model)
+		public void Defence()
+		{
+			_planetsViewModel.ExecuteNextAction();
+		}
+
+		public void Research()
+        {
+            _planetsViewModel.ExecuteNextAction();
+        }
+
+		public void Colonize()
+		{
+			_planetsViewModel.ExecuteNextAction();
+		}
+
+		public void BuiltLightDefence()
+		{
+			_planetsViewModel.ExecuteNextAction();
+		}
+
+		public void BuiltMidleDefence()
+		{
+			_planetsViewModel.ExecuteNextAction();
+		}
+
+		public void BuiltStrongDefence()
+		{
+			_planetsViewModel.ExecuteNextAction();
+		}
+
+		protected override void OnBind(PlanetsViewModel model)
         {
 			_planetsViewModel = model;
         }
