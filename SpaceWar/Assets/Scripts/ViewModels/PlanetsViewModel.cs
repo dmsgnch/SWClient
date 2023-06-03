@@ -26,7 +26,7 @@ namespace Assets.Scripts.ViewModels
 	public class PlanetsViewModel : ViewModelBase
 	{
 		private const float ConnectionThickness = 0.5f;
-
+		
 		public GameObject[] GeneratePlanets(GameObject[] planetPrefabs, GameObject planetsParent,
 			GameObject planetInfoPanelPrefab, GameObject[] planetIconsPrefabs, GameObject buttonPrefab,
 			GameObject planetTextPrefab, GameObject healthbarPrefab)
@@ -335,7 +335,10 @@ namespace Assets.Scripts.ViewModels
 			return planets.FirstOrDefault(p => p.Id.Equals(id)) ??
 				throw new ArgumentException($"planet with id {id} was not found");
 		}
-
+		/// <summary>
+		/// clearing children of parent object
+		/// </summary>
+		/// <param name="parent"></param>
 		private void ClearChildren(GameObject parent)
 		{
 			foreach (GameObject child in parent.transform)
