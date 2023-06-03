@@ -16,9 +16,46 @@ namespace Assets.Scripts.ViewModels
 		private GameObject _soldiersInfoPanel;
 		private GameObject _researchShipInfoPanel;
 		private GameObject _colonizeShipInfoPanel;
+        private float time = 60f;
+        private bool enableTimer = true;
 
+        public void ReduceTurnPanelTime(GameObject turnPanel, float value)
+        {
+            if (enableTimer)
+            {
+                time -= value;
+                if (time <= 0f)
+                {
+                    TurnPanelTimeOut();
+                    enableTimer = false;
+                }
+                SetTurnPanelTime(turnPanel);
+            }
+        }
+        public void SetTurnPanelTimer(GameObject turnPanel, float value)
+        {
+            time = value;
+            enableTimer = true;
+        }
+        private void SetTurnPanelTime(GameObject turnPanel)
+        {
+            TMP_Text[] turnTexts = turnPanel.GetComponentsInChildren<TMP_Text>();
+            foreach (TMP_Text tmpText in turnTexts)
+            {
+                if (tmpText.gameObject.name == "txt_leftTimeValue")
+                {
+                    tmpText.text = ((int)time).ToString();
+                    break;
+                }
+            }
+        }
 
-		public void UpdatePanelTexts(GameObject resourcesPanel, GameObject soldiersPanel,
+        private void TurnPanelTimeOut()
+        {
+            Debug.Log("OUT OF TIME");
+        }
+
+        public void UpdatePanelTexts(GameObject resourcesPanel, GameObject soldiersPanel,
 			GameObject researchShipsPanel, GameObject colonizationShipsPanel, GameObject turnPanel)
 		{
 			resourcesPanel.GetComponentInChildren<TMP_Text>().text = GameManager.Instance.HeroDataStore.Resourses.ToString();
@@ -30,13 +67,13 @@ namespace Assets.Scripts.ViewModels
 			{
 				switch (tmpText.gameObject.name)
 				{
-					case "txt_leftTimeValue":
-						int timeLimitView = GameManager.Instance.SessionDataStore.TurnTimeLimit;
-                        tmpText.text = timeLimitView.ToString();
-						break;
+				//	case "txt_leftTimeValue":
+				//		int timeLimitView = GameManager.Instance.SessionDataStore.TurnTimeLimit;
+    //                    tmpText.text = timeLimitView.ToString();
+				//		break;
 					case "txt_currentTurnValue":
-                        int turnNumberView = GameManager.Instance.SessionDataStore.TurnNumber + 1;
-                        tmpText.text = turnNumberView.ToString();
+						int turnNumberView = GameManager.Instance.SessionDataStore.TurnNumber + 1;
+						tmpText.text = turnNumberView.ToString();
 						break;
 				}
 			}

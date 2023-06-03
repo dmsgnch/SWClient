@@ -29,13 +29,14 @@ public class PlanetController : MonoBehaviour
     private GameObject actMenu;
 	private MonoBehaviour[] cameraScripts;
 	private bool actMenuEnabled = false;
-	private List<string> actionNames;
+	//private List<string> actionNames;
 	private float hoverTime;
     private bool createNewPlanetInfoPanel;
-    private GameObject InfoPanel = null;
+    private GameObject PlanetInfoPanel = null;
     private UnityEngine.UI.Slider slider;
     private Camera mainCamera;
-    private byte CountOfButtons { get; set; } = 0;
+
+	private List<Button> ActionsButtons = new List<Button>();
 
 	private void Start()
 	{
@@ -52,7 +53,7 @@ public class PlanetController : MonoBehaviour
             UpdateHealthBar();
         }
 
-        if (createNewPlanetInfoPanel && InfoPanel is null)
+        if (createNewPlanetInfoPanel && PlanetInfoPanel is null && !actMenuEnabled)
 		{
 			CreatePlanetInfoPanel();
             createNewPlanetInfoPanel = false;
@@ -96,12 +97,13 @@ public class PlanetController : MonoBehaviour
 
     void CreatePlanetInfoPanel()
 	{
-		InfoPanel = Instantiate(InfoPanelPrefab, GameObject.Find("cnvs_HUD").transform);
-		InfoPanel.transform.position = Input.mousePosition;
+		PlanetInfoPanel = Instantiate(InfoPanelPrefab, GameObject.Find("cnvs_HUD").transform);
+		PlanetInfoPanel.transform.position = Input.mousePosition;
+		PlanetInfoPanel.AddComponent<HUDCursorFollower>();
 
-		for (int i = 0; i < InfoPanel.transform.childCount; i++)
+		for (int i = 0; i < PlanetInfoPanel.transform.childCount; i++)
 		{
-			var child = InfoPanel.transform.GetChild(i);
+			var child = PlanetInfoPanel.transform.GetChild(i);
 			switch (child.name)
 			{
 				case "Name":
@@ -131,14 +133,15 @@ public class PlanetController : MonoBehaviour
 	}
 
 	/// <summary>
-	/// Create buttons one uder the other
+	/// Create ActionsButtons one uder the other
 	/// </summary>
 	/// <param name="buttonName"></param>
 	/// <param name="onClick"></param>
 	private void CreateActMenu(string buttonName, out Button onClick)
 	{
-		if (CountOfButtons.Equals(0))
+		if (ActionsButtons.Count.Equals(0))
 			actMenu.transform.position = Input.mousePosition;
+	
 
 		GameObject buttonObject = Instantiate(ButtonPrefab, actMenu.transform);
 		Button button = buttonObject.GetComponent<Button>();
@@ -146,13 +149,12 @@ public class PlanetController : MonoBehaviour
 		TMP_Text buttonText = buttonObject.GetComponentInChildren<TMP_Text>();
 		buttonText.text = buttonName;
 
-		buttonObject.transform.localPosition = new Vector3(0f, -CountOfButtons * 30f, 0f);
+		buttonObject.transform.localPosition = new Vector3(0f, (-ActionsButtons.Count * 25f)-30f, 0f);
 
 		onClick = button;
 
-		CountOfButtons++;
-
-		if (CountOfButtons.Equals(1))
+        ActionsButtons.Add(button);
+        if (ActionsButtons.Count.Equals(1))
 		{
 			actMenuEnabled = true;
 			DisableScripts();
@@ -203,13 +205,38 @@ public class PlanetController : MonoBehaviour
 			defenceButton.onClick.AddListener(DestroyActMenu);
 			defenceButton.onClick.AddListener(() => planetsView.Defence(planet));
 		}
-	}
+		ResizeButtons();
 
-	/// <summary>
-	/// Perform sugery and binding according to planet defence status
-	/// </summary>
-	/// <param name="planetsView"></param>
-	private void OpearationDefenceChoosing(PlanetsView planetsView)
+    }
+
+    private void ResizeButtons()
+    {
+        float maxWidth = 0f;
+
+        // Ќайти максимальную ширину текста среди всех кнопок
+        foreach (Button button in ActionsButtons)
+        {
+            TMP_Text buttonText = button.GetComponentInChildren<TMP_Text>();
+            float buttonWidth = buttonText.preferredWidth;
+            
+            maxWidth = Mathf.Max(maxWidth, buttonWidth);
+        }
+
+        // ”становить одинаковую ширину дл€ всех кнопок
+        foreach (Button button in ActionsButtons)
+        {
+            RectTransform buttonRect = button.GetComponent<RectTransform>();
+            buttonRect.sizeDelta = new Vector2(maxWidth, buttonRect.sizeDelta.y);
+            RectTransform textRect = button.GetComponentInChildren<TMP_Text>().GetComponent<RectTransform>();
+            textRect.sizeDelta = new Vector2(maxWidth, textRect.sizeDelta.y);
+        }
+    }
+
+    /// <summary>
+    /// Perform sugery and binding according to planet defence status
+    /// </summary>
+    /// <param name="planetsView"></param>
+    private void OpearationDefenceChoosing(PlanetsView planetsView)
 	{
 		switch (planet.FortificationLevel)
 		{
@@ -275,8 +302,8 @@ public class PlanetController : MonoBehaviour
 		actMenu.transform.DestroyChildren();
 		EnableScripts();
 		actMenuEnabled = false;
-		CountOfButtons = 0;
-	}
+        ActionsButtons.Clear();
+    }
 
 	void DisableScripts()
 	{
@@ -302,8 +329,8 @@ public class PlanetController : MonoBehaviour
 
 	private void OnMouseExit()
 	{
-		Destroy(InfoPanel);
-		InfoPanel = null;
+		Destroy(PlanetInfoPanel);
+		PlanetInfoPanel = null;
 		hoverTime = 0f;
         createNewPlanetInfoPanel = false;
 	}
