@@ -4,6 +4,8 @@ using Assets.Scripts.View;
 using Assets.Scripts.ViewModels;
 using Components;
 using Scripts.RegisterLoginScripts;
+using LocalManagers.RegisterLoginRequests;
+using OpenCover.Framework.Model;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -19,6 +21,8 @@ namespace Assets.Scripts.Managers
 {
 	public class GameManager : ComponentPersistentSingleton<GameManager>
 	{
+		[SerializeField] private GameObject loadManagerPrefab;
+
 		internal MainDataStore MainDataStore { get; private set; } = new MainDataStore();
 		internal ConnectToGameDataStore ConnectToGameDataStore { get; private set; } = new ConnectToGameDataStore();
 		internal LobbyDataStore LobbyDataStore { get; private set; } = new LobbyDataStore();
@@ -118,9 +122,13 @@ namespace Assets.Scripts.Managers
 
 		private void HandleLoadConnectToGameScene()
 		{
-			SceneManager.LoadScene(1);
+			GameObject loadingManagerObject = Instantiate(loadManagerPrefab);
+
+			LoadingManager loadingManager = loadingManagerObject.GetComponent<LoadingManager>();
 
 			SceneManager.sceneLoaded += OnConnectToGameSceneLoaded;
+
+			loadingManager.LoadScene(1);
 		}
 
         private void OnConnectToGameSceneLoaded(Scene scene, LoadSceneMode mode)
@@ -174,9 +182,13 @@ namespace Assets.Scripts.Managers
 
 		private void HandleLoadMainGameScene()
 		{
-			SceneManager.LoadScene(2);
+			GameObject loadingManagerObject = Instantiate(loadManagerPrefab);
+
+			LoadingManager loadingManager = loadingManagerObject.GetComponent<LoadingManager>();
 
 			SceneManager.sceneLoaded += OnMainGameSceneLoaded;
+
+			loadingManager.LoadScene(2);
 		}
 
 		private async void OnMainGameSceneLoaded(Scene scene, LoadSceneMode mode)
