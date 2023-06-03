@@ -14,6 +14,11 @@ using UnityEngine.UI;
 using ViewModels.Abstract;
 using Vector3 = UnityEngine.Vector3;
 using Object = UnityEngine.Object;
+using Microsoft.AspNetCore.SignalR.Client;
+using Scripts.RegisterLoginScripts;
+using SharedLibrary.Contracts.Hubs;
+using SharedLibrary.Requests;
+using static SharedLibrary.Routes.ApiRoutes;
 
 namespace Assets.Scripts.ViewModels
 {
@@ -247,39 +252,56 @@ namespace Assets.Scripts.ViewModels
 			}
 		}
 
-		public void Attack(Planet planet)
+		public async Task Attack(Planet planet)
 		{
-			Debug.Log("Attack");
+			//TODO: Sending signalR request
 		}
 
-		public void Defend(Planet planet)
+		public async Task Defend(Planet planet)
 		{
-			Debug.Log("Attack");
+			//TODO: Sending signalR request
 		}
 
-		public void Research()
+		public async Task Research(Planet planet)
 		{
-			_planetsViewModel.ExecuteNextAction();
+			await ResearchOrColonizeRequest(planet);
 		}
 
-		public void Colonize()
+		public async Task Colonize(Planet planet)
 		{
-			_planetsViewModel.ExecuteNextAction();
+			await ResearchOrColonizeRequest(planet);
 		}
 
-		public void BuiltLightDefence()
+		private async Task ResearchOrColonizeRequest(Planet planet)
 		{
-			_planetsViewModel.ExecuteNextAction();
+			HubConnection hubConnection = NetworkingManager.Instance.HubConnection;
+			Guid lobbyId = GameManager.Instance.LobbyDataStore.LobbyId;
+
+			var request = new ResearchColonizePlanetRequest
+			{
+				HeroId = GameManager.Instance.HeroDataStore.HeroId,
+				SessionId = GameManager.Instance.SessionDataStore.SessionId,
+				PlanetId = planet.Id
+			};
+
+			await hubConnection.InvokeAsync(ServerHandlers.Session.PostResearchOrColonizePlanet, request);
+
+			GameManager.Instance.ChangeState(GameState.ConnectToGame);
 		}
 
-		public void BuiltMidleDefence()
+		public async Task BuiltLightDefence(Planet planet)
 		{
-			_planetsViewModel.ExecuteNextAction();
+			//TODO: Sending signalR request
 		}
 
-		public void BuiltStrongDefence()
+		public async Task BuiltMidleDefence(Planet planet)
 		{
-			_planetsViewModel.ExecuteNextAction();
+			//TODO: Sending signalR request
+		}
+
+		public async Task BuiltStrongDefence(Planet planet)
+		{
+			//TODO: Sending signalR request
 		}
 
 		#region ParsingPrefabs

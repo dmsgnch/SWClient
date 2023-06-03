@@ -38,39 +38,39 @@ namespace Assets.Scripts.View
 
         }
 
-		public void Attack()
+		public async void Attack(Planet planet)
 		{
-			_planetsViewModel.ExecuteNextAction();
+			_planetsViewModel.Attack(planet);
 		}
 
-		public void Defence()
+		public async void Defence(Planet planet)
 		{
-			_planetsViewModel.ExecuteNextAction();
+			_planetsViewModel.Defend(planet);
 		}
 
-		public void Research()
+		public async void Research(Planet planet)
         {
-            _planetsViewModel.ExecuteNextAction();
+            await _planetsViewModel.Research(planet);
         }
 
-		public void Colonize()
+		public async void Colonize(Planet planet)
 		{
-			_planetsViewModel.ExecuteNextAction();
+			await _planetsViewModel.Colonize(planet);
 		}
 
-		public void BuiltLightDefence()
+		public async void BuiltLightDefence(Planet planet)
 		{
-			_planetsViewModel.ExecuteNextAction();
+			_planetsViewModel.BuiltLightDefence(planet);
 		}
 
-		public void BuiltMidleDefence()
+		public async void BuiltMidleDefence(Planet planet)
 		{
-			_planetsViewModel.ExecuteNextAction();
+			_planetsViewModel.BuiltMidleDefence(planet);
 		}
 
-		public void BuiltStrongDefence()
+		public async void BuiltStrongDefence(Planet planet)
 		{
-			_planetsViewModel.ExecuteNextAction();
+			_planetsViewModel.BuiltStrongDefence(planet);
 		}
 
 		protected override void OnBind(PlanetsViewModel model)

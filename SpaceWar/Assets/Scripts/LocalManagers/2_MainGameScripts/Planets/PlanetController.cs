@@ -144,13 +144,13 @@ public class PlanetController : MonoBehaviour
 		{
 			case PlanetStatus.Known:
 				CreateActMenu("Research", out Button researchButton);
-				researchButton.onClick.AddListener(() => planetsView.Research());
+				researchButton.onClick.AddListener(() => planetsView.Research(planet));
 				researchButton.onClick.AddListener(DestroyActMenu);
 				break;
 
 			case PlanetStatus.Researched:
 				CreateActMenu("Colonize", out Button colonizeButton);
-				colonizeButton.onClick.AddListener(() => planetsView.Colonize());
+				colonizeButton.onClick.AddListener(() => planetsView.Colonize(planet));
 				colonizeButton.onClick.AddListener(DestroyActMenu);
 				break;
 
@@ -158,7 +158,7 @@ public class PlanetController : MonoBehaviour
 				if (IsAvaibleToAtack())
 				{
 					CreateActMenu("Attack", out Button attackButton);
-					attackButton.onClick.AddListener(() => planetsView.Attack());
+					attackButton.onClick.AddListener(() => planetsView.Attack(planet));
 					attackButton.onClick.AddListener(DestroyActMenu);
 				}
 				break;
@@ -173,7 +173,7 @@ public class PlanetController : MonoBehaviour
 		if(IsDefencing(planetsView))
 		{
 			CreateActMenu("Send soldiers to defend", out Button defenceButton);
-			defenceButton.onClick.AddListener(() => planetsView.Defence());
+			defenceButton.onClick.AddListener(() => planetsView.Defence(planet));
 			defenceButton.onClick.AddListener(DestroyActMenu);
 		}
 	}
@@ -188,19 +188,19 @@ public class PlanetController : MonoBehaviour
 		{
 			case Fortification.None:
 				CreateActMenu("Build light defence (cost)", out Button liteDefButton);
-				liteDefButton.onClick.AddListener(() => planetsView.BuiltLightDefence());
+				liteDefButton.onClick.AddListener(() => planetsView.BuiltLightDefence(planet));
 				liteDefButton.onClick.AddListener(DestroyActMenu);
 				break;
 
 			case Fortification.Weak:
 				CreateActMenu("Build medium defence (cost)", out Button mediumDefButton);
-				mediumDefButton.onClick.AddListener(() => planetsView.BuiltMidleDefence());
+				mediumDefButton.onClick.AddListener(() => planetsView.BuiltMidleDefence(planet));
 				mediumDefButton.onClick.AddListener(DestroyActMenu);
 				break;
 
 			case Fortification.Reliable:
 				CreateActMenu("Build strong defence (cost)", out Button strongDefButton);
-				strongDefButton.onClick.AddListener(() => planetsView.BuiltStrongDefence());
+				strongDefButton.onClick.AddListener(() => planetsView.BuiltStrongDefence(planet));
 				strongDefButton.onClick.AddListener(DestroyActMenu);
 				break;
 
