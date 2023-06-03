@@ -31,10 +31,12 @@ namespace Assets.Scripts.ViewModels
 				switch (tmpText.gameObject.name)
 				{
 					case "txt_leftTimeValue":
-						tmpText.text = GameManager.Instance.SessionDataStore.TurnTimeLimit.ToString();
+						int timeLimitView = GameManager.Instance.SessionDataStore.TurnTimeLimit;
+                        tmpText.text = timeLimitView.ToString();
 						break;
 					case "txt_currentTurnValue":
-						tmpText.text = GameManager.Instance.SessionDataStore.TurnNumber.ToString();
+                        int turnNumberView = GameManager.Instance.SessionDataStore.TurnNumber + 1;
+                        tmpText.text = turnNumberView.ToString();
 						break;
 				}
 			}
