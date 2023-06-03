@@ -29,7 +29,7 @@ namespace Assets.Scripts.ViewModels
 			{
 				camera.transform.Translate(Vector3.left * moveSpeed * Time.deltaTime);
 			}
-			else if (camera.transform.position.x < maxX && mousePosition.x > Screen.width - edgeThreshold && !IsCursorOverUI())
+			else if (camera.transform.position.x < maxX && mousePosition.x > Screen.width - edgeThreshold - 10 && !IsCursorOverUI())
 			{
 				camera.transform.Translate(Vector3.right * moveSpeed * Time.deltaTime);
 			}
@@ -38,7 +38,7 @@ namespace Assets.Scripts.ViewModels
 			{
 				camera.transform.Translate(Vector3.down * moveSpeed * Time.deltaTime);
 			}
-			else if (camera.transform.position.y < maxY && mousePosition.y > Screen.height - edgeThreshold && !IsCursorOverUI())
+			else if (camera.transform.position.y < maxY && mousePosition.y > Screen.height - edgeThreshold - 10 && !IsCursorOverUI())
 			{
 				camera.transform.Translate(Vector3.up * moveSpeed * Time.deltaTime);
 			}

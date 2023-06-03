@@ -10,6 +10,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using System;
+using UnityEngine.UIElements;
 
 public class PlanetController : MonoBehaviour
 {
@@ -19,26 +20,38 @@ public class PlanetController : MonoBehaviour
     public GameObject ButtonPrefab;
     public GameObject InfoPanelPrefab;
     public float timeThreshold = 1f;
+    public GameObject HealthBarPrefab;
 
     private GameObject actMenu;
     private MonoBehaviour[] scripts;
     private bool actMenuEnabled = false;
     private List<string> actionNames;
     private float hoverTime;
-    private bool createNewObject;
+    private bool createNewPlanetInfoPanel;
     private GameObject InfoPanel = null;
+    private UnityEngine.UI.Slider slider;
+    private Camera mainCamera;
+
 
     private void Start()
     {
         scripts = GameObject.Find("Look_Camera").GetComponents<MonoBehaviour>();
         actMenu = GameObject.Find("ActionsMenu");
+        mainCamera = Camera.main;
+        CreateHealthBar();
+        slider.transform.localScale = Vector3.one * 0.7f;
     }
     private void Update()
     {
-        if (createNewObject && InfoPanel is null)
+        if (slider != null && slider.gameObject.activeSelf)
+        {
+            UpdateHealthBar();
+        }
+
+        if (createNewPlanetInfoPanel && InfoPanel is null)
         {
             CreateInfoPanel();
-            createNewObject = false;
+            createNewPlanetInfoPanel = false;
         }
 
         transform.Rotate(Vector3.up, rotationSpeed * Time.deltaTime);
@@ -60,6 +73,19 @@ public class PlanetController : MonoBehaviour
                 DestroyActMenu();
             }
         }
+    }
+    private void UpdateHealthBar() {
+        Vector3 planetPosition = transform.position;
+        Vector3 screenPosition = mainCamera.WorldToScreenPoint(planetPosition);
+        Vector3 sliderPosition = screenPosition;
+
+        sliderPosition.y += slider.GetComponent<RectTransform>().rect.height;
+        slider.transform.position = sliderPosition + Vector3.up * planet.Size;
+    }
+    private void CreateHealthBar()
+    {
+        var sliderGO = Instantiate(HealthBarPrefab, transform.parent);
+        slider = sliderGO.GetComponent<UnityEngine.UI.Slider>();
     }
 
     void CreateInfoPanel() {
@@ -105,7 +131,7 @@ public class PlanetController : MonoBehaviour
 		for (int i = 0; i < actionNames.Count; i++)
 		{
 			GameObject buttonObject = Instantiate(ButtonPrefab, actMenu.transform);
-			Button button = buttonObject.GetComponent<Button>();
+			UnityEngine.UI.Button button = buttonObject.GetComponent<UnityEngine.UI.Button>();
 
 			TMP_Text buttonText = buttonObject.GetComponentInChildren<TMP_Text>();
 			buttonText.text = actionNames[i];
@@ -203,23 +229,22 @@ public class PlanetController : MonoBehaviour
     private void OnMouseEnter()
     {
         hoverTime = Time.time;
-        createNewObject = false;
+        createNewPlanetInfoPanel = false;
     }
 
     private void OnMouseExit()
     {
         Destroy(InfoPanel);
         InfoPanel = null;
-        Debug.Log($"info panel destroyed");
         hoverTime = 0f;
-        createNewObject = false;
+        createNewPlanetInfoPanel = false;
     }
 
     private void OnMouseOver()
     {
         if (Time.time - hoverTime >= timeThreshold)
         {
-            createNewObject = true;
+            createNewPlanetInfoPanel = true;
         }
     }
 

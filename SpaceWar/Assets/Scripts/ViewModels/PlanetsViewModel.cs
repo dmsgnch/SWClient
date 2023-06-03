@@ -37,7 +37,8 @@ namespace Assets.Scripts.ViewModels
 				planetGO.transform.SetParent(planetsParent.transform);
 
 				//Create planet
-				GameObject newPlanet = CreatePlanet(planet, planetPrefabs, planetGO, buttonPrefab, planetInfoPanelPrefab); 
+				GameObject newPlanet = CreatePlanet(planet, planetPrefabs, planetGO,
+					buttonPrefab, planetInfoPanelPrefab, healthbarPrefab); 
 				planets.Add(newPlanet);
 
                 //Create image
@@ -52,8 +53,6 @@ namespace Assets.Scripts.ViewModels
 				AddSizeTextToPlanet(planet, newPlanet, planetGO, diameter, planetTextPrefab);
 
 				AddResourceTextToPlanet(planet, newPlanet, planetGO, diameter, planetTextPrefab);
-
-				AddHealthbarToPlanet(planet, newPlanet, planetGO, diameter, healthbarPrefab);
             }
 
 			return planets.ToArray();
@@ -90,7 +89,7 @@ namespace Assets.Scripts.ViewModels
 
         #region PlanetBuilding
         private GameObject CreatePlanet(Planet planet, GameObject[] planetPrefabs,GameObject planetParent,
-			GameObject buttonPrefab, GameObject planetInfoPlanetPrefab)
+			GameObject buttonPrefab, GameObject planetInfoPlanetPrefab, GameObject HealthBarPrefab)
         {
             GameObject prefab = GetPlanetPrefabByPlanetType(planet.PlanetType, planetPrefabs);
             GameObject newPlanet = Object.Instantiate(prefab);
@@ -102,6 +101,7 @@ namespace Assets.Scripts.ViewModels
             planetController.planet = planet;
             planetController.ButtonPrefab = buttonPrefab;
 			planetController.InfoPanelPrefab = planetInfoPlanetPrefab;
+			planetController.HealthBarPrefab = HealthBarPrefab;
 
             var planetPosition = new Vector3(planet.X, planet.Y, 0);
             newPlanet.transform.position = planetPosition;
@@ -190,17 +190,6 @@ namespace Assets.Scripts.ViewModels
             }
         }
 
-		private void AddHealthbarToPlanet(Planet planet, GameObject newPlanet,
-            GameObject planetGO, float diameter, GameObject planetHealthbarPrefab)
-		{
-			if (planet.OwnerId is not null && planet.Status is PlanetStatus.Colonized)
-            {
-                GameObject healthbar = Object.Instantiate(planetHealthbarPrefab);
-                healthbar.transform.SetParent(planetGO.transform);
-                healthbar.transform.position = newPlanet.transform.position
-                    + (Vector3.up * diameter / 2f);
-            }
-		}
         #endregion
 
         private Vector3 GetPlanetScale(int size)
@@ -300,8 +289,7 @@ namespace Assets.Scripts.ViewModels
             switch (fortStatus)
             {
                 case Fortification.None:
-                    return fortPrefabs.First(p => p.name.Equals("LightDefenceIcon"));
-                    //return null;
+                    return null;
                 case Fortification.Weak:
                     return fortPrefabs.First(p => p.name.Equals("LightDefenceIcon"));
                 case Fortification.Reliable:
