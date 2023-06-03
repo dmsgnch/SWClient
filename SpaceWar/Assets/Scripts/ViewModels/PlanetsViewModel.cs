@@ -26,7 +26,7 @@ namespace Assets.Scripts.ViewModels
 	public class PlanetsViewModel : ViewModelBase
 	{
 		private const float ConnectionThickness = 0.5f;
-
+		
 		public GameObject[] GeneratePlanets(GameObject[] planetPrefabs, GameObject planetsParent,
 			GameObject planetInfoPanelPrefab, GameObject[] planetIconsPrefabs, GameObject buttonPrefab,
 			GameObject planetTextPrefab, GameObject healthbarPrefab)
@@ -192,17 +192,17 @@ namespace Assets.Scripts.ViewModels
                     GameManager.Instance.HeroDataStore.Color;
             }
 
-            if (planet.Status is PlanetStatus.Researching)
+            if (planet.ResourceType is ResourceType.Default)
             {
-                rightDownText.GetComponent<TextMesh>().text = $"RS:{planet.IterationsLeftToNextStatus}";
+                rightDownText.GetComponent<TextMesh>().text = $"R:{planet.ResourceCount}";
             }
-            else if (planet.Status is PlanetStatus.Colonizing)
+            else if (planet.ResourceType is ResourceType.Default)
             {
-                rightDownText.GetComponent<TextMesh>().text = $"CS:{planet.IterationsLeftToNextStatus}";
+                rightDownText.GetComponent<TextMesh>().text = $"CS:{planet.ResourceCount}";
             }
-            else if (planet.Status is PlanetStatus.Colonized)
+            else if (planet.ResourceType is ResourceType.Default)
             {
-                rightDownText.GetComponent<TextMesh>().text = $"R:{planet.Size}";
+                rightDownText.GetComponent<TextMesh>().text = $"RS:{planet.ResourceCount}";
             }
         }
 
@@ -335,7 +335,10 @@ namespace Assets.Scripts.ViewModels
 			return planets.FirstOrDefault(p => p.Id.Equals(id)) ??
 				throw new ArgumentException($"planet with id {id} was not found");
 		}
-
+		/// <summary>
+		/// clearing children of parent object
+		/// </summary>
+		/// <param name="parent"></param>
 		private void ClearChildren(GameObject parent)
 		{
 			foreach (GameObject child in parent.transform)
