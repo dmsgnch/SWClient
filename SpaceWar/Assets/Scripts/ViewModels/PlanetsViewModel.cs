@@ -192,17 +192,17 @@ namespace Assets.Scripts.ViewModels
                     GameManager.Instance.HeroDataStore.Color;
             }
 
-            if (planet.Status is PlanetStatus.Researching)
+            if (planet.ResourceType is ResourceType.Default)
             {
-                rightDownText.GetComponent<TextMesh>().text = $"RS:{planet.IterationsLeftToNextStatus}";
+                rightDownText.GetComponent<TextMesh>().text = $"R:{planet.ResourceCount}";
             }
-            else if (planet.Status is PlanetStatus.Colonizing)
+            else if (planet.ResourceType is ResourceType.Default)
             {
-                rightDownText.GetComponent<TextMesh>().text = $"CS:{planet.IterationsLeftToNextStatus}";
+                rightDownText.GetComponent<TextMesh>().text = $"CS:{planet.ResourceCount}";
             }
-            else if (planet.Status is PlanetStatus.Colonized)
+            else if (planet.ResourceType is ResourceType.Default)
             {
-                rightDownText.GetComponent<TextMesh>().text = $"R:{planet.Size}";
+                rightDownText.GetComponent<TextMesh>().text = $"RS:{planet.ResourceCount}";
             }
         }
 
