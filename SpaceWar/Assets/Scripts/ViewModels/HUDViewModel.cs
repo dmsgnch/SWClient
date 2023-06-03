@@ -21,14 +21,10 @@ namespace Assets.Scripts.ViewModels
 		public void UpdatePanelTexts(GameObject resourcesPanel, GameObject soldiersPanel,
 			GameObject researchShipsPanel, GameObject colonizationShipsPanel, GameObject turnPanel)
 		{
-			resourcesPanel.GetComponentInChildren<TMP_Text>().text = 
-				GameManager.Instance.HeroDataStore.Resourses.ToString();
-			soldiersPanel.GetComponentInChildren<TMP_Text>().text =
-				GameManager.Instance.HeroDataStore.AvailableSoldiers.ToString();
-			researchShipsPanel.GetComponentInChildren<TMP_Text>().text = 
-				GameManager.Instance.HeroDataStore.AvailableResearchShips.ToString();
-			colonizationShipsPanel.GetComponentInChildren<TMP_Text>().text = 
-				GameManager.Instance.HeroDataStore.AvailableColonizationShips.ToString();
+			resourcesPanel.GetComponentInChildren<TMP_Text>().text = GameManager.Instance.HeroDataStore.Resourses.ToString();
+			soldiersPanel.GetComponentInChildren<TMP_Text>().text = GameManager.Instance.HeroDataStore.AvailableSoldiers.ToString();
+			researchShipsPanel.GetComponentInChildren<TMP_Text>().text = GameManager.Instance.HeroDataStore.AvailableResearchShips.ToString();
+			colonizationShipsPanel.GetComponentInChildren<TMP_Text>().text = GameManager.Instance.HeroDataStore.AvailableColonizationShips.ToString();
 			TMP_Text[] turnTexts = turnPanel.GetComponentsInChildren<TMP_Text>();
 			foreach (TMP_Text tmpText in turnTexts)
 			{

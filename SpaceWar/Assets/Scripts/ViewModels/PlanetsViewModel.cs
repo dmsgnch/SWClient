@@ -192,24 +192,23 @@ namespace Assets.Scripts.ViewModels
                     GameManager.Instance.HeroDataStore.Color;
             }
 
-            if (planet.ResourceType is ResourceType.Default)
+            if (planet.Status is PlanetStatus.Researching)
             {
-                rightDownText.GetComponent<TextMesh>().text = $"RS:{planet.ResourceCount}";
+                rightDownText.GetComponent<TextMesh>().text = $"RS:{planet.IterationsLeftToNextStatus}";
             }
-            else if (planet.ResourceType is ResourceType.Default)
+            else if (planet.Status is PlanetStatus.Colonizing)
             {
-                rightDownText.GetComponent<TextMesh>().text = $"CS:{planet.ResourceCount}";
+                rightDownText.GetComponent<TextMesh>().text = $"CS:{planet.IterationsLeftToNextStatus}";
             }
-            else if (planet.ResourceType is ResourceType.Default)
+            else if (planet.Status is PlanetStatus.Colonized)
             {
-                rightDownText.GetComponent<TextMesh>().text = $"R:{planet.ResourceCount}";
+                rightDownText.GetComponent<TextMesh>().text = $"R:{planet.Size}";
             }
         }
 
         #endregion
 
-        #region SignalR
-        public async Task Attack(Planet planet)
+		public async Task Attack(Planet planet)
 		{
 			//TODO: Sending signalR request
 		}
@@ -260,11 +259,10 @@ namespace Assets.Scripts.ViewModels
 		{
 			//TODO: Sending signalR request
 		}
-        #endregion
 
-        #region ParsingPrefabs
+		#region ParsingPrefabs
 
-        private GameObject GetPlanetPrefabByPlanetType(PlanetType planetType, GameObject[] prefabs)
+		private GameObject GetPlanetPrefabByPlanetType(PlanetType planetType, GameObject[] prefabs)
 		{
 			switch (planetType)
 			{

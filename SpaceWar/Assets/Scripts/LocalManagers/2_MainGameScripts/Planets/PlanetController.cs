@@ -91,7 +91,6 @@ public class PlanetController : MonoBehaviour
     private void CreateHealthBar()
     {
         var sliderGO = Instantiate(HealthBarPrefab, transform.parent);
-		if (planet.Health >= planet.HealthLimit) sliderGO.SetActive(false);
         slider = sliderGO.GetComponent<UnityEngine.UI.Slider>();
     }
 
