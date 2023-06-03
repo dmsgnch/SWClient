@@ -179,7 +179,7 @@ namespace Assets.Scripts.Managers
 			SceneManager.sceneLoaded += OnMainGameSceneLoaded;
 		}
 
-		private void OnMainGameSceneLoaded(Scene scene, LoadSceneMode mode)
+		private async void OnMainGameSceneLoaded(Scene scene, LoadSceneMode mode)
 		{
 			if (scene.buildIndex != 2) throw new DataException("Index is not match");
 
@@ -224,6 +224,8 @@ namespace Assets.Scripts.Managers
 			UiManager.Instance.Init(screens);
 
 			SceneManager.sceneLoaded -= OnMainGameSceneLoaded;
+
+			await NetworkingManager.Instance.StartHub("session");
 
 			ChangeState(GameState.MainGame);
 		}

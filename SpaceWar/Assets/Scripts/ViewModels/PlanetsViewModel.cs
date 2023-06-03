@@ -207,50 +207,6 @@ namespace Assets.Scripts.ViewModels
 
         #endregion
 
-        private Vector3 GetPlanetScale(int size)
-		{
-			size = Math.Clamp(size, 1, 25);
-			float scale;
-			if (size >= 1 && size <= 5)
-			{
-				scale = 15f;
-			}
-			else if (size >= 6 && size <= 10)
-			{
-				scale = 20f;
-			}
-			else if (size >= 11 && size <= 15)
-			{
-				scale = 25f;
-			}
-			else if (size >= 16 && size <= 20)
-			{
-				scale = 30f;
-			}
-			else
-			{
-				scale = 35f;
-			}
-			scale /= 1.5f;
-
-			return new Vector3(scale, scale, scale);
-		}
-
-		private Planet GetPlanetById(Guid id)
-		{
-			List<Planet> planets = GameManager.Instance.HeroDataStore.HeroMapView.Planets;
-			return planets.FirstOrDefault(p => p.Id.Equals(id)) ??
-				throw new ArgumentException($"planet with id {id} was not found");
-		}
-
-		private void ClearChildren(GameObject parent)
-		{
-			foreach (GameObject child in parent.transform)
-			{
-				Object.Destroy(child);
-			}
-		}
-
 		public async Task Attack(Planet planet)
 		{
 			//TODO: Sending signalR request
@@ -370,50 +326,50 @@ namespace Assets.Scripts.ViewModels
             }
         }
 
-        #endregion
+		#endregion
 
-        private Vector3 GetPlanetScale(int size)
-        {
-            size = Math.Clamp(size, 1, 25);
-            float scale;
-            if (size >= 1 && size <= 5)
-            {
-                scale = 15f;
-            }
-            else if (size >= 6 && size <= 10)
-            {
-                scale = 20f;
-            }
-            else if (size >= 11 && size <= 15)
-            {
-                scale = 25f;
-            }
-            else if (size >= 16 && size <= 20)
-            {
-                scale = 30f;
-            }
-            else
-            {
-                scale = 35f;
-            }
-            scale /= 1.5f;
+		private Planet GetPlanetById(Guid id)
+		{
+			List<Planet> planets = GameManager.Instance.HeroDataStore.HeroMapView.Planets;
+			return planets.FirstOrDefault(p => p.Id.Equals(id)) ??
+				throw new ArgumentException($"planet with id {id} was not found");
+		}
 
-            return new Vector3(scale, scale, scale);
-        }
+		private void ClearChildren(GameObject parent)
+		{
+			foreach (GameObject child in parent.transform)
+			{
+				Object.Destroy(child);
+			}
+		}
 
-        private Planet GetPlanetById(Guid id)
-        {
-            List<Planet> planets = GameManager.Instance.HeroDataStore.HeroMapView.Planets;
-            return planets.FirstOrDefault(p => p.Id.Equals(id)) ??
-                throw new ArgumentException($"planet with id {id} was not found");
-        }
+		private Vector3 GetPlanetScale(int size)
+		{
+			size = Math.Clamp(size, 1, 25);
+			float scale;
+			if (size >= 1 && size <= 5)
+			{
+				scale = 15f;
+			}
+			else if (size >= 6 && size <= 10)
+			{
+				scale = 20f;
+			}
+			else if (size >= 11 && size <= 15)
+			{
+				scale = 25f;
+			}
+			else if (size >= 16 && size <= 20)
+			{
+				scale = 30f;
+			}
+			else
+			{
+				scale = 35f;
+			}
+			scale /= 1.5f;
 
-        private void ClearChildren(GameObject parent)
-        {
-            foreach (GameObject child in parent.transform)
-            {
-                Object.Destroy(child);
-            }
-        }
-    }
+			return new Vector3(scale, scale, scale);
+		}
+	}
 }
