@@ -39,7 +39,12 @@ namespace Assets.Scripts.View
 			AddHoverListeners(ColonizeShipPanel, OnColonizeShipPanelHoverEnter, OnColonizeShipPanelHoverExit);
 		}
 
-		private void AddHoverListeners(GameObject panel, UnityAction<PointerEventData> onEnter, UnityAction<PointerEventData> onExit)
+        private void Update()
+        {
+			_hudViewModel.ResuceTurnPanelTime(TurnPanel, Time.deltaTime);
+        }
+
+        private void AddHoverListeners(GameObject panel, UnityAction<PointerEventData> onEnter, UnityAction<PointerEventData> onExit)
 		{
 			EventTrigger trigger = panel.GetComponent<EventTrigger>();
 			if (trigger == null)
@@ -123,13 +128,17 @@ namespace Assets.Scripts.View
 			if (_hudViewModel is null) return;
 			UpdateSession();
 		}
+		public void SetTurnPanelTimer(int time) {
+			_hudViewModel.SetTurnPanelTimer(TurnPanel, time);
+		}
 
-		//private void OnDisable()
-		//{
-		//    HUD_values.OnValuesChanged -= UpdateTextValues;
-		//}
 
-		protected override void OnBind(HUDViewModel hudViewModel)
+        //private void OnDisable()
+        //{
+        //    HUD_values.OnValuesChanged -= UpdateTextValues;
+        //}
+
+        protected override void OnBind(HUDViewModel hudViewModel)
 		{
 			_hudViewModel = hudViewModel;
 		}

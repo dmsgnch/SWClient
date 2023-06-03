@@ -733,7 +733,7 @@ MonoBehaviour:
   - {fileID: 2664042884964684233, guid: 8b48ae359da1b7b468dc91b2a66678b1, type: 3}
   ButtonPrefab: {fileID: 4030092777037534551, guid: 74a69d20f30ad6e409cec72aa0dafa9a, type: 3}
   textPrefab: {fileID: 5653605300139628338, guid: 98ece849cb71f3b47bb90205fa57e051, type: 3}
-  healthbarPrefab: {fileID: 8595157710949786121, guid: 85c0edce866200b4e893d53e59a3f90e, type: 3}
+  healthbarPrefab: {fileID: 1796562122291600629, guid: 85c0edce866200b4e893d53e59a3f90e, type: 3}
   PlanetInfoPanelPrefab: {fileID: 4559352972712032284, guid: 1a8daeb38a4042b4d93f79c569edf018, type: 3}
 --- !u!1 &223981704
 GameObject:

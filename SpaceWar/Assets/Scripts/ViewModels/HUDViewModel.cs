@@ -17,7 +17,39 @@ namespace Assets.Scripts.ViewModels
 		private GameObject _researchShipInfoPanel;
 		private GameObject _colonizeShipInfoPanel;
 
+		private float time = 60f;
+		private bool enableTimer = true;
 
+		public void ResuceTurnPanelTime(GameObject turnPanel, float value) {
+			if (enableTimer)
+			{
+				time -= value;
+				if (time <= 0f)
+				{
+					TurnPanelTimeOut();
+					enableTimer = false;
+				}
+				SetTurnPanelTime(turnPanel);
+			}
+		}
+		public void SetTurnPanelTimer(GameObject turnPanel, float value) {
+			time = value;
+			enableTimer = true;
+		}
+		private void SetTurnPanelTime(GameObject turnPanel) {
+			TMP_Text[] turnTexts = turnPanel.GetComponentsInChildren<TMP_Text>();
+			foreach (TMP_Text tmpText in turnTexts)
+			{
+				if (tmpText.gameObject.name == "txt_leftTimeValue") {
+					tmpText.text = ((int)time).ToString();
+					break;
+				}
+			}
+		}
+
+		private void TurnPanelTimeOut(){
+			Debug.Log("OUT OF TIME");
+        }
 		public void UpdatePanelTexts(GameObject resourcesPanel, GameObject soldiersPanel,
 			GameObject researchShipsPanel, GameObject colonizationShipsPanel, GameObject turnPanel)
 		{
@@ -30,9 +62,9 @@ namespace Assets.Scripts.ViewModels
 			{
 				switch (tmpText.gameObject.name)
 				{
-					case "txt_leftTimeValue":
-						tmpText.text = GameManager.Instance.SessionDataStore.TurnTimeLimit.ToString();
-						break;
+					//case "txt_leftTimeValue":
+						//tmpText.text = GameManager.Instance.SessionDataStore.TurnTimeLimit.ToString();
+					//	break;
 					case "txt_currentTurnValue":
 						tmpText.text = GameManager.Instance.SessionDataStore.TurnNumber.ToString();
 						break;
