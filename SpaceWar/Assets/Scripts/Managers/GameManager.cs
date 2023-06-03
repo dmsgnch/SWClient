@@ -21,6 +21,8 @@ namespace Assets.Scripts.Managers
 {
 	public class GameManager : ComponentPersistentSingleton<GameManager>
 	{
+		[SerializeField] private GameObject loadManagerPrefab;
+
 		internal MainDataStore MainDataStore { get; private set; } = new MainDataStore();
 		internal ConnectToGameDataStore ConnectToGameDataStore { get; private set; } = new ConnectToGameDataStore();
 		internal LobbyDataStore LobbyDataStore { get; private set; } = new LobbyDataStore();
@@ -120,11 +122,13 @@ namespace Assets.Scripts.Managers
 
 		private void HandleLoadConnectToGameScene()
 		{
+			GameObject loadingManagerObject = Instantiate(loadManagerPrefab);
 
-            LoadingManager loadingManager = new GameObject("LoadingManager").AddComponent<LoadingManager>();
-            loadingManager.LoadScene(1);
+			LoadingManager loadingManager = loadingManagerObject.GetComponent<LoadingManager>();
 
-            SceneManager.sceneLoaded += OnConnectToGameSceneLoaded;
+			SceneManager.sceneLoaded += OnConnectToGameSceneLoaded;
+
+			loadingManager.LoadScene(1);
 		}
 
         private void OnConnectToGameSceneLoaded(Scene scene, LoadSceneMode mode)
@@ -178,12 +182,12 @@ namespace Assets.Scripts.Managers
 
 		private void HandleLoadMainGameScene()
 		{
-			SceneManager.LoadScene(2);
+			GameObject loadingManagerObject = Instantiate(loadManagerPrefab);
+
+			LoadingManager loadingManager = loadingManagerObject.GetComponent<LoadingManager>();
 
 			SceneManager.sceneLoaded += OnMainGameSceneLoaded;
-			
-			LoadingManager loadingManager = new GameObject("LoadingManager").AddComponent<LoadingManager>();
-			
+
 			loadingManager.LoadScene(2);
 		}
 
