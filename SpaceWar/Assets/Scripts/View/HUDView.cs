@@ -41,7 +41,7 @@ namespace Assets.Scripts.View
 
         private void Update()
         {
-			//_hudViewModel.ResuceTurnPanelTime(TurnPanel, Time.deltaTime);
+			_hudViewModel.ReduceTurnPanelTime(TurnPanel, Time.deltaTime);
         }
 
         private void AddHoverListeners(GameObject panel, UnityAction<PointerEventData> onEnter, UnityAction<PointerEventData> onExit)
