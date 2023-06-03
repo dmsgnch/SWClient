@@ -49,7 +49,11 @@ namespace Assets.Scripts.LocalManagers._2_MainGameScripts.RequestsAndResponses.R
 			PlanetsView planetsView = UnityEngine.Object.FindAnyObjectByType<PlanetsView>();
 			if (planetsView is null) throw new InvalidOperationException();
 			planetsView.GeneratePlanetsWithConnections();
-		}
+
+            MainGameCameraView mainCameraView = UnityEngine.Object.FindAnyObjectByType<MainGameCameraView>();
+            if (mainCameraView is null) throw new InvalidOperationException();
+            mainCameraView.CenterCameraOnCapital();
+        }
 
 		public void OnRequestFinished()
 		{

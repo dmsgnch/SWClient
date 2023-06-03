@@ -1,5 +1,7 @@
-﻿using Assets.Scripts.ViewModels;
+﻿using Assets.Scripts.Managers;
+using Assets.Scripts.ViewModels;
 using Assets.View.Abstract;
+using SharedLibrary.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,25 +17,24 @@ namespace Assets.Scripts.View
 		//[SerializeField]
 		//private GameObject _camera;
 
+
 		private bool MouseMove { get; set; } = false;
 		private Vector3 MousePosition;
 		private float ScrollInput;
-		private float CurrentDistance;
+		private float CurrentDistance = -200;
 
 
 		private MainGameCameraViewModel _mainGameCameraViewModel;
 
-		void Start()
-		{
-			CurrentDistance = -200;
-		}
+        public void Awake()
+        {
+        }
 
-		public void Awake()
-		{
-			//_camera
-		}
+        private void OnEnable()
+        {
+        }
 
-		private void Update()
+        private void Update()
 		{
 			if (_mainGameCameraViewModel is null) return;
 
@@ -59,14 +60,14 @@ namespace Assets.Scripts.View
 			_mainGameCameraViewModel.OnZoom(ref ScrollInput, ref CurrentDistance, gameObject);
 		}
 
-		private void OnEnable()
-		{
-			if (_mainGameCameraViewModel is null) return;
-		}
+        public void CenterCameraOnCapital()
+        {
+			_mainGameCameraViewModel.CenterCameraOnCapital(gameObject);
+        }
 
-		protected override void OnBind(MainGameCameraViewModel mainGameCameraViewModel)
+        protected override void OnBind(MainGameCameraViewModel mainGameCameraViewModel)
 		{
 			_mainGameCameraViewModel = mainGameCameraViewModel;
-		}
+        }
 	}
 }

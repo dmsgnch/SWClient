@@ -155,18 +155,28 @@ namespace Assets.Scripts.ViewModels
 		private void AddSizeTextToPlanet(Planet planet, GameObject newPlanet,
             GameObject planetGO, float diameter, GameObject planetTextPrefab)
 		{
+			bool isSizeVisible = planet.Status >= PlanetStatus.Colonized &&
+				planet.Status < PlanetStatus.Enemy;
+
+            if (!isSizeVisible) return;
+
             GameObject sizeText = Object.Instantiate(planetTextPrefab);
             sizeText.GetComponent<TextMesh>().text = $"S:{planet.Size}";
             sizeText.transform.SetParent(planetGO.transform);
             sizeText.GetComponent<TextMesh>().color = Color.white;
             sizeText.transform.position = newPlanet.transform.position
                 + (Vector3.down * diameter / 2f) + (Vector3.left * diameter / 1.5f);
-			sizeText.name = "sizeText";
+            sizeText.name = "sizeText";
         }
 
 		private void AddResourceTextToPlanet(Planet planet, GameObject newPlanet,
             GameObject planetGO, float diameter, GameObject planetTextPrefab)
-		{
+        {
+            bool isResourceVisible = planet.Status >= PlanetStatus.Colonized &&
+                planet.Status < PlanetStatus.Enemy;
+
+			if (!isResourceVisible) return;
+
             GameObject rightDownText = Object.Instantiate(planetTextPrefab);
             rightDownText.GetComponent<TextMesh>().text = "";
             rightDownText.transform.SetParent(planetGO.transform);
@@ -176,7 +186,7 @@ namespace Assets.Scripts.ViewModels
             rightDownText.name = "resourceText";
 
             if (planet.Status is PlanetStatus.Colonized)
-			{
+            {
                 rightDownText.GetComponent<TextMesh>().color =
                     GameManager.Instance.HeroDataStore.Color;
             }
@@ -314,7 +324,7 @@ namespace Assets.Scripts.ViewModels
 				case PlanetType.Venus:
 					return prefabs.First(p => p.name.Equals("Venus"));
 				default:
-					throw new DataException();
+					throw new DataException("planet prefab not found");
 			}
 		}
 
@@ -338,7 +348,7 @@ namespace Assets.Scripts.ViewModels
 				case PlanetStatus.Known:
 					return null;
                 default:
-                    throw new DataException();
+                    throw new DataException("status prefab not found");
             }
 		}
 
@@ -347,6 +357,7 @@ namespace Assets.Scripts.ViewModels
             switch (fortStatus)
             {
                 case Fortification.None:
+                    //return fortPrefabs.First(p => p.name.Equals("LightDefenceIcon"));
                     return null;
                 case Fortification.Weak:
                     return fortPrefabs.First(p => p.name.Equals("LightDefenceIcon"));
@@ -355,10 +366,54 @@ namespace Assets.Scripts.ViewModels
                 case Fortification.Strong:
                     return fortPrefabs.First(p => p.name.Equals("TotalDefenceIcon"));
                 default:
-                    throw new DataException();
+                    throw new DataException("Fortification prefab not found");
             }
         }
 
         #endregion
+
+        private Vector3 GetPlanetScale(int size)
+        {
+            size = Math.Clamp(size, 1, 25);
+            float scale;
+            if (size >= 1 && size <= 5)
+            {
+                scale = 15f;
+            }
+            else if (size >= 6 && size <= 10)
+            {
+                scale = 20f;
+            }
+            else if (size >= 11 && size <= 15)
+            {
+                scale = 25f;
+            }
+            else if (size >= 16 && size <= 20)
+            {
+                scale = 30f;
+            }
+            else
+            {
+                scale = 35f;
+            }
+            scale /= 1.5f;
+
+            return new Vector3(scale, scale, scale);
+        }
+
+        private Planet GetPlanetById(Guid id)
+        {
+            List<Planet> planets = GameManager.Instance.HeroDataStore.HeroMapView.Planets;
+            return planets.FirstOrDefault(p => p.Id.Equals(id)) ??
+                throw new ArgumentException($"planet with id {id} was not found");
+        }
+
+        private void ClearChildren(GameObject parent)
+        {
+            foreach (GameObject child in parent.transform)
+            {
+                Object.Destroy(child);
+            }
+        }
     }
 }
