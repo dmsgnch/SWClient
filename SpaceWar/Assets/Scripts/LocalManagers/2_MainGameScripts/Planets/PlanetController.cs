@@ -23,27 +23,38 @@ public class PlanetController : MonoBehaviour
 	public GameObject ButtonPrefab;
 	public GameObject InfoPanelPrefab;
 	public float timeThreshold = 1f;
+    public GameObject HealthBarPrefab;
 
-	private GameObject actMenu;
+    private GameObject actMenu;
 	private MonoBehaviour[] cameraScripts;
 	private bool actMenuEnabled = false;
 	private List<string> actionNames;
 	private float hoverTime;
-	private bool createNewObject;
-	private GameObject InfoPanel = null;
-	private byte CountOfButtons { get; set; } = 0;
+    private bool createNewPlanetInfoPanel;
+    private GameObject InfoPanel = null;
+    private UnityEngine.UI.Slider slider;
+    private Camera mainCamera;
+    private byte CountOfButtons { get; set; } = 0;
 
 	private void Start()
 	{
 		cameraScripts = GameObject.Find("Look_Camera").GetComponents<MonoBehaviour>();
 		actMenu = GameObject.Find("ActionsMenu");
-	}
+        mainCamera = Camera.main;
+        CreateHealthBar();
+        slider.transform.localScale = Vector3.one * 0.7f;
+    }
 	private void Update()
 	{
-		if (createNewObject && InfoPanel is null)
+        if (slider != null && slider.gameObject.activeSelf)
+        {
+            UpdateHealthBar();
+        }
+
+        if (createNewPlanetInfoPanel && InfoPanel is null)
 		{
 			CreatePlanetInfoPanel();
-			createNewObject = false;
+            createNewPlanetInfoPanel = false;
 		}
 
 		transform.Rotate(Vector3.up, rotationSpeed * Time.deltaTime);
@@ -67,7 +78,22 @@ public class PlanetController : MonoBehaviour
 		}
 	}
 
-	void CreatePlanetInfoPanel()
+    private void UpdateHealthBar()
+    {
+        Vector3 planetPosition = transform.position;
+        Vector3 screenPosition = mainCamera.WorldToScreenPoint(planetPosition);
+        Vector3 sliderPosition = screenPosition;
+
+        sliderPosition.y += slider.GetComponent<RectTransform>().rect.height;
+        slider.transform.position = sliderPosition + Vector3.up * planet.Size;
+    }
+    private void CreateHealthBar()
+    {
+        var sliderGO = Instantiate(HealthBarPrefab, transform.parent);
+        slider = sliderGO.GetComponent<UnityEngine.UI.Slider>();
+    }
+
+    void CreatePlanetInfoPanel()
 	{
 		InfoPanel = Instantiate(InfoPanelPrefab, GameObject.Find("cnvs_HUD").transform);
 		InfoPanel.transform.position = Input.mousePosition;
@@ -117,7 +143,7 @@ public class PlanetController : MonoBehaviour
 		Button button = buttonObject.GetComponent<Button>();
 
 		TMP_Text buttonText = buttonObject.GetComponentInChildren<TMP_Text>();
-		buttonText.text = actionNames[CountOfButtons];
+		buttonText.text = buttonName;
 
 		buttonObject.transform.localPosition = new Vector3(0f, -CountOfButtons * 30f, 0f);
 
@@ -144,22 +170,22 @@ public class PlanetController : MonoBehaviour
 		{
 			case PlanetStatus.Known:
 				CreateActMenu("Research", out Button researchButton);
-				researchButton.onClick.AddListener(() => planetsView.Research(planet));
 				researchButton.onClick.AddListener(DestroyActMenu);
+				researchButton.onClick.AddListener(() => planetsView.Research(planet));
 				break;
 
 			case PlanetStatus.Researched:
 				CreateActMenu("Colonize", out Button colonizeButton);
-				colonizeButton.onClick.AddListener(() => planetsView.Colonize(planet));
 				colonizeButton.onClick.AddListener(DestroyActMenu);
+				colonizeButton.onClick.AddListener(() => planetsView.Colonize(planet));
 				break;
 
 			case PlanetStatus.Enemy:
 				if (IsAvaibleToAtack())
 				{
 					CreateActMenu("Attack", out Button attackButton);
-					attackButton.onClick.AddListener(() => planetsView.Attack(planet));
 					attackButton.onClick.AddListener(DestroyActMenu);
+					attackButton.onClick.AddListener(() => planetsView.Attack(planet));
 				}
 				break;
 
@@ -173,8 +199,8 @@ public class PlanetController : MonoBehaviour
 		if(IsDefencing(planetsView))
 		{
 			CreateActMenu("Send soldiers to defend", out Button defenceButton);
-			defenceButton.onClick.AddListener(() => planetsView.Defence(planet));
 			defenceButton.onClick.AddListener(DestroyActMenu);
+			defenceButton.onClick.AddListener(() => planetsView.Defence(planet));
 		}
 	}
 
@@ -188,20 +214,20 @@ public class PlanetController : MonoBehaviour
 		{
 			case Fortification.None:
 				CreateActMenu("Build light defence (cost)", out Button liteDefButton);
-				liteDefButton.onClick.AddListener(() => planetsView.BuiltLightDefence(planet));
 				liteDefButton.onClick.AddListener(DestroyActMenu);
+				liteDefButton.onClick.AddListener(() => planetsView.BuiltLightDefence(planet));
 				break;
 
 			case Fortification.Weak:
 				CreateActMenu("Build medium defence (cost)", out Button mediumDefButton);
-				mediumDefButton.onClick.AddListener(() => planetsView.BuiltMidleDefence(planet));
 				mediumDefButton.onClick.AddListener(DestroyActMenu);
+				mediumDefButton.onClick.AddListener(() => planetsView.BuiltMidleDefence(planet));
 				break;
 
 			case Fortification.Reliable:
 				CreateActMenu("Build strong defence (cost)", out Button strongDefButton);
-				strongDefButton.onClick.AddListener(() => planetsView.BuiltStrongDefence(planet));
 				strongDefButton.onClick.AddListener(DestroyActMenu);
+				strongDefButton.onClick.AddListener(() => planetsView.BuiltStrongDefence(planet));
 				break;
 
 			default:
@@ -270,23 +296,22 @@ public class PlanetController : MonoBehaviour
 	private void OnMouseEnter()
 	{
 		hoverTime = Time.time;
-		createNewObject = false;
+        createNewPlanetInfoPanel = false;
 	}
 
 	private void OnMouseExit()
 	{
 		Destroy(InfoPanel);
 		InfoPanel = null;
-		Debug.Log($"info panel destroyed");
 		hoverTime = 0f;
-		createNewObject = false;
+        createNewPlanetInfoPanel = false;
 	}
 
 	private void OnMouseOver()
 	{
 		if (Time.time - hoverTime >= timeThreshold)
 		{
-			createNewObject = true;
+            createNewPlanetInfoPanel = true;
 		}
 	}
 
