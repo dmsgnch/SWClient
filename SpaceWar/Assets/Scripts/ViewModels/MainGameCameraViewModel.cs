@@ -88,8 +88,7 @@ namespace Assets.Scripts.ViewModels
             float maxX = planets.Max(p => p.X);
             float maxY = planets.Max(p => p.Y);
 
-            Vector3 newPosition = camera.transform.position + cameraMovement 
-				+ new Vector3(0, 0, camera.transform.position.z);
+			Vector3 newPosition = camera.transform.position + cameraMovement;
 			camera.transform.position = MoveIntoPlanetsBorders(newPosition);
 
             previousMousePosition = currentMousePosition;
@@ -144,7 +143,7 @@ namespace Assets.Scripts.ViewModels
 			return new Vector3(
 				Mathf.Clamp(position.x, minX, maxX), 
 				Mathf.Clamp(position.y, minY, maxY),
-                Mathf.Clamp(position.z, minDistance, maxDistance)
+                position.z
                 );
         }
 	}
