@@ -20,14 +20,105 @@ using SharedLibrary.Contracts.Hubs;
 using SharedLibrary.Requests;
 using static SharedLibrary.Routes.ApiRoutes;
 using SharedLibrary.Models.Enums;
+using Components;
 
 namespace Assets.Scripts.ViewModels
 {
 	public class PlanetsViewModel : ViewModelBase
 	{
 		private const float ConnectionThickness = 0.5f;
-		
-		public GameObject[] GeneratePlanets(GameObject[] planetPrefabs, GameObject planetsParent,
+
+		public async void UpdatePlanet(Planet newPlanet, GameObject textPrefab) {
+			var planet = GameObject.Find(newPlanet.PlanetName);
+            if (planet is not null)
+            {
+                var planetController = planet.GetComponentInChildren<PlanetController>();
+
+				//if (planetController.planet.ResourceCount != planet.ResourceCount) {
+                    UpdateResourceTextToPlanet(newPlanet, planet.transform.Find("resourceText"));
+				    UpdateSizeTextToPlanet(newPlanet, planet.transform.Find("sizeText"));
+				planetController.planet = newPlanet;
+                    await ShowPlanetsTextsChangePanel(newPlanet.ResourceCount - planetController.planet.ResourceCount
+						, newPlanet.Size - planetController.planet.Size, textPrefab, planet);
+                //  }
+            }
+			else throw new DataException();
+		}
+
+		private async Task ShowPlanetsTextsChangePanel(int ResValue, int SizeValue, GameObject textPrefab, GameObject planet) {
+            MeshRenderer sphereRenderer = planet.GetComponentInChildren<MeshRenderer>();
+            Vector3 size = sphereRenderer.bounds.size;
+            float diameter = Mathf.Max(size.x, size.y, size.z);
+
+           var sizeText = GameObject.Instantiate(textPrefab);
+            sizeText.transform.SetParent(planet.transform);
+            sizeText.transform.position = planet.transform.GetChild(0).transform.position
+                + (Vector3.down * diameter / 1.15f) + (Vector3.left * diameter / 1.5f);
+			var text = sizeText.gameObject.GetComponent<TextMesh>();
+			text.text = SizeValue.ToString();
+			text.color = SizeValue>=0?Color.green:Color.red;
+
+            var rightDownText = GameObject.Instantiate(textPrefab);
+            rightDownText.transform.SetParent(planet.transform);
+            rightDownText.transform.position = planet.transform.GetChild(0).transform.position
+               + (Vector3.down * diameter / 1.15f) + (Vector3.right * diameter / 3f);
+            text = rightDownText.gameObject.GetComponent<TextMesh>();
+            text.text = ResValue.ToString();
+            text.color = ResValue >= 0 ? Color.green : Color.red;
+
+            await Task.Delay(10000);
+
+				GameObject.Destroy(sizeText);
+                GameObject.Destroy(rightDownText);
+		}
+        private void UpdateSizeTextToPlanet(Planet planet, Transform sizeText)
+        {
+            if (sizeText is null) return;
+            bool isSizeVisible = planet.Status >= PlanetStatus.Colonized &&
+                planet.Status < PlanetStatus.Enemy;
+
+            if (!isSizeVisible)
+            {
+				sizeText.gameObject.SetActive(false);
+                return;
+            }
+            else sizeText.gameObject.SetActive(true);
+
+            sizeText.gameObject.GetComponent<TextMesh>().text = $"S:{planet.Size}\n(+xxx)";
+        }
+        private void UpdateResourceTextToPlanet(Planet newPlanet, Transform rightDownText)
+        {
+			if (rightDownText is null) return;
+            bool isResourceVisible = newPlanet.Status >= PlanetStatus.Colonized &&
+                newPlanet.Status < PlanetStatus.Enemy;
+
+			if (!isResourceVisible) {
+				rightDownText.gameObject.SetActive(false);
+				return;	
+			}
+			else rightDownText.gameObject.SetActive(true);
+
+
+            if (newPlanet.Status is PlanetStatus.Colonized)
+            {
+                rightDownText.gameObject.GetComponent<TextMesh>().color =
+                    GameManager.Instance.HeroDataStore.Color;
+            }
+
+            if (newPlanet.ResourceType is ResourceType.OnlyResources)
+            {
+                rightDownText.gameObject.GetComponent<TextMesh>().text = $"R:{newPlanet.ResourceCount}\n(+xxx)";
+            }
+            else if (newPlanet.ResourceType is ResourceType.ResourcesWithColonizationShip)
+            {
+                rightDownText.gameObject.GetComponent<TextMesh>().text = $"CS:{newPlanet.ResourceCount}/limit";
+            }
+            else if (newPlanet.ResourceType is ResourceType.ResourcesWithResearchShip)
+            {
+                rightDownText.gameObject.GetComponent<TextMesh>().text = $"RS:{newPlanet.ResourceCount}/limit";
+            }
+        }
+        public GameObject[] GeneratePlanets(GameObject[] planetPrefabs, GameObject planetsParent,
 			GameObject planetInfoPanelPrefab, GameObject[] planetIconsPrefabs, GameObject buttonPrefab,
 			GameObject planetTextPrefab, GameObject healthbarPrefab)
 		{
@@ -162,7 +253,7 @@ namespace Assets.Scripts.ViewModels
             if (!isSizeVisible) return;
 
             GameObject sizeText = Object.Instantiate(planetTextPrefab);
-            sizeText.GetComponent<TextMesh>().text = $"S:{planet.Size}";
+            sizeText.GetComponent<TextMesh>().text = $"S:{planet.Size}\n(+xxx)";
             sizeText.transform.SetParent(planetGO.transform);
             sizeText.GetComponent<TextMesh>().color = Color.white;
             sizeText.transform.position = newPlanet.transform.position
@@ -194,15 +285,15 @@ namespace Assets.Scripts.ViewModels
 
             if (planet.ResourceType is ResourceType.OnlyResources)
             {
-                rightDownText.GetComponent<TextMesh>().text = $"R:{planet.ResourceCount}";
+                rightDownText.GetComponent<TextMesh>().text = $"R:{planet.ResourceCount}\n(+xxx)";
             }
             else if (planet.ResourceType is ResourceType.ResourcesWithColonizationShip)
             {
-                rightDownText.GetComponent<TextMesh>().text = $"CS:{planet.ResourceCount}";
+                rightDownText.GetComponent<TextMesh>().text = $"CS:{planet.ResourceCount}/limit";
             }
             else if (planet.ResourceType is ResourceType.ResourcesWithResearchShip)
             {
-                rightDownText.GetComponent<TextMesh>().text = $"RS:{planet.ResourceCount}";
+                rightDownText.GetComponent<TextMesh>().text = $"RS:{planet.ResourceCount}/limit";
             }
         }
 

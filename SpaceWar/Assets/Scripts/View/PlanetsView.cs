@@ -17,7 +17,7 @@ namespace Assets.Scripts.View
 
         [SerializeField] private GameObject planetsParent;
         [SerializeField] private GameObject connectionsParent;
-        [SerializeField] private GameObject dropdownPrefab;
+        //[SerializeField] private GameObject dropdownPrefab;
         [SerializeField] private GameObject[] planetPrefabs;
         [SerializeField] private GameObject[] planetIconsPrefabs;
         [SerializeField] private GameObject ButtonPrefab;
@@ -30,6 +30,7 @@ namespace Assets.Scripts.View
             GameObject[] planets = _planetsViewModel.GeneratePlanets(planetPrefabs, 
                 planetsParent, PlanetInfoPanelPrefab, planetIconsPrefabs, ButtonPrefab, textPrefab, healthbarPrefab);
             _planetsViewModel.CreateConnections(connectionsParent, planets);
+            
         }
 
         private void Awake()
@@ -50,6 +51,7 @@ namespace Assets.Scripts.View
 
 		public async void Research(Planet planet)
         {
+           
             await _planetsViewModel.Research(planet);
         }
 
@@ -60,7 +62,8 @@ namespace Assets.Scripts.View
 
 		public async void BuiltLightDefence(Planet planet)
 		{
-			_planetsViewModel.BuiltLightDefence(planet);
+            _planetsViewModel.UpdatePlanet(planet, textPrefab);
+            //_planetsViewModel.BuiltLightDefence(planet);
 		}
 
 		public async void BuiltMidleDefence(Planet planet)

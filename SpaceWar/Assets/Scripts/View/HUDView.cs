@@ -141,8 +141,15 @@ namespace Assets.Scripts.View
             //_hudViewModel.SetTurnButtonUnactiveStatus(TurnPanel);
             //_hudViewModel.SetTurnButtonActiveStatus(TurnPanel);
         }
-		public void SetTurnPanelTimer(int time) {
-			//_hudViewModel.SetTurnPanelTimer(TurnPanel, time);
+		public void SetTurnButtonActive() {
+            _hudViewModel.SetTurnButtonActiveStatus(TurnPanel);
+        }
+        public void SetTurnButtonUnactive()
+        {
+            _hudViewModel.SetTurnButtonUnactiveStatus(TurnPanel);
+        }
+        public void SetTurnPanelTimer(int time) {
+			_hudViewModel.SetTurnPanelTimer(TurnPanel, time);
 		}
 
 

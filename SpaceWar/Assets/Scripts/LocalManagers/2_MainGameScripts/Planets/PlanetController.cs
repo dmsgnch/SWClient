@@ -24,7 +24,7 @@ public class PlanetController : MonoBehaviour
 	public GameObject ButtonPrefab;
 	public GameObject InfoPanelPrefab;
 	public float timeThreshold = 1f;
-    public GameObject HealthBarPrefab;
+    public GameObject HealthBarPrefab; 
 
     private GameObject actMenu;
 	private MonoBehaviour[] cameraScripts;
@@ -40,6 +40,7 @@ public class PlanetController : MonoBehaviour
 
 	private void Start()
 	{
+		
 		cameraScripts = GameObject.Find("Look_Camera").GetComponents<MonoBehaviour>();
 		actMenu = GameObject.Find("ActionsMenu");
         mainCamera = Camera.main;

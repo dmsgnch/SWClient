@@ -22,6 +22,7 @@ namespace Assets.Scripts.ViewModels
         private float time = 60f;
         private bool enableTimer = true;
 
+		
         public void ReduceTurnPanelTime(GameObject turnPanel, float value)
         {
             if (enableTimer)
