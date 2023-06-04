@@ -46,10 +46,11 @@ namespace Scripts.RegisterLoginScripts
 				UnityMainThreadDispatcher.Instance().Enqueue(() =>
 				{
 					if (Debug.isDebugBuild) Debug.Log($"an error ocured. error message: {errorMessage}");
-					InformationPanelController.Instance.CreateMessage(InformationPanelController.MessageType.ERROR,
+					InformationPanelController.Instance.CreateMessage(
+						InformationPanelController.MessageType.ERROR,
 						errorMessage);
 				});
-			});
+            });
 
 			hubConnection.On<string>(ClientHandlers.Lobby.DeleteLobbyHandler, (serverMessage) =>
 			{

@@ -70,7 +70,7 @@ public class PlanetController : MonoBehaviour
 
 				if (Physics.Raycast(ray, out hit) && hit.collider.gameObject == gameObject)
 				{
-					OpearationChoosing();
+					GenerateActMenus();
 				}
 			}
 			else
@@ -166,7 +166,7 @@ public class PlanetController : MonoBehaviour
 	/// Perform sugery and binding according to planet status
 	/// </summary>
 	/// <exception cref="DataException"></exception>
-	private void OpearationChoosing()
+	private void GenerateActMenus()
 	{
 		var planetsView = GetPlanetsView();
 
@@ -185,7 +185,7 @@ public class PlanetController : MonoBehaviour
 				break;
 
 			case PlanetStatus.Enemy:
-				if (IsAvaibleToAtack())
+				if (IsAvaibleToAttack())
 				{
 					CreateActMenu("Attack", out Button attackButton);
 					attackButton.onClick.AddListener(DestroyActMenu);
@@ -194,8 +194,12 @@ public class PlanetController : MonoBehaviour
 				break;
 
 			case PlanetStatus.Colonized:
-				OpearationDefenceChoosing(planetsView);
-				break;
+				if (planet.FortificationLevel is Fortification.Strong) break;
+
+                CreateActMenu("Attack", out Button fortificationButton);
+                fortificationButton.onClick.AddListener(DestroyActMenu);
+                fortificationButton.onClick.AddListener(() => planetsView.BuildDefence(planet));
+                break;
 			default:
 				throw new DataException();
 		}
@@ -214,14 +218,15 @@ public class PlanetController : MonoBehaviour
     {
         float maxWidth = 0f;
 
-        // Ќайти максимальную ширину текста среди всех кнопок
-        foreach (Button button in ActionsButtons)
-        {
-            TMP_Text buttonText = button.GetComponentInChildren<TMP_Text>();
-            float buttonWidth = buttonText.preferredWidth;
+		// Ќайти максимальную ширину текста среди всех кнопок
+		maxWidth = ActionsButtons.Max(b => b.GetComponentInChildren<TMP_Text>().preferredWidth);
+        //foreach (Button button in ActionsButtons)
+        //{
+        //    TMP_Text buttonText = button.GetComponentInChildren<TMP_Text>();
+        //    float buttonWidth = buttonText.preferredWidth;
             
-            maxWidth = Mathf.Max(maxWidth, buttonWidth);
-        }
+        //    maxWidth = Mathf.Max(maxWidth, buttonWidth);
+        //}
 
         // ”становить одинаковую ширину дл€ всех кнопок
         foreach (Button button in ActionsButtons)
@@ -232,37 +237,6 @@ public class PlanetController : MonoBehaviour
             textRect.sizeDelta = new Vector2(maxWidth, textRect.sizeDelta.y);
         }
     }
-
-    /// <summary>
-    /// Perform sugery and binding according to planet defence status
-    /// </summary>
-    /// <param name="planetsView"></param>
-    private void OpearationDefenceChoosing(PlanetsView planetsView)
-	{
-		switch (planet.FortificationLevel)
-		{
-			case Fortification.None:
-				CreateActMenu("Build light defence (cost)", out Button liteDefButton);
-				liteDefButton.onClick.AddListener(DestroyActMenu);
-				liteDefButton.onClick.AddListener(() => planetsView.BuiltLightDefence(planet));
-				break;
-
-			case Fortification.Weak:
-				CreateActMenu("Build medium defence (cost)", out Button mediumDefButton);
-				mediumDefButton.onClick.AddListener(DestroyActMenu);
-				mediumDefButton.onClick.AddListener(() => planetsView.BuiltMidleDefence(planet));
-				break;
-
-			case Fortification.Reliable:
-				CreateActMenu("Build strong defence (cost)", out Button strongDefButton);
-				strongDefButton.onClick.AddListener(DestroyActMenu);
-				strongDefButton.onClick.AddListener(() => planetsView.BuiltStrongDefence(planet));
-				break;
-
-			default:
-				break;
-		}
-	}
 
 	/// <summary>
 	/// Check that any connection has a battle where the currect planet is being defended
@@ -287,7 +261,7 @@ public class PlanetController : MonoBehaviour
 			throw new Exception("PlanetsView was not found");
 	}
 
-	private bool IsAvaibleToAtack()
+	private bool IsAvaibleToAttack()
 	{
 		var connections =
 			GameManager.Instance.HeroDataStore.HeroMapView.Connections.Where(c =>

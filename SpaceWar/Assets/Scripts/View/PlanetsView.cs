@@ -1,6 +1,7 @@
 ﻿using Assets.Scripts.Managers;
 using Assets.Scripts.ViewModels;
 using Assets.View.Abstract;
+using Components;
 using SharedLibrary.Models;
 using System;
 using System.Collections.Generic;
@@ -8,6 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 namespace Assets.Scripts.View
 {
@@ -27,15 +29,13 @@ namespace Assets.Scripts.View
 
         public void GeneratePlanetsWithConnections()
         {
-            GameObject[] planets = _planetsViewModel.GeneratePlanets(planetPrefabs, 
-                planetsParent, PlanetInfoPanelPrefab, planetIconsPrefabs, ButtonPrefab, textPrefab, healthbarPrefab);
-            _planetsViewModel.CreateConnections(connectionsParent, planets);
+            _planetsViewModel.GeneratePlanets(GetPlanetsGenerationForm());
+            _planetsViewModel.CreateConnections(connectionsParent);
         }
 
-        private void Awake()
+        public void UpdatePlanet(Planet planet)
         {
-            if (_planetsViewModel is null) return;
-
+            _planetsViewModel.UpdatePlanet(planet,GetPlanetsGenerationForm());
         }
 
 		public async void Attack(Planet planet)
@@ -50,28 +50,32 @@ namespace Assets.Scripts.View
 
 		public async void Research(Planet planet)
         {
-            await _planetsViewModel.Research(planet);
+            await _planetsViewModel.ResearchOrColonizeRequest(planet);
         }
 
 		public async void Colonize(Planet planet)
 		{
-			await _planetsViewModel.Colonize(planet);
+			await _planetsViewModel.ResearchOrColonizeRequest(planet);
 		}
 
-		public async void BuiltLightDefence(Planet planet)
+		public async void BuildDefence(Planet planet)
 		{
-			_planetsViewModel.BuiltLightDefence(planet);
-		}
+			await _planetsViewModel.BuildDefence(planet);
+        }
 
-		public async void BuiltMidleDefence(Planet planet)
-		{
-			_planetsViewModel.BuiltMidleDefence(planet);
-		}
-
-		public async void BuiltStrongDefence(Planet planet)
-		{
-			_planetsViewModel.BuiltStrongDefence(planet);
-		}
+        private PlanetsGenerationForm GetPlanetsGenerationForm()
+        {
+            return new PlanetsGenerationForm
+            {
+                PlanetPrefabs = planetPrefabs,
+                PlanetsParent = planetsParent,
+                PlanetInfoPanelPrefab = PlanetInfoPanelPrefab,
+                PlanetIconsPrefabs = planetIconsPrefabs,
+                ButtonPrefab = ButtonPrefab,
+                PlanetTextPrefab = textPrefab,
+                HealthbarPrefab = healthbarPrefab,
+            };
+        }
 
 		protected override void OnBind(PlanetsViewModel model)
         {

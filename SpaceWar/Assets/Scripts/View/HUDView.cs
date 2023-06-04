@@ -131,7 +131,8 @@ namespace Assets.Scripts.View
 
 		public void UpdateHUDValues()
 		{
-			_hudViewModel.UpdatePanelTexts(ResourcesPanel, SoldiersPanel, ResearchShipPanel, ColonizeShipPanel, TurnPanel);
+			_hudViewModel.UpdatePanelTexts(ResourcesPanel, 
+				SoldiersPanel, ResearchShipPanel, ColonizeShipPanel, TurnPanel);
 		}
 
 		private void OnEnable()
@@ -142,16 +143,16 @@ namespace Assets.Scripts.View
             //_hudViewModel.SetTurnButtonActiveStatus(TurnPanel);
         }
 		public void SetTurnPanelTimer(int time) {
-			//_hudViewModel.SetTurnPanelTimer(TurnPanel, time);
+			_hudViewModel.SetTurnPanelTimer(TurnPanel, time);
 		}
 
 
-        //private void OnDisable()
-        //{
-        //    HUD_values.OnValuesChanged -= UpdateTextValues;
-        //}
+		private void OnDisable()
+		{
+			//HUD_values.OnValuesChanged -= UpdateTextValues;
+		}
 
-        protected override void OnBind(HUDViewModel hudViewModel)
+		protected override void OnBind(HUDViewModel hudViewModel)
 		{
 			_hudViewModel = hudViewModel;
             
