@@ -258,10 +258,14 @@ namespace Assets.Scripts.Managers
 		private void HandleMainGameMenu()
 		{
 			UiManager.Instance.BindAndShow(new MenuViewModel());
-            UiManager.Instance.Hide<HUDViewModel>();
-            UiManager.Instance.Hide<FPSViewModel>();
+            UiManager.Instance.BindAndShow(new HUDViewModel());
+            UiManager.Instance.BindAndShow(new FPSViewModel());
             UiManager.Instance.BindAndShow(new MainGameCameraViewModel());
-            UiManager.Instance.Hide<PlanetsViewModel>();
+            UiManager.Instance.BindAndShow(new PlanetsViewModel());
+            //UiManager.Instance.Hide<HUDViewModel>();
+            //UiManager.Instance.Hide<FPSViewModel>();
+           // UiManager.Instance.BindAndShow(new MainGameCameraViewModel());
+          // UiManager.Instance.Hide<PlanetsViewModel>();
 
         }
     }

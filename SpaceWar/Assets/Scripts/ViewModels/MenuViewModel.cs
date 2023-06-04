@@ -14,15 +14,12 @@ namespace Assets.Scripts.ViewModels
 {
 	public class MenuViewModel : ViewModelBase
 	{
-		public static bool GameIsPaused = false;
-		public GameObject menuUI;
+		
 		
 		public MenuViewModel() { }
 		public void ContinueGame()
 		{
 			Debug.Log("Continue");
-            //Time.timeScale = 1f;
-            GameIsPaused = false;
             GameManager.Instance.ChangeState(GameState.MainGame);
 
         }
@@ -38,7 +35,13 @@ namespace Assets.Scripts.ViewModels
 		{
 			Debug.Log("Settings");
 		}
-		public void QuitTheGame()
+		public void LeaveTheGame() 
+		{
+			Debug.Log("LeaveTheGame");
+            GameManager.Instance.ChangeState(GameState.LoadConnectToGameScene);
+
+        }
+        public void QuitTheGame()
 		{
 			Debug.Log("Quit");
 			Application.Quit();

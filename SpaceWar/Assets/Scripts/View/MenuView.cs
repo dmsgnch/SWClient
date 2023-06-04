@@ -21,6 +21,7 @@ namespace Assets.Scripts.View
         [SerializeField] private UnityEngine.UI.Button btn_LoadGame;
         [SerializeField] private UnityEngine.UI.Button btn_Settings;
         [SerializeField] private UnityEngine.UI.Button btn_QuitTheGame;
+        [SerializeField] private UnityEngine.UI.Button btn_LeaveTheGame;
         private MenuViewModel _menuViewModel;
         // Start is called before the first frame update
         private void Awake()
@@ -30,6 +31,7 @@ namespace Assets.Scripts.View
             btn_LoadGame.onClick.AddListener (btn_LoadGame_Click);
             btn_Settings.onClick.AddListener(btn_Settings_Click);
             btn_QuitTheGame.onClick.AddListener(btn_QuitTheGame_Click);
+            btn_LeaveTheGame.onClick.AddListener(btn_LeaveTheGame_Click);
         }
         void btn_Continue_Click()
         {
@@ -46,6 +48,10 @@ namespace Assets.Scripts.View
         void btn_Settings_Click()
         {
             _menuViewModel.Settings();
+        }
+        void btn_LeaveTheGame_Click()
+        {
+            _menuViewModel.LeaveTheGame();
         }
         void btn_QuitTheGame_Click() 
         {
