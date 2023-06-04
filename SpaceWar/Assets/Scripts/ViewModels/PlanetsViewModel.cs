@@ -341,10 +341,7 @@ namespace Assets.Scripts.ViewModels
 		/// <param name="parent"></param>
 		private void ClearChildren(GameObject parent)
 		{
-			foreach (GameObject child in parent.transform)
-			{
-				Object.Destroy(child);
-			}
+			parent.transform.DestroyChildren();
 		}
 
 		private Vector3 GetPlanetScale(int size)

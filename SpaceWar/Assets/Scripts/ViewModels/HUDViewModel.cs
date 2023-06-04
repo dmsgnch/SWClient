@@ -54,6 +54,12 @@ namespace Assets.Scripts.ViewModels
         {
             Debug.Log("OUT OF TIME");
         }
+		public void ToMenu()
+		{
+			//Time.timeScale = 0f;
+            GameManager.Instance.ChangeState(GameState.MainGameMenu);
+        }
+
 
         public void UpdatePanelTexts(GameObject resourcesPanel, GameObject soldiersPanel,
 			GameObject researchShipsPanel, GameObject colonizationShipsPanel, GameObject turnPanel)
