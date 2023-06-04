@@ -33,10 +33,12 @@ namespace Assets.Scripts.View
 
 		private void Awake()
 		{
+
 			AddHoverListeners(ResourcesPanel, OnResourcesPanelHoverEnter, OnResourcesPanelHoverExit);
 			AddHoverListeners(SoldiersPanel, OnSoldiersPanelHoverEnter, OnSoldiersPanelHoverExit);
 			AddHoverListeners(ResearchShipPanel, OnResearchShipPanelHoverEnter, OnResearchShipPanelHoverExit);
 			AddHoverListeners(ColonizeShipPanel, OnColonizeShipPanelHoverEnter, OnColonizeShipPanelHoverExit);
+			
 		}
 
         private void Update()
@@ -127,7 +129,9 @@ namespace Assets.Scripts.View
 		{
 			if (_hudViewModel is null) return;
 			UpdateSession();
-		}
+            //_hudViewModel.SetTurnButtonUnactiveStatus(TurnPanel);
+            //_hudViewModel.SetTurnButtonActiveStatus(TurnPanel);
+        }
 		public void SetTurnPanelTimer(int time) {
 			//_hudViewModel.SetTurnPanelTimer(TurnPanel, time);
 		}
@@ -141,6 +145,7 @@ namespace Assets.Scripts.View
         protected override void OnBind(HUDViewModel hudViewModel)
 		{
 			_hudViewModel = hudViewModel;
-		}
+            
+        }
 	}
 }

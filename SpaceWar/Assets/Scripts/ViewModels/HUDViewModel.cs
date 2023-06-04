@@ -1,7 +1,10 @@
 ﻿using Assets.Scripts.LocalManagers._2_MainGameScripts.RequestsAndResponses.Requests;
 using Assets.Scripts.Managers;
+using System.Drawing;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.UI;
 using ViewModels.Abstract;
 using Object = UnityEngine.Object;
 
@@ -55,6 +58,29 @@ namespace Assets.Scripts.ViewModels
             Debug.Log("OUT OF TIME");
         }
 
+		public void SetTurnButtonUnactiveStatus(GameObject turnPanel) {
+			var buttonGO = turnPanel.transform.GetChild(0);
+			var buttonImage = buttonGO.GetComponent<Image>();
+			var buttonText = buttonGO.GetComponentInChildren<TMP_Text>();
+            var button = buttonGO.GetComponent<Button>();
+            UnityEngine.Color color;
+			UnityEngine.ColorUtility.TryParseHtmlString("#CD393F", out color);
+            buttonImage.color = color;
+			buttonText.text = "Wait for other player";
+			button.enabled = false;
+		}
+        public void SetTurnButtonActiveStatus(GameObject turnPanel)
+        {
+            var buttonGO = turnPanel.transform.GetChild(0);
+            var buttonImage = buttonGO.GetComponent<Image>();
+            var buttonText = buttonGO.GetComponentInChildren<TMP_Text>();
+            var button = buttonGO.GetComponent<Button>();
+            UnityEngine.Color color;
+            UnityEngine.ColorUtility.TryParseHtmlString("#539F61", out color);
+            buttonImage.color = color; ;
+            buttonText.text = "Next Turn";
+            button.enabled = true;
+        }
         public void UpdatePanelTexts(GameObject resourcesPanel, GameObject soldiersPanel,
 			GameObject researchShipsPanel, GameObject colonizationShipsPanel, GameObject turnPanel)
 		{
