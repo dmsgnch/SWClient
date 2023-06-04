@@ -13,34 +13,34 @@ using Unity.VisualScripting;
 namespace Assets.Scripts.ViewModels
 {
 	public class MenuViewModel : ViewModelBase
-	{
-		
-		
-		public MenuViewModel() { }
+	{	
 		public void ContinueGame()
 		{
 			Debug.Log("Continue");
             GameManager.Instance.ChangeState(GameState.MainGame);
-
         }
+
         public void SaveGame()
 		{
 			Debug.Log("Save Game");
 		}
+
 		public void LoadGame()
 		{
 			Debug.Log("Load Game");
 		}
+
 		public void Settings()
 		{
 			Debug.Log("Settings");
 		}
+
 		public void LeaveTheGame() 
 		{
 			Debug.Log("LeaveTheGame");
             GameManager.Instance.ChangeState(GameState.LoadConnectToGameScene);
-
         }
+
         public void QuitTheGame()
 		{
 			Debug.Log("Quit");

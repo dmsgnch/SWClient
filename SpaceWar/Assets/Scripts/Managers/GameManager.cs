@@ -210,18 +210,22 @@ namespace Assets.Scripts.Managers
 			{
 				if(fpsView is null)
 				{
+					Debug.Log("fpsView was not found");
 					InformationPanelController.Instance.CreateMessage(InformationPanelController.MessageType.ERROR, "fpsView was not found");
 				}
 				if (hudView is null)
 				{
+					Debug.Log("hudView was not found");
 					InformationPanelController.Instance.CreateMessage(InformationPanelController.MessageType.ERROR, "hudView was not found");
 				}
 				if (planetsView is null)
 				{
+					Debug.Log("planetsView was not found");
 					InformationPanelController.Instance.CreateMessage(InformationPanelController.MessageType.ERROR, "planetsView was not found");
 				}
 				if (mainGameCameraView is null)
 				{
+					Debug.Log("mainGameCameraView was not found");
 					InformationPanelController.Instance.CreateMessage(InformationPanelController.MessageType.ERROR, "mainGameCameraView was not found");
 				}
 
@@ -257,17 +261,12 @@ namespace Assets.Scripts.Managers
 
 		private void HandleMainGameMenu()
 		{
+			UiManager.Instance.Hide<HUDViewModel>();
+			UiManager.Instance.Hide<FPSViewModel>();
+			UiManager.Instance.BindAndShow(new MainGameCameraViewModel());
 			UiManager.Instance.BindAndShow(new MenuViewModel());
-            UiManager.Instance.BindAndShow(new HUDViewModel());
-            UiManager.Instance.BindAndShow(new FPSViewModel());
-            UiManager.Instance.BindAndShow(new MainGameCameraViewModel());
-            UiManager.Instance.BindAndShow(new PlanetsViewModel());
-            //UiManager.Instance.Hide<HUDViewModel>();
-            //UiManager.Instance.Hide<FPSViewModel>();
-           // UiManager.Instance.BindAndShow(new MainGameCameraViewModel());
-          // UiManager.Instance.Hide<PlanetsViewModel>();
-
-        }
+			UiManager.Instance.Hide<PlanetsViewModel>();
+		}
     }
 
 	public enum GameState

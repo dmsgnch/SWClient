@@ -47,6 +47,7 @@ namespace Assets.Scripts.View
 		{
 			_hudViewModel.ToMenu();
 		}
+
         private void Update()
         {
             if (Input.GetKey(KeyCode.Escape))
@@ -56,6 +57,7 @@ namespace Assets.Scripts.View
             }
 			_hudViewModel.ReduceTurnPanelTime(TurnPanel, Time.deltaTime);
         }
+
         private void AddHoverListeners(GameObject panel, UnityAction<PointerEventData> onEnter, UnityAction<PointerEventData> onExit)
 		{
 			EventTrigger trigger = panel.GetComponent<EventTrigger>();
@@ -119,7 +121,6 @@ namespace Assets.Scripts.View
 
 		#endregion
 
-
 		public void UpdateSessionRequest()
 		{
 			_hudViewModel.GetSessionRequestCreate();
@@ -163,8 +164,7 @@ namespace Assets.Scripts.View
 		
         protected override void OnBind(HUDViewModel hudViewModel)
 		{
-			_hudViewModel = hudViewModel;
-            
+			_hudViewModel = hudViewModel;            
         }
 	}
 }

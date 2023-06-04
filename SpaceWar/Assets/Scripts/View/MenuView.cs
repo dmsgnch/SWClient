@@ -23,45 +23,34 @@ namespace Assets.Scripts.View
         [SerializeField] private UnityEngine.UI.Button btn_QuitTheGame;
         [SerializeField] private UnityEngine.UI.Button btn_LeaveTheGame;
         private MenuViewModel _menuViewModel;
-        // Start is called before the first frame update
+
+
         private void Awake()
         {
-            btn_Continue.onClick.AddListener(btn_Continue_Click);
-            btn_SaveGame.onClick.AddListener(btn_SaveGame_Click);
-            btn_LoadGame.onClick.AddListener (btn_LoadGame_Click);
-            btn_Settings.onClick.AddListener(btn_Settings_Click);
-            btn_QuitTheGame.onClick.AddListener(btn_QuitTheGame_Click);
-            btn_LeaveTheGame.onClick.AddListener(btn_LeaveTheGame_Click);
+            btn_Continue.onClick.AddListener(bt_Continue_Click);
+            btn_SaveGame.onClick.AddListener(bt_SaveGame_Click);
+            btn_LoadGame.onClick.AddListener (bt_LoadGame_Click);
+            btn_Settings.onClick.AddListener(bt_Settings_Click);
+            btn_QuitTheGame.onClick.AddListener(bt_LeaveTheGame_Click);
+            btn_LeaveTheGame.onClick.AddListener(bt_QuitTheGame_Click);
         }
-        void btn_Continue_Click()
-        {
-            _menuViewModel.ContinueGame();
-        }
-        void btn_SaveGame_Click()
-        {
-            _menuViewModel.SaveGame();
-        }
-        void btn_LoadGame_Click()
-        {
-            _menuViewModel.LoadGame();
-        }
-        void btn_Settings_Click()
-        {
-            _menuViewModel.Settings();
-        }
-        void btn_LeaveTheGame_Click()
-        {
-            _menuViewModel.LeaveTheGame();
-        }
-        void btn_QuitTheGame_Click() 
-        {
-            _menuViewModel.QuitTheGame();
-        }
+
+        void bt_Continue_Click() => _menuViewModel.ContinueGame();
+
+        void bt_SaveGame_Click() => _menuViewModel.SaveGame();
+
+        void bt_LoadGame_Click() => _menuViewModel.LoadGame();
+
+        void bt_Settings_Click() => _menuViewModel.Settings();
+
+        void bt_LeaveTheGame_Click() => _menuViewModel.LeaveTheGame();
+
+        void bt_QuitTheGame_Click() =>  _menuViewModel.QuitTheGame();
+
         protected override void OnBind(MenuViewModel menuViewModel)
         {
             _menuViewModel = menuViewModel;
         }
-
     }
 }
 
