@@ -17,8 +17,14 @@ namespace Assets.Scripts.ViewModels
 		private GameObject _researchShipInfoPanel;
 		private GameObject _colonizeShipInfoPanel;
 
+		public void ToMenu()
+		{
+			Time.timeScale = 0f;
+            GameManager.Instance.ChangeState(GameState.MainGameMenu);
+        }
 
-		public void UpdatePanelTexts(GameObject resourcesPanel, GameObject soldiersPanel,
+
+        public void UpdatePanelTexts(GameObject resourcesPanel, GameObject soldiersPanel,
 			GameObject researchShipsPanel, GameObject colonizationShipsPanel, GameObject turnPanel)
 		{
 			resourcesPanel.GetComponentInChildren<TMP_Text>().text = GameManager.Instance.HeroDataStore.Resourses.ToString();
