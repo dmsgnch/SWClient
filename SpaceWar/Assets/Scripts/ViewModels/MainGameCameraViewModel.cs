@@ -147,7 +147,7 @@ namespace Assets.Scripts.ViewModels
             if (planets is null) return true;
             float minY = planets.Min(p => p.Y);
 
-            bool isInLowerBorder = position.y < maxY;
+            bool isInLowerBorder = position.y > minY;
             return isInLowerBorder;
         }
 
