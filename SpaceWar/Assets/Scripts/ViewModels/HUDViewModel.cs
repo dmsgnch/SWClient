@@ -128,7 +128,6 @@ namespace Assets.Scripts.ViewModels
 			GameManager.Instance.HeroDataStore.Resourses = hero.Resourses;
 			GameManager.Instance.HeroDataStore.SoldiersLimit = hero.SoldiersLimit;
 			GameManager.Instance.HeroDataStore.AvailableSoldiers = hero.AvailableSoldiers;
-			GameManager.Instance.HeroDataStore.Resourses = hero.Resourses;
 			GameManager.Instance.HeroDataStore.ResearchShipLimit = hero.ResearchShipLimit;
 			GameManager.Instance.HeroDataStore.AvailableResearchShips = hero.AvailableResearchShips;
 			GameManager.Instance.HeroDataStore.ColonizationShipLimit = hero.ColonizationShipLimit;

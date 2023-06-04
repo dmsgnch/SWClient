@@ -112,20 +112,33 @@ public class PlanetController : MonoBehaviour
 						.FirstOrDefault(t => t.name == "Value").text = planet.PlanetName;
 					break;
 				case "Fortification":
+					if (planet.Status < PlanetStatus.Researched) break;
+
 					child.transform.GetComponentsInChildren<TMP_Text>()
 						.FirstOrDefault(t => t.name == "Value").text = planet.FortificationLevel.ToString();
 					break;
 				case "Size":
+					if (planet.Status < PlanetStatus.Researched) break;
+
 					child.transform.GetComponentsInChildren<TMP_Text>()
 						.FirstOrDefault(t => t.name == "Value").text = planet.Size.ToString();
 					break;
 				case "Status":
+					if (planet.Status < PlanetStatus.Researched) break;
+
 					child.transform.GetComponentsInChildren<TMP_Text>()
 						.FirstOrDefault(t => t.name == "Value").text = planet.Status.ToString();
 					break;
 				case "Resources":
+					if (planet.Status < PlanetStatus.Researched) break;
+
+					var resourceType = planet.ResourceType is ResourceType.OnlyResources ? "Resources" :
+						(planet.ResourceType is ResourceType.ColonizationShip ? "Colonization ships" :
+						"Research ships");
+
 					child.transform.GetComponentsInChildren<TMP_Text>()
-						.FirstOrDefault(t => t.name == "Value").text = "res-type";
+						.FirstOrDefault(t => t.name == "Value").text = $"{planet.ResourceCount} " +
+						$"{resourceType}";
 					break;
 				default:
 					throw new DataException();
@@ -173,13 +186,13 @@ public class PlanetController : MonoBehaviour
 		switch (planet.Status)
 		{
 			case PlanetStatus.Known:
-				CreateActMenu("Research", out Button researchButton);
+				CreateActMenu("Research (R: 10)", out Button researchButton);
 				researchButton.onClick.AddListener(DestroyActMenu);
 				researchButton.onClick.AddListener(() => planetsView.Research(planet));
 				break;
 
 			case PlanetStatus.Researched:
-				CreateActMenu("Colonize", out Button colonizeButton);
+				CreateActMenu("Colonize (R: 30)", out Button colonizeButton);
 				colonizeButton.onClick.AddListener(DestroyActMenu);
 				colonizeButton.onClick.AddListener(() => planetsView.Colonize(planet));
 				break;
@@ -194,12 +207,9 @@ public class PlanetController : MonoBehaviour
 				break;
 
 			case PlanetStatus.Colonized:
-				if (planet.FortificationLevel is Fortification.Strong) break;
+				OpearationDefenceChoosing(planetsView);
+				break;
 
-                CreateActMenu("Attack", out Button fortificationButton);
-                fortificationButton.onClick.AddListener(DestroyActMenu);
-                fortificationButton.onClick.AddListener(() => planetsView.BuildDefence(planet));
-                break;
 			default:
 				throw new DataException();
 		}
@@ -211,7 +221,40 @@ public class PlanetController : MonoBehaviour
 			defenceButton.onClick.AddListener(() => planetsView.Defence(planet));
 		}
 		ResizeButtons();
+	}
 
+	/// <summary>
+	/// Perform sugery and binding according to planet defence status
+	/// </summary>
+	/// <param name="planetsView"></param>
+	private void OpearationDefenceChoosing(PlanetsView planetsView)
+	{
+		switch (planet.FortificationLevel)
+		{
+			case Fortification.None:
+				CreateActMenu("Build light defence (R: later)", out Button liteDefButton);
+				AddListeners(liteDefButton);
+				break;
+
+			case Fortification.Weak:
+				CreateActMenu("Build medium defence (R: later)", out Button mediumDefButton);
+				AddListeners(mediumDefButton);
+				break;
+
+			case Fortification.Reliable:
+				CreateActMenu("Build strong defence (R: later)", out Button strongDefButton);
+				AddListeners(strongDefButton);
+				break;
+
+			default:
+				break;
+		}
+
+		void AddListeners(Button button)
+		{
+			button.onClick.AddListener(DestroyActMenu);
+			button.onClick.AddListener(() => planetsView.BuildDefence(planet));
+		}
 	}
 
 	private void ResizeButtons()
@@ -232,45 +275,14 @@ public class PlanetController : MonoBehaviour
 	}
 
 	/// <summary>
-	/// Perform sugery and binding according to planet defence status
-	/// </summary>
-	/// <param name="planetsView"></param>
-	private void OpearationDefenceChoosing(PlanetsView planetsView)
-	{
-		switch (planet.FortificationLevel)
-		{
-			case Fortification.None:
-				CreateActMenu("Build light defence (cost)", out Button liteDefButton);
-				liteDefButton.onClick.AddListener(DestroyActMenu);
-				liteDefButton.onClick.AddListener(() => planetsView.BuiltLightDefence(planet));
-				break;
-
-			case Fortification.Weak:
-				CreateActMenu("Build medium defence (cost)", out Button mediumDefButton);
-				mediumDefButton.onClick.AddListener(DestroyActMenu);
-				mediumDefButton.onClick.AddListener(() => planetsView.BuiltMidleDefence(planet));
-				break;
-
-			case Fortification.Reliable:
-				CreateActMenu("Build strong defence (cost)", out Button strongDefButton);
-				strongDefButton.onClick.AddListener(DestroyActMenu);
-				strongDefButton.onClick.AddListener(() => planetsView.BuiltStrongDefence(planet));
-				break;
-
-			default:
-				break;
-		}
-	}
-
-	/// <summary>
 	/// Check that any connection has a battle where the currect planet is being defended
 	/// </summary>
 	/// <param name="planetsView"></param>
 	/// <returns>True if the specified connection is found</returns>
 	private bool IsDefencing(PlanetsView planetsView)
 	{
-		return GameManager.Instance.BattleDataStore.Battles.Any(b => 
-		b.AttackedPlanetId.Equals(planet.Id));
+		return GameManager.Instance.BattleDataStore.Battles?.Any(b =>
+		b.AttackedPlanetId.Equals(planet.Id)) ?? false;
 	}
 
 	/// <summary>

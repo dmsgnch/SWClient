@@ -196,7 +196,7 @@ namespace Scripts.RegisterLoginScripts
 				});
 			});
 
-			hubConnection.On<NextTurnResponse>(ClientHandlers.Session.NextTurnHandler, HandleUpdateAllParams<NextTurnResponse>());
+			hubConnection.On<NextTurnResponse>(ClientHandlers.Session.NextTurnHandler, HandleUpdateAllParams());
 
 			hubConnection.On<UpdatedPlanetStatusResponse>(ClientHandlers.Session.StartPlanetResearchingOrColonization, (newPlanetStatus) =>
 			{
@@ -219,7 +219,7 @@ namespace Scripts.RegisterLoginScripts
 				});
 			});
 
-			hubConnection.On<GetHeroDataResponse>(ClientHandlers.Session.GetHeroDataHandler, HandleUpdateAllParams<GetHeroDataResponse>());
+			hubConnection.On<NextTurnResponse>(ClientHandlers.Session.GetHeroDataHandler, HandleUpdateAllParams());
 
 			hubConnection.On<string>(ClientHandlers.Session.PostResearchOrColonizeErrorHandler,
 				HandleStringMessageOutput());
@@ -240,7 +240,7 @@ namespace Scripts.RegisterLoginScripts
 			};
 		}
 
-		private Action<T> HandleUpdateAllParams<T>() where T : FullParamListBase
+		private Action<NextTurnResponse> HandleUpdateAllParams()
 		{
 			return (data) =>
 			{
