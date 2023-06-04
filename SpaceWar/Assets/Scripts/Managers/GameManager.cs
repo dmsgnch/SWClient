@@ -28,6 +28,7 @@ namespace Assets.Scripts.Managers
 		internal LobbyDataStore LobbyDataStore { get; private set; } = new LobbyDataStore();
 		internal SessionDataStore SessionDataStore { get; private set; } = new SessionDataStore();
 		internal HeroDataStore HeroDataStore { get; private set; } = new HeroDataStore();
+		internal BattleDataStore BattleDataStore { get; private set; } = new BattleDataStore();
 
 		public static event Action<GameState> OnBeforeStateChanged;
 		public static event Action<GameState> OnAfterStateChanged;

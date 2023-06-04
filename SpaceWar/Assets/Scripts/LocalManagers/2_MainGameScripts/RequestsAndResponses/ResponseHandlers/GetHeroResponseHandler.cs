@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 using SharedLibrary.Models;
 using Assets.Scripts.View;
 using SharedLibrary.Models.Enums;
+using UnityEngine;
 
 namespace Assets.Scripts.LocalManagers._2_MainGameScripts.RequestsAndResponses.ResponseHandlers
 {
@@ -30,20 +31,15 @@ namespace Assets.Scripts.LocalManagers._2_MainGameScripts.RequestsAndResponses.R
             Hero hero = response.Hero;
 
 			GameManager.Instance.HeroDataStore.HeroId = hero.HeroId;
-			GameManager.Instance.HeroDataStore.Name = hero.Name;
-			GameManager.Instance.HeroDataStore.Resourses = hero.Resourses;
-			GameManager.Instance.HeroDataStore.SoldiersLimit = hero.SoldiersLimit;
-			GameManager.Instance.HeroDataStore.AvailableSoldiers = hero.AvailableSoldiers;
-			GameManager.Instance.HeroDataStore.Resourses = hero.Resourses;
-			GameManager.Instance.HeroDataStore.ResearchShipLimit = hero.ResearchShipLimit;
-			GameManager.Instance.HeroDataStore.AvailableResearchShips = hero.AvailableResearchShips;
-			GameManager.Instance.HeroDataStore.ColonizationShipLimit = hero.ColonizationShipLimit;
-			GameManager.Instance.HeroDataStore.AvailableColonizationShips = hero.AvailableColonizationShips;
 			GameManager.Instance.HeroDataStore.Color = ColorParser.GetColor((ColorStatus)hero.ColorStatus);
+
+			HUDView hudView = UnityEngine.Object.FindAnyObjectByType<HUDView>() ?? throw new Exception();
+
+			hudView.SetHeroNewValues(hero);
+
 			GameManager.Instance.HeroDataStore.HeroMapView = response.Map;
 			GameManager.Instance.HeroDataStore.CapitalPlanetId = hero.HomePlanetId;
 
-            HUDView hudView = UnityEngine.Object.FindAnyObjectByType<HUDView>();
 			if (hudView is null) throw new InvalidOperationException();
 			hudView.UpdateHUDValues();
 

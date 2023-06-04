@@ -2,6 +2,7 @@
 using Assets.Scripts.ViewModels;
 using Assets.View.Abstract;
 using Components;
+using SharedLibrary.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -119,37 +120,46 @@ namespace Assets.Scripts.View
 		#endregion
 
 
-		public void UpdateSession()
+		public void UpdateSessionRequest()
 		{
 			_hudViewModel.GetSessionRequestCreate();
 		}
 
-		public void UpdateHero()
+		public void UpdateHeroRequest()
 		{
 			_hudViewModel.GetHeroRequestCreate();
 		}
 
 		public void UpdateHUDValues()
 		{
-			_hudViewModel.UpdatePanelTexts(ResourcesPanel, SoldiersPanel, ResearchShipPanel, ColonizeShipPanel, TurnPanel);
+			UpdateHeroHudValues();
+			UpdateSessionHudValues();
+		}
+
+		public void UpdateHeroHudValues()
+		{
+			_hudViewModel.UpdateHeroDataPanelTexts(ResourcesPanel, SoldiersPanel, ResearchShipPanel, ColonizeShipPanel);
+		}
+
+		public void UpdateSessionHudValues()
+		{
+			_hudViewModel.UpdateSessionDataPanelTexts(TurnPanel);
+		}
+
+		public void SetHeroNewValues(Hero hero)
+		{
+			_hudViewModel.SetHeroNewValues(hero);
 		}
 
 		private void OnEnable()
 		{
 			if (_hudViewModel is null) return;
-			UpdateSession();
-            //_hudViewModel.SetTurnButtonUnactiveStatus(TurnPanel);
-            //_hudViewModel.SetTurnButtonActiveStatus(TurnPanel);
+			UpdateSessionRequest();
         }
+
 		public void SetTurnPanelTimer(int time) {
-			//_hudViewModel.SetTurnPanelTimer(TurnPanel, time);
+			_hudViewModel.SetTurnPanelTimer(TurnPanel, time);
 		}
-
-
-        //private void OnDisable()
-        //{
-        //    HUD_values.OnValuesChanged -= UpdateTextValues;
-        //}
 
         protected override void OnBind(HUDViewModel hudViewModel)
 		{

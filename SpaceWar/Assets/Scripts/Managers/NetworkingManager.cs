@@ -14,6 +14,8 @@ using Assets.Scripts.Managers;
 using System.Linq;
 using Assets.Scripts.View;
 using Task = System.Threading.Tasks.Task;
+using SharedLibrary.Responses;
+using Unity.VisualScripting;
 
 namespace Scripts.RegisterLoginScripts
 {
@@ -35,32 +37,30 @@ namespace Scripts.RegisterLoginScripts
 				.WithAutomaticReconnect()
 				.Build();
 
-			ConfigureHandlers(HubConnection);
+			if (hubName == "session" || hubName == "Session")
+			{
+				ConfigureHandlersSession(HubConnection);
+			}
+			else
+			{
+				ConfigureHandlersLobby(HubConnection);
+			}
 		}
-		private Lobby ConfigureHandlers(HubConnection hubConnection)
+
+		private Lobby ConfigureHandlersLobby(HubConnection hubConnection)
 		{
 			Lobby currentLobby1 = null;
-
-			hubConnection.On<string>(ClientHandlers.Lobby.Error, (errorMessage) =>
-			{
-				UnityMainThreadDispatcher.Instance().Enqueue(() =>
-				{
-					if (Debug.isDebugBuild) Debug.Log($"an error ocured. error message: {errorMessage}");
-					InformationPanelController.Instance.CreateMessage(InformationPanelController.MessageType.ERROR,
-						errorMessage);
-				});
-			});
 
 			hubConnection.On<string>(ClientHandlers.Lobby.DeleteLobbyHandler, (serverMessage) =>
 			{
 				UnityMainThreadDispatcher.Instance().Enqueue(() =>
 				{
-                    GameManager.Instance.ChangeState(GameState.ConnectToGame);
+					GameManager.Instance.ChangeState(GameState.ConnectToGame);
 
-                    InformationPanelController.Instance.CreateMessage(
+					InformationPanelController.Instance.CreateMessage(
 						InformationPanelController.MessageType.WARNING,
 						serverMessage);
-                });
+				});
 			});
 
 			hubConnection.On<Lobby>(ClientHandlers.Lobby.ConnectToLobbyHandler, (lobby) =>
@@ -115,7 +115,7 @@ namespace Scripts.RegisterLoginScripts
 			{
 				UnityMainThreadDispatcher.Instance().Enqueue(() =>
 				{
-                    PlayersListController.Instance.ChangeReadyStatus(info);
+					PlayersListController.Instance.ChangeReadyStatus(info);
 					FindAnyObjectByType<LobbyView>().SetInteractableStartButton();
 				});
 			});
@@ -125,23 +125,103 @@ namespace Scripts.RegisterLoginScripts
 				UnityMainThreadDispatcher.Instance().Enqueue(() =>
 				{
 					GameManager.Instance.SessionDataStore.SessionId = sessionId;
-					
+
 					GameManager.Instance.ChangeState(GameState.LoadMainGameScene);
 				});
 			});
+
+			hubConnection.On<string>(ClientHandlers.Lobby.Error, HandleStringMessageOutput());
+
+			return currentLobby1;
+		}
+
+		private Lobby ConfigureHandlersSession(HubConnection hubConnection)
+		{
+			Lobby currentLobby1 = null;
 
 			hubConnection.On<HeroMapView>(ClientHandlers.Session.ReceiveHeroMap, (heroMap) =>
 			{
 				throw new NotImplementedException();
 			});
 
-			hubConnection.On<string>(ClientHandlers.ErrorHandler, 
-				HandleStringMessageOutput());
-			hubConnection.On<string>(ClientHandlers.Session.StartPlanetResearchingOrColonization, 
-				HandleStringMessageOutput());
-			hubConnection.On<string>(ClientHandlers.Session.PostResearchOrColonizeErrorHandler, 
-				HandleStringMessageOutput());
-			hubConnection.On<string>(ClientHandlers.Session.HealthCheckHandler, 
+			hubConnection.On<Session>(ClientHandlers.Session.ReceiveSession, (session) =>
+			{
+				UnityMainThreadDispatcher.Instance().Enqueue(() =>
+				{
+					var hudView = GetView<HUDView>();
+
+					if (!GameManager.Instance.SessionDataStore.SessionId.Equals(session.Id))
+						throw new ArgumentException();
+
+					GameManager.Instance.SessionDataStore.TurnNumber = session.TurnNumber;
+					GameManager.Instance.SessionDataStore.TurnTimeLimit = session.TurnTimeLimit;
+
+					hudView.UpdateSessionRequest();
+				});
+			});
+
+			hubConnection.On<UpdatedFortificationResponse>(ClientHandlers.Session.UpdatedFortification, (fortificationResponse) =>
+			{
+				UnityMainThreadDispatcher.Instance().Enqueue(() =>
+				{
+					var planetsView = GetView<PlanetsView>();
+
+					Planet newPlanet = new Planet()
+					{
+						Id = fortificationResponse.PlanetId,
+						FortificationLevel = fortificationResponse.Fortification,
+						IterationsLeftToNextStatus = fortificationResponse.IterationsToTheNextStatus
+					};
+
+					GameManager.Instance.HeroDataStore.Resourses = fortificationResponse.Resources;
+					GameManager.Instance.HeroDataStore.AvailableColonizationShips = fortificationResponse.AvailableColonizationShips;
+					GameManager.Instance.HeroDataStore.AvailableResearchShips = fortificationResponse.AvailableResearchShips;
+
+					//planetsView.UpdatePlanet(newPlanet);
+				});
+			});
+
+			hubConnection.On<Battle>(ClientHandlers.Session.ReceiveBattle, (battle) =>
+			{
+				UnityMainThreadDispatcher.Instance().Enqueue(() =>
+				{
+					var planetsView = GetView<PlanetsView>();
+
+					if (!GameManager.Instance.BattleDataStore.Battles.Any(b => b.Id.Equals(battle.Id)))
+					{
+						GameManager.Instance.BattleDataStore.Battles.Add(battle);
+					}
+
+					//planetsView.UpdateConnection();
+				});
+			});
+
+			hubConnection.On<NextTurnResponse>(ClientHandlers.Session.NextTurnHandler, HandleUpdateAllParams<NextTurnResponse>());
+
+			hubConnection.On<UpdatedPlanetStatusResponse>(ClientHandlers.Session.StartPlanetResearchingOrColonization, (newPlanetStatus) =>
+			{
+				UnityMainThreadDispatcher.Instance().Enqueue(() =>
+				{
+					var planetsView = GetView<PlanetsView>();
+
+					Planet newPlanet = new Planet()
+					{
+						Id = newPlanetStatus.PlanetId,
+						Status = newPlanetStatus.RelationStatus,
+						IterationsLeftToNextStatus = newPlanetStatus.IterationsToTheNextStatus
+					};
+
+					GameManager.Instance.HeroDataStore.Resourses = newPlanetStatus.Resources;
+					GameManager.Instance.HeroDataStore.AvailableColonizationShips = newPlanetStatus.AvailableColonizationShips;
+					GameManager.Instance.HeroDataStore.AvailableResearchShips = newPlanetStatus.AvailableResearchShips;
+
+					//planetsView.UpdatePlanet(newPlanet);
+				});
+			});
+
+			hubConnection.On<GetHeroDataResponse>(ClientHandlers.Session.GetHeroDataHandler, HandleUpdateAllParams<GetHeroDataResponse>());
+
+			hubConnection.On<string>(ClientHandlers.Session.PostResearchOrColonizeErrorHandler,
 				HandleStringMessageOutput());
 
 			return currentLobby1;
@@ -151,7 +231,38 @@ namespace Scripts.RegisterLoginScripts
 		{
 			return (message) =>
 			{
-				Debug.Log(message);
+				UnityMainThreadDispatcher.Instance().Enqueue(() =>
+				{
+					Debug.Log(message);
+
+					InformationPanelController.Instance.CreateMessage(InformationPanelController.MessageType.WARNING, message);
+				});
+			};
+		}
+
+		private Action<T> HandleUpdateAllParams<T>() where T : FullParamListBase
+		{
+			return (data) =>
+			{
+				UnityMainThreadDispatcher.Instance().Enqueue(() =>
+				{
+					var hudView = GetView<HUDView>();
+					var planetsView = GetView<PlanetsView>();
+
+					GameManager.Instance.HeroDataStore.HeroMapView = data.HeroMapView;
+
+					hudView.SetHeroNewValues(data.Hero);
+
+					GameManager.Instance.SessionDataStore.TurnNumber = data.Session.TurnNumber;
+					GameManager.Instance.SessionDataStore.TurnTimeLimit = data.Session.TurnTimeLimit;
+
+					GameManager.Instance.BattleDataStore.Battles = data.Battles;
+
+					hudView.UpdateHeroHudValues();
+					hudView.UpdateSessionHudValues();
+
+					//planetsView.RecreateMap();
+				});
 			};
 		}
 
@@ -221,6 +332,11 @@ namespace Scripts.RegisterLoginScripts
 		private void AttachHeader(UnityWebRequest request, string key, string value)
 		{
 			request.SetRequestHeader(key, value);
+		}
+
+		private T GetView<T>() where T : Component
+		{
+			return FindFirstObjectByType<T>() ?? throw new Exception();
 		}
 	}
 

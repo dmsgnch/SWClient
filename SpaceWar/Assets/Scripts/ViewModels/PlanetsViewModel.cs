@@ -196,11 +196,11 @@ namespace Assets.Scripts.ViewModels
             {
                 rightDownText.GetComponent<TextMesh>().text = $"R:{planet.ResourceCount}";
             }
-            else if (planet.ResourceType is ResourceType.ResourcesWithColonizationShip)
+            else if (planet.ResourceType is ResourceType.ColonizationShip)
             {
                 rightDownText.GetComponent<TextMesh>().text = $"CS:{planet.ResourceCount}";
             }
-            else if (planet.ResourceType is ResourceType.ResourcesWithResearchShip)
+            else if (planet.ResourceType is ResourceType.ResearchShip)
             {
                 rightDownText.GetComponent<TextMesh>().text = $"RS:{planet.ResourceCount}";
             }
