@@ -24,17 +24,17 @@ public class PlanetController : MonoBehaviour
 	public GameObject ButtonPrefab;
 	public GameObject InfoPanelPrefab;
 	public float timeThreshold = 1f;
-    public GameObject HealthBarPrefab;
+	public GameObject HealthBarPrefab;
 
-    private GameObject actMenu;
+	private GameObject actMenu;
 	private MonoBehaviour[] cameraScripts;
 	private bool actMenuEnabled = false;
 	//private List<string> actionNames;
 	private float hoverTime;
-    private bool createNewPlanetInfoPanel;
-    private GameObject PlanetInfoPanel = null;
-    private UnityEngine.UI.Slider slider;
-    private Camera mainCamera;
+	private bool createNewPlanetInfoPanel;
+	private GameObject PlanetInfoPanel = null;
+	private UnityEngine.UI.Slider slider;
+	private Camera mainCamera;
 
 	private List<Button> ActionsButtons = new List<Button>();
 
@@ -42,21 +42,21 @@ public class PlanetController : MonoBehaviour
 	{
 		cameraScripts = GameObject.Find("Look_Camera").GetComponents<MonoBehaviour>();
 		actMenu = GameObject.Find("ActionsMenu");
-        mainCamera = Camera.main;
-        CreateHealthBar();
-        slider.transform.localScale = Vector3.one * 0.7f;
-    }
+		mainCamera = Camera.main;
+		CreateHealthBar();
+		slider.transform.localScale = Vector3.one * 0.7f;
+	}
 	private void Update()
 	{
-        if (slider != null && slider.gameObject.activeSelf)
-        {
-            UpdateHealthBar();
-        }
+		if (slider != null && slider.gameObject.activeSelf)
+		{
+			UpdateHealthBar();
+		}
 
-        if (createNewPlanetInfoPanel && PlanetInfoPanel is null && !actMenuEnabled)
+		if (createNewPlanetInfoPanel && PlanetInfoPanel is null && !actMenuEnabled)
 		{
 			CreatePlanetInfoPanel();
-            createNewPlanetInfoPanel = false;
+			createNewPlanetInfoPanel = false;
 		}
 
 		transform.Rotate(Vector3.up, rotationSpeed * Time.deltaTime);
@@ -80,23 +80,23 @@ public class PlanetController : MonoBehaviour
 		}
 	}
 
-    private void UpdateHealthBar()
-    {
-        Vector3 planetPosition = transform.position;
-        Vector3 screenPosition = mainCamera.WorldToScreenPoint(planetPosition);
-        Vector3 sliderPosition = screenPosition;
+	private void UpdateHealthBar()
+	{
+		Vector3 planetPosition = transform.position;
+		Vector3 screenPosition = mainCamera.WorldToScreenPoint(planetPosition);
+		Vector3 sliderPosition = screenPosition;
 
-        sliderPosition.y += slider.GetComponent<RectTransform>().rect.height;
-        slider.transform.position = sliderPosition + Vector3.up * planet.Size;
-    }
-    private void CreateHealthBar()
-    {
-        var sliderGO = Instantiate(HealthBarPrefab, transform.parent);
-		if(planet.Health >= planet.HealthLimit) sliderGO.SetActive(false);
-        slider = sliderGO.GetComponent<UnityEngine.UI.Slider>();
-    }
+		sliderPosition.y += slider.GetComponent<RectTransform>().rect.height;
+		slider.transform.position = sliderPosition + Vector3.up * planet.Size;
+	}
+	private void CreateHealthBar()
+	{
+		var sliderGO = Instantiate(HealthBarPrefab, transform.parent);
+		if (planet.Health >= planet.HealthLimit) sliderGO.SetActive(false);
+		slider = sliderGO.GetComponent<UnityEngine.UI.Slider>();
+	}
 
-    void CreatePlanetInfoPanel()
+	void CreatePlanetInfoPanel()
 	{
 		PlanetInfoPanel = Instantiate(InfoPanelPrefab, GameObject.Find("cnvs_HUD").transform);
 		PlanetInfoPanel.transform.position = Input.mousePosition;
@@ -142,7 +142,7 @@ public class PlanetController : MonoBehaviour
 	{
 		if (ActionsButtons.Count.Equals(0))
 			actMenu.transform.position = Input.mousePosition;
-	
+
 
 		GameObject buttonObject = Instantiate(ButtonPrefab, actMenu.transform);
 		Button button = buttonObject.GetComponent<Button>();
@@ -150,12 +150,12 @@ public class PlanetController : MonoBehaviour
 		TMP_Text buttonText = buttonObject.GetComponentInChildren<TMP_Text>();
 		buttonText.text = buttonName;
 
-		buttonObject.transform.localPosition = new Vector3(0f, (-ActionsButtons.Count * 25f)-30f, 0f);
+		buttonObject.transform.localPosition = new Vector3(0f, (-ActionsButtons.Count * 25f) - 30f, 0f);
 
 		onClick = button;
 
-        ActionsButtons.Add(button);
-        if (ActionsButtons.Count.Equals(1))
+		ActionsButtons.Add(button);
+		if (ActionsButtons.Count.Equals(1))
 		{
 			actMenuEnabled = true;
 			DisableScripts();
@@ -204,7 +204,7 @@ public class PlanetController : MonoBehaviour
 				throw new DataException();
 		}
 
-		if(IsDefencing(planetsView))
+		if (IsDefencing(planetsView))
 		{
 			CreateActMenu("Send soldiers to defend", out Button defenceButton);
 			defenceButton.onClick.AddListener(DestroyActMenu);
@@ -212,31 +212,55 @@ public class PlanetController : MonoBehaviour
 		}
 		ResizeButtons();
 
-    }
+	}
 
-    private void ResizeButtons()
-    {
-        float maxWidth = 0f;
+	private void ResizeButtons()
+	{
+		float maxWidth = 0f;
 
 		// Ќайти максимальную ширину текста среди всех кнопок
 		maxWidth = ActionsButtons.Max(b => b.GetComponentInChildren<TMP_Text>().preferredWidth);
-        //foreach (Button button in ActionsButtons)
-        //{
-        //    TMP_Text buttonText = button.GetComponentInChildren<TMP_Text>();
-        //    float buttonWidth = buttonText.preferredWidth;
-            
-        //    maxWidth = Mathf.Max(maxWidth, buttonWidth);
-        //}
 
-        // ”становить одинаковую ширину дл€ всех кнопок
-        foreach (Button button in ActionsButtons)
-        {
-            RectTransform buttonRect = button.GetComponent<RectTransform>();
-            buttonRect.sizeDelta = new Vector2(maxWidth, buttonRect.sizeDelta.y);
-            RectTransform textRect = button.GetComponentInChildren<TMP_Text>().GetComponent<RectTransform>();
-            textRect.sizeDelta = new Vector2(maxWidth, textRect.sizeDelta.y);
-        }
-    }
+		// ”становить одинаковую ширину дл€ всех кнопок
+		foreach (Button button in ActionsButtons)
+		{
+			RectTransform buttonRect = button.GetComponent<RectTransform>();
+			buttonRect.sizeDelta = new Vector2(maxWidth, buttonRect.sizeDelta.y);
+			RectTransform textRect = button.GetComponentInChildren<TMP_Text>().GetComponent<RectTransform>();
+			textRect.sizeDelta = new Vector2(maxWidth, textRect.sizeDelta.y);
+		}
+	}
+
+	/// <summary>
+	/// Perform sugery and binding according to planet defence status
+	/// </summary>
+	/// <param name="planetsView"></param>
+	private void OpearationDefenceChoosing(PlanetsView planetsView)
+	{
+		switch (planet.FortificationLevel)
+		{
+			case Fortification.None:
+				CreateActMenu("Build light defence (cost)", out Button liteDefButton);
+				liteDefButton.onClick.AddListener(DestroyActMenu);
+				liteDefButton.onClick.AddListener(() => planetsView.BuiltLightDefence(planet));
+				break;
+
+			case Fortification.Weak:
+				CreateActMenu("Build medium defence (cost)", out Button mediumDefButton);
+				mediumDefButton.onClick.AddListener(DestroyActMenu);
+				mediumDefButton.onClick.AddListener(() => planetsView.BuiltMidleDefence(planet));
+				break;
+
+			case Fortification.Reliable:
+				CreateActMenu("Build strong defence (cost)", out Button strongDefButton);
+				strongDefButton.onClick.AddListener(DestroyActMenu);
+				strongDefButton.onClick.AddListener(() => planetsView.BuiltStrongDefence(planet));
+				break;
+
+			default:
+				break;
+		}
+	}
 
 	/// <summary>
 	/// Check that any connection has a battle where the currect planet is being defended
@@ -245,9 +269,8 @@ public class PlanetController : MonoBehaviour
 	/// <returns>True if the specified connection is found</returns>
 	private bool IsDefencing(PlanetsView planetsView)
 	{
-		//TODO: Add checking that connection has battle where "planet" is defencing
-		return GameManager.Instance.HeroDataStore.HeroMapView.Connections.Any(c => 
-		c.FromPlanetId.Equals(planet.Id) || c.ToPlanetId.Equals(planet.Id));
+		return GameManager.Instance.BattleDataStore.Battles.Any(b => 
+		b.AttackedPlanetId.Equals(planet.Id));
 	}
 
 	/// <summary>
@@ -277,8 +300,8 @@ public class PlanetController : MonoBehaviour
 		actMenu.transform.DestroyChildren();
 		EnableScripts();
 		actMenuEnabled = false;
-        ActionsButtons.Clear();
-    }
+		ActionsButtons.Clear();
+	}
 
 	void DisableScripts()
 	{
@@ -299,7 +322,7 @@ public class PlanetController : MonoBehaviour
 	private void OnMouseEnter()
 	{
 		hoverTime = Time.time;
-        createNewPlanetInfoPanel = false;
+		createNewPlanetInfoPanel = false;
 	}
 
 	private void OnMouseExit()
@@ -307,14 +330,14 @@ public class PlanetController : MonoBehaviour
 		Destroy(PlanetInfoPanel);
 		PlanetInfoPanel = null;
 		hoverTime = 0f;
-        createNewPlanetInfoPanel = false;
+		createNewPlanetInfoPanel = false;
 	}
 
 	private void OnMouseOver()
 	{
 		if (Time.time - hoverTime >= timeThreshold)
 		{
-            createNewPlanetInfoPanel = true;
+			createNewPlanetInfoPanel = true;
 		}
 	}
 

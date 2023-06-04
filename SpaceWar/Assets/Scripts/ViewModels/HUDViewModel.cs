@@ -1,5 +1,6 @@
 ﻿using Assets.Scripts.LocalManagers._2_MainGameScripts.RequestsAndResponses.Requests;
 using Assets.Scripts.Managers;
+using SharedLibrary.Models;
 using System.Drawing;
 using TMPro;
 using Unity.VisualScripting;
@@ -87,28 +88,51 @@ namespace Assets.Scripts.ViewModels
             buttonText.text = "Next Turn";
             button.enabled = true;
         }
-        public void UpdatePanelTexts(GameObject resourcesPanel, GameObject soldiersPanel,
-			GameObject researchShipsPanel, GameObject colonizationShipsPanel, GameObject turnPanel)
+        public void UpdateHeroDataPanelTexts(
+			GameObject resourcesPanel, 
+			GameObject soldiersPanel,
+			GameObject researchShipsPanel, 
+			GameObject colonizationShipsPanel)
 		{
-			resourcesPanel.GetComponentInChildren<TMP_Text>().text = GameManager.Instance.HeroDataStore.Resourses.ToString();
-			soldiersPanel.GetComponentInChildren<TMP_Text>().text = GameManager.Instance.HeroDataStore.AvailableSoldiers.ToString();
-			researchShipsPanel.GetComponentInChildren<TMP_Text>().text = GameManager.Instance.HeroDataStore.AvailableResearchShips.ToString();
-			colonizationShipsPanel.GetComponentInChildren<TMP_Text>().text = GameManager.Instance.HeroDataStore.AvailableColonizationShips.ToString();
+			resourcesPanel.GetComponentInChildren<TMP_Text>().text = 
+				GameManager.Instance.HeroDataStore.Resourses.ToString();
+
+			soldiersPanel.GetComponentInChildren<TMP_Text>().text = 
+				GameManager.Instance.HeroDataStore.AvailableSoldiers.ToString();
+
+			researchShipsPanel.GetComponentInChildren<TMP_Text>().text =
+				GameManager.Instance.HeroDataStore.AvailableResearchShips.ToString();
+
+			colonizationShipsPanel.GetComponentInChildren<TMP_Text>().text = 
+				GameManager.Instance.HeroDataStore.AvailableColonizationShips.ToString();
+		}
+
+		public void UpdateSessionDataPanelTexts(GameObject turnPanel)
+		{
 			TMP_Text[] turnTexts = turnPanel.GetComponentsInChildren<TMP_Text>();
 			foreach (TMP_Text tmpText in turnTexts)
 			{
 				switch (tmpText.gameObject.name)
 				{
-				//	case "txt_leftTimeValue":
-				//		int timeLimitView = GameManager.Instance.SessionDataStore.TurnTimeLimit;
-    //                    tmpText.text = timeLimitView.ToString();
-				//		break;
 					case "txt_currentTurnValue":
 						int turnNumberView = GameManager.Instance.SessionDataStore.TurnNumber + 1;
 						tmpText.text = turnNumberView.ToString();
 						break;
 				}
 			}
+		}
+
+		public void SetHeroNewValues(Hero hero)
+		{
+			GameManager.Instance.HeroDataStore.Name = hero.Name;
+			GameManager.Instance.HeroDataStore.Resourses = hero.Resourses;
+			GameManager.Instance.HeroDataStore.SoldiersLimit = hero.SoldiersLimit;
+			GameManager.Instance.HeroDataStore.AvailableSoldiers = hero.AvailableSoldiers;
+			GameManager.Instance.HeroDataStore.Resourses = hero.Resourses;
+			GameManager.Instance.HeroDataStore.ResearchShipLimit = hero.ResearchShipLimit;
+			GameManager.Instance.HeroDataStore.AvailableResearchShips = hero.AvailableResearchShips;
+			GameManager.Instance.HeroDataStore.ColonizationShipLimit = hero.ColonizationShipLimit;
+			GameManager.Instance.HeroDataStore.AvailableColonizationShips = hero.AvailableColonizationShips;
 		}
 
 		public void GetSessionRequestCreate()
