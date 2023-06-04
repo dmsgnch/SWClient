@@ -208,7 +208,8 @@ namespace Assets.Scripts.ViewModels
 
         #endregion
 
-		public async Task Attack(Planet planet)
+        #region SignalR
+        public async Task Attack(Planet planet)
 		{
 			//TODO: Sending signalR request
 		}
@@ -259,10 +260,11 @@ namespace Assets.Scripts.ViewModels
 		{
 			//TODO: Sending signalR request
 		}
+        #endregion
 
-		#region ParsingPrefabs
+        #region ParsingPrefabs
 
-		private GameObject GetPlanetPrefabByPlanetType(PlanetType planetType, GameObject[] prefabs)
+        private GameObject GetPlanetPrefabByPlanetType(PlanetType planetType, GameObject[] prefabs)
 		{
 			switch (planetType)
 			{

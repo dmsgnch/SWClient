@@ -44,28 +44,28 @@ namespace Assets.Scripts.ViewModels
 			if (camera.transform.position.x > minX && mousePosition.x < edgeThreshold && !IsCursorOverUI())
 			{
 				var moveLeft = Vector3.left * moveSpeed * Time.deltaTime;
-				if(IsInPlanetsBorders(camera.transform.position + cameraMovement + moveLeft))
+				if(IsInLeftBorder(camera.transform.position + cameraMovement + moveLeft))
 				   cameraMovement += moveLeft;
             }
 			else if (camera.transform.position.x < maxX && 
 				mousePosition.x > Screen.width - edgeThreshold && !IsCursorOverUI())
             {
                 var moveRight = Vector3.right * moveSpeed * Time.deltaTime;
-                if (IsInPlanetsBorders(camera.transform.position + cameraMovement + moveRight))
+                if (IsInRightBorder(camera.transform.position + cameraMovement + moveRight))
                     cameraMovement += moveRight;
 			}
 
 			if (camera.transform.position.y > minY && mousePosition.y < edgeThreshold && !IsCursorOverUI())
             {
                 var moveDown = Vector3.down * moveSpeed * Time.deltaTime;
-                if (IsInPlanetsBorders(camera.transform.position + cameraMovement + moveDown))
+                if (IsInLowerBorder(camera.transform.position + cameraMovement + moveDown))
                     cameraMovement += moveDown;
 			}
 			else if (camera.transform.position.y < maxY && 
 				mousePosition.y > Screen.height - edgeThreshold && !IsCursorOverUI())
             {
                 var moveUp = Vector3.up * moveSpeed * Time.deltaTime;
-                if (IsInPlanetsBorders(camera.transform.position + cameraMovement + moveUp))
+                if (IsInUpperBorder(camera.transform.position + cameraMovement + moveUp))
                     cameraMovement += moveUp;
 			}
 
@@ -111,24 +111,64 @@ namespace Assets.Scripts.ViewModels
 			return EventSystem.current.IsPointerOverGameObject();
 		}
 
-		private bool IsInPlanetsBorders(Vector3 position)
+		private bool IsInLeftBorder(Vector3 position)
         {
             Planet[] planets = GameManager.Instance.HeroDataStore.HeroMapView?.Planets.ToArray();
             if (planets is null) return true;
-
             float minX = planets.Min(p => p.X);
-            float minY = planets.Min(p => p.Y);
+
+            bool isInLeftBorder = position.x > minX;
+			return isInLeftBorder;
+        }
+
+        private bool IsInRightBorder(Vector3 position)
+        {
+            Planet[] planets = GameManager.Instance.HeroDataStore.HeroMapView?.Planets.ToArray();
+            if (planets is null) return true;
             float maxX = planets.Max(p => p.X);
+
+            bool isInRightBorder = position.x < maxX;
+            return isInRightBorder;
+        }
+
+        private bool IsInUpperBorder(Vector3 position)
+        {
+            Planet[] planets = GameManager.Instance.HeroDataStore.HeroMapView?.Planets.ToArray();
+            if (planets is null) return true;
             float maxY = planets.Max(p => p.Y);
 
-			bool isInLeftBorder = position.x > minX;
-            bool isInRightBorder = position.x < maxX;
-            bool isInUpperBorder = position.y > minY;
-            bool isInLowerBorder = position.y < maxY;
-
-            return isInLeftBorder && isInRightBorder && isInUpperBorder && isInLowerBorder;
-
+            bool isInUpperBorder = position.y < maxY;
+            return isInUpperBorder;
         }
+
+        private bool IsInLowerBorder(Vector3 position)
+        {
+            Planet[] planets = GameManager.Instance.HeroDataStore.HeroMapView?.Planets.ToArray();
+            if (planets is null) return true;
+            float minY = planets.Min(p => p.Y);
+
+            bool isInLowerBorder = position.y < maxY;
+            return isInLowerBorder;
+        }
+
+   //     private bool IsInPlanetsBorders(Vector3 position)
+   //     {
+   //         Planet[] planets = GameManager.Instance.HeroDataStore.HeroMapView?.Planets.ToArray();
+   //         if (planets is null) return true;
+
+   //         float minX = planets.Min(p => p.X);
+   //         float minY = planets.Min(p => p.Y);
+   //         float maxX = planets.Max(p => p.X);
+   //         float maxY = planets.Max(p => p.Y);
+
+			//bool isInLeftBorder = position.x > minX;
+   //         bool isInRightBorder = position.x < maxX;
+   //         bool isInUpperBorder = position.y > minY;
+   //         bool isInLowerBorder = position.y < maxY;
+
+   //         return isInLeftBorder && isInRightBorder && isInUpperBorder && isInLowerBorder;
+
+   //     }
 
 		private Vector3 MoveIntoPlanetsBorders(Vector3 position)
         {
