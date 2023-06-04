@@ -192,15 +192,15 @@ namespace Assets.Scripts.ViewModels
                     GameManager.Instance.HeroDataStore.Color;
             }
 
-            if (planet.ResourceType is ResourceType.Default)
+            if (planet.ResourceType is ResourceType.OnlyResources)
             {
                 rightDownText.GetComponent<TextMesh>().text = $"R:{planet.ResourceCount}";
             }
-            else if (planet.ResourceType is ResourceType.Default)
+            else if (planet.ResourceType is ResourceType.ResourcesWithColonizationShip)
             {
                 rightDownText.GetComponent<TextMesh>().text = $"CS:{planet.ResourceCount}";
             }
-            else if (planet.ResourceType is ResourceType.Default)
+            else if (planet.ResourceType is ResourceType.ResourcesWithResearchShip)
             {
                 rightDownText.GetComponent<TextMesh>().text = $"RS:{planet.ResourceCount}";
             }

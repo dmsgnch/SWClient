@@ -130,21 +130,19 @@ namespace Scripts.RegisterLoginScripts
 				});
 			});
 
-			hubConnection.On<HeroMapView>(ClientHandlers.Session.ResearchedPlanet, (heroMap) =>
-			{
-				throw new NotImplementedException();
-			});
-
 			hubConnection.On<HeroMapView>(ClientHandlers.Session.ReceiveHeroMap, (heroMap) =>
 			{
 				throw new NotImplementedException();
 			});
 
-			hubConnection.On<string>(ClientHandlers.ErrorHandler, HandleStringMessageOutput());
-			hubConnection.On<string>(ClientHandlers.Session.ResearchingPlanet, HandleStringMessageOutput());
-			hubConnection.On<string>(ClientHandlers.Session.ColonizingPlanet, HandleStringMessageOutput());
-			hubConnection.On<string>(ClientHandlers.Session.PostResearchOrColonizeErrorHandler, HandleStringMessageOutput());
-			hubConnection.On<string>(ClientHandlers.Session.HealthCheckHandler, HandleStringMessageOutput());
+			hubConnection.On<string>(ClientHandlers.ErrorHandler, 
+				HandleStringMessageOutput());
+			hubConnection.On<string>(ClientHandlers.Session.StartPlanetResearchingOrColonization, 
+				HandleStringMessageOutput());
+			hubConnection.On<string>(ClientHandlers.Session.PostResearchOrColonizeErrorHandler, 
+				HandleStringMessageOutput());
+			hubConnection.On<string>(ClientHandlers.Session.HealthCheckHandler, 
+				HandleStringMessageOutput());
 
 			return currentLobby1;
 		}
@@ -157,7 +155,7 @@ namespace Scripts.RegisterLoginScripts
 			};
 		}
 
-		public async System.Threading.Tasks.Task StartHub(string endpoint)
+		public async Task StartHub(string endpoint)
 		{
 			if (HubConnection is null)
 			{
@@ -170,7 +168,7 @@ namespace Scripts.RegisterLoginScripts
 			}
 		}
 
-		public async System.Threading.Tasks.Task StopHub()
+		public async Task StopHub()
 		{
 			if (HubConnection is not null)
 			{
