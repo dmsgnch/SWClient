@@ -1,4 +1,5 @@
-﻿using Assets.Scripts.ViewModels;
+﻿using Assets.Scripts.Managers;
+using Assets.Scripts.ViewModels;
 using Assets.View.Abstract;
 using Components;
 using System;
@@ -22,8 +23,9 @@ namespace Assets.Scripts.View
 		[SerializeField] private GameObject SoldiersPanel;
 		[SerializeField] private GameObject ResearchShipPanel;
 		[SerializeField] private GameObject ColonizeShipPanel;
+        [SerializeField] private Button MenuButton;
 
-		[SerializeField] private GameObject ResourcesInfoPanelPrefab;
+        [SerializeField] private GameObject ResourcesInfoPanelPrefab;
 		[SerializeField] private GameObject SoldiersInfoPanelPrefab;
 		[SerializeField] private GameObject ResearchShipInfoPanelPrefab;
 		[SerializeField] private GameObject ColonizeShipInfoPanelPrefab;
@@ -33,19 +35,26 @@ namespace Assets.Scripts.View
 
 		private void Awake()
 		{
-
-			AddHoverListeners(ResourcesPanel, OnResourcesPanelHoverEnter, OnResourcesPanelHoverExit);
+            MenuButton.onClick.AddListener(MenuButton_Click);
+            AddHoverListeners(ResourcesPanel, OnResourcesPanelHoverEnter, OnResourcesPanelHoverExit);
 			AddHoverListeners(SoldiersPanel, OnSoldiersPanelHoverEnter, OnSoldiersPanelHoverExit);
 			AddHoverListeners(ResearchShipPanel, OnResearchShipPanelHoverEnter, OnResearchShipPanelHoverExit);
 			AddHoverListeners(ColonizeShipPanel, OnColonizeShipPanelHoverEnter, OnColonizeShipPanelHoverExit);
 			
 		}
-
+		private void MenuButton_Click()
+		{
+			_hudViewModel.ToMenu();
+		}
         private void Update()
         {
+            if (Input.GetKey(KeyCode.Escape))
+            {
+                //TODO: Add confirm window	
+                _hudViewModel.ToMenu();
+            }
 			_hudViewModel.ReduceTurnPanelTime(TurnPanel, Time.deltaTime);
         }
-
         private void AddHoverListeners(GameObject panel, UnityAction<PointerEventData> onEnter, UnityAction<PointerEventData> onExit)
 		{
 			EventTrigger trigger = panel.GetComponent<EventTrigger>();

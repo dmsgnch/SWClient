@@ -57,6 +57,12 @@ namespace Assets.Scripts.ViewModels
         {
             Debug.Log("OUT OF TIME");
         }
+		public void ToMenu()
+		{
+			//Time.timeScale = 0f;
+            GameManager.Instance.ChangeState(GameState.MainGameMenu);
+        }
+
 
 		public void SetTurnButtonUnactiveStatus(GameObject turnPanel) {
 			var buttonGO = turnPanel.transform.GetChild(0);

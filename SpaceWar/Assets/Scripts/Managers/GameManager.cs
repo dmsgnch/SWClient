@@ -203,7 +203,9 @@ namespace Assets.Scripts.Managers
 
             PlanetsView planetsView = GameObject.Find("cnvs_mainGame")?.GetComponent<PlanetsView>();
 
-            if (fpsView is null || hudView is null || planetsView is null || mainGameCameraView is null)
+			MenuView menuView = GameObject.Find("cnvs_menu")?.GetComponent<MenuView>();
+
+            if (fpsView is null || hudView is null || planetsView is null || mainGameCameraView is null || menuView is null)
 			{
 				if(fpsView is null)
 				{
@@ -230,7 +232,8 @@ namespace Assets.Scripts.Managers
 				fpsView, 
 				hudView, 
 				mainGameCameraView, 
-				planetsView 
+				planetsView, 
+				menuView
 			};
 
 			UiManager.Instance.Init(screens);
@@ -248,13 +251,19 @@ namespace Assets.Scripts.Managers
 			UiManager.Instance.BindAndShow(new FPSViewModel());
 			UiManager.Instance.BindAndShow(new MainGameCameraViewModel());
             UiManager.Instance.BindAndShow(new PlanetsViewModel());
+			UiManager.Instance.Hide<MenuViewModel>();
         }
 
 		private void HandleMainGameMenu()
 		{
+			UiManager.Instance.BindAndShow(new MenuViewModel());
+            UiManager.Instance.Hide<HUDViewModel>();
+            UiManager.Instance.Hide<FPSViewModel>();
+            UiManager.Instance.BindAndShow(new MainGameCameraViewModel());
+            UiManager.Instance.Hide<PlanetsViewModel>();
 
-		}
-	}
+        }
+    }
 
 	public enum GameState
 	{

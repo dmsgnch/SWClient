@@ -192,15 +192,15 @@ namespace Assets.Scripts.ViewModels
                     GameManager.Instance.HeroDataStore.Color;
             }
 
-            if (planet.ResourceType is ResourceType.Default)
+            if (planet.ResourceType is ResourceType.OnlyResources)
             {
                 rightDownText.GetComponent<TextMesh>().text = $"R:{planet.ResourceCount}";
             }
-            else if (planet.ResourceType is ResourceType.Default)
+            else if (planet.ResourceType is ResourceType.ResourcesWithColonizationShip)
             {
                 rightDownText.GetComponent<TextMesh>().text = $"CS:{planet.ResourceCount}";
             }
-            else if (planet.ResourceType is ResourceType.Default)
+            else if (planet.ResourceType is ResourceType.ResourcesWithResearchShip)
             {
                 rightDownText.GetComponent<TextMesh>().text = $"RS:{planet.ResourceCount}";
             }
@@ -208,7 +208,8 @@ namespace Assets.Scripts.ViewModels
 
         #endregion
 
-		public async Task Attack(Planet planet)
+        #region SignalR
+        public async Task Attack(Planet planet)
 		{
 			//TODO: Sending signalR request
 		}
@@ -259,10 +260,11 @@ namespace Assets.Scripts.ViewModels
 		{
 			//TODO: Sending signalR request
 		}
+        #endregion
 
-		#region ParsingPrefabs
+        #region ParsingPrefabs
 
-		private GameObject GetPlanetPrefabByPlanetType(PlanetType planetType, GameObject[] prefabs)
+        private GameObject GetPlanetPrefabByPlanetType(PlanetType planetType, GameObject[] prefabs)
 		{
 			switch (planetType)
 			{
@@ -341,10 +343,7 @@ namespace Assets.Scripts.ViewModels
 		/// <param name="parent"></param>
 		private void ClearChildren(GameObject parent)
 		{
-			foreach (GameObject child in parent.transform)
-			{
-				Object.Destroy(child);
-			}
+			parent.transform.DestroyChildren();
 		}
 
 		private Vector3 GetPlanetScale(int size)
