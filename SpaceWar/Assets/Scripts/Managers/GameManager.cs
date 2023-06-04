@@ -226,7 +226,7 @@ namespace Assets.Scripts.Managers
 			UiManager.Instance.BindAndShow(new MenuViewModel());
             UiManager.Instance.Hide<HUDViewModel>();
             UiManager.Instance.Hide<FPSViewModel>();
-            UiManager.Instance.Hide<MainGameCameraViewModel>();
+            UiManager.Instance.BindAndShow(new MainGameCameraViewModel());
             UiManager.Instance.Hide<PlanetsViewModel>();
 
         }

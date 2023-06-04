@@ -113,10 +113,7 @@ namespace Assets.Scripts.ViewModels
 
         private void ClearChildren(GameObject parent)
         {
-            foreach (GameObject child in parent.transform)
-            {
-                UnityEngine.Object.Destroy(child);
-            }
+            parent.transform.DestroyChildren();
         }
     }
 }

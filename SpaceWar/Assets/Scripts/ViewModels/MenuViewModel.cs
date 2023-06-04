@@ -21,7 +21,7 @@ namespace Assets.Scripts.ViewModels
 		public void ContinueGame()
 		{
 			Debug.Log("Continue");
-            Time.timeScale = 1f;
+            //Time.timeScale = 1f;
             GameIsPaused = false;
             GameManager.Instance.ChangeState(GameState.MainGame);
 

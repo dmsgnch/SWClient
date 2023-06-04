@@ -19,7 +19,7 @@ namespace Assets.Scripts.ViewModels
 
 		public void ToMenu()
 		{
-			Time.timeScale = 0f;
+			//Time.timeScale = 0f;
             GameManager.Instance.ChangeState(GameState.MainGameMenu);
         }
 
