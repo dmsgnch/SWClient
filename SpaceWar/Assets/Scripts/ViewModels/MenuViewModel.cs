@@ -11,6 +11,7 @@ using System.Security.Cryptography.X509Certificates;
 using Unity.VisualScripting;
 using Scripts.RegisterLoginScripts;
 using System.Threading.Tasks;
+using UnityEngine.UI;
 
 namespace Assets.Scripts.ViewModels
 {
@@ -44,11 +45,16 @@ namespace Assets.Scripts.ViewModels
             GameManager.Instance.ChangeState(GameState.LoadConnectToGameScene);
         }
 
-        public async Task QuitApplication()
-		{
-			Debug.Log("Quit");
-            await NetworkingManager.Instance.StopHub();
-            Application.Quit();
-		}
+        public void CloseApplication(GameObject confirmPrefab, GameObject parent)
+        {
+            var panel = MonoBehaviour.Instantiate(confirmPrefab, parent.transform);
+            //panel.transform.SetParent(parent.transform);
+            panel.SetActive(true);
+            panel.transform.GetChild(0).GetComponent<Text>().text = "Are you sure you want to quit?";
+            panel.transform.GetChild(1).gameObject.
+                GetComponent<Button>().onClick.AddListener(() => Application.Quit());
+            panel.transform.GetChild(2).gameObject.
+                GetComponent<Button>().onClick.AddListener(() => Object.Destroy(panel));
+        }
 	}
 }

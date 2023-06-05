@@ -65,14 +65,14 @@ namespace Assets.Scripts.View
 
 		private void OnQuitGameButtonClick()
 		{
-			_mainMenuViewModel.CloseApplication(confirmationPrefab);
+			_mainMenuViewModel.CloseApplication(confirmationPrefab, gameObject);
 		}
 
 		private void Update()
 		{
 			if (Input.GetKey(KeyCode.Escape))
 			{
-				_mainMenuViewModel.CloseApplication(confirmationPrefab);
+				_mainMenuViewModel.CloseApplication(confirmationPrefab, gameObject);
 			}
 		}
 

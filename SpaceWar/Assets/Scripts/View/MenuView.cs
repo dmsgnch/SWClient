@@ -22,7 +22,9 @@ namespace Assets.Scripts.View
 		[SerializeField] private UnityEngine.UI.Button btn_Settings;
 		[SerializeField] private UnityEngine.UI.Button btn_QuitApplication;
 		[SerializeField] private UnityEngine.UI.Button btn_LeaveTheGame;
-		private MenuViewModel _menuViewModel;
+        [SerializeField] private GameObject confirmationPanel;
+
+        private MenuViewModel _menuViewModel;
 
 		private void Awake()
 		{
@@ -50,7 +52,7 @@ namespace Assets.Scripts.View
 
 		async void bt_LeaveTheGame_Click() => await _menuViewModel.LeaveTheGame();
 
-		async void bt_QuitApplication_Click() => await _menuViewModel.QuitApplication();
+		void bt_QuitApplication_Click() => _menuViewModel.CloseApplication(confirmationPanel,gameObject);
 
 		protected override void OnBind(MenuViewModel menuViewModel)
 		{
