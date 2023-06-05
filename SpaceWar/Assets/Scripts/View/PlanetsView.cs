@@ -27,9 +27,10 @@ namespace Assets.Scripts.View
         [SerializeField] private GameObject healthbarPrefab;
         [SerializeField] private GameObject PlanetInfoPanelPrefab;
 
-        public void GeneratePlanetsWithConnections()
+        public async void GeneratePlanetsWithConnections()
         {
             _planetsViewModel.GeneratePlanets(GetPlanetsGenerationForm());
+            await Task.Delay((int)Time.deltaTime*1000);
             _planetsViewModel.CreateConnections(connectionsParent);
         }
 

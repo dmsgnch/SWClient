@@ -10,8 +10,7 @@ public class ConnectionController : MonoBehaviour
     public GameObject toPlanet;
     public float thickness;
 
-    private void Update()
-    {        
+    private void Update(){
         Vector3 direction = toPlanet.transform.position - fromPlanet.transform.position;
         float distance = direction.magnitude;
         gameObject.transform.localScale = new Vector3(thickness, distance / 2, thickness);
