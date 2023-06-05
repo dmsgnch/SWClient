@@ -30,7 +30,8 @@ namespace Assets.Scripts.View
 		[SerializeField] private GameObject SoldiersInfoPanelPrefab;
 		[SerializeField] private GameObject ResearchShipInfoPanelPrefab;
 		[SerializeField] private GameObject ColonizeShipInfoPanelPrefab;
-		
+        [SerializeField] private GameObject ChangesLinePrefab;
+
 
         private HUDViewModel _hudViewModel;
 
@@ -44,8 +45,17 @@ namespace Assets.Scripts.View
 			
 		}
 		private void MenuButton_Click()
-		{
-			_hudViewModel.ToMenu();
+		{ var hero = new Hero();
+			hero.Name = "dsvdsv";
+			hero.Resourses = GameManager.Instance.HeroDataStore.Resourses + 30;
+			hero.AvailableColonizationShips = GameManager.Instance.HeroDataStore.AvailableColonizationShips;
+			hero.AvailableResearchShips = (byte)(GameManager.Instance.HeroDataStore.AvailableResearchShips + 30);
+			hero.AvailableSoldiers = GameManager.Instance.HeroDataStore.AvailableSoldiers;
+			hero.ColonizationShipLimit = GameManager.Instance.HeroDataStore.ColonizationShipLimit;
+			hero.ResearchShipLimit = (byte)(GameManager.Instance.HeroDataStore.ResearchShipLimit + 30);
+			hero.SoldiersLimit = GameManager.Instance.HeroDataStore.SoldiersLimit;
+			_hudViewModel.SetHeroNewValues(hero, ChangesLinePrefab);
+			//_hudViewModel.ToMenu();
 		}
         private void Update()
         {
@@ -148,7 +158,7 @@ namespace Assets.Scripts.View
 
 		public void SetHeroNewValues(Hero hero)
 		{
-			_hudViewModel.SetHeroNewValues(hero);
+			_hudViewModel.SetHeroNewValues(hero, ChangesLinePrefab);
 		}
 
 		private void OnEnable()
