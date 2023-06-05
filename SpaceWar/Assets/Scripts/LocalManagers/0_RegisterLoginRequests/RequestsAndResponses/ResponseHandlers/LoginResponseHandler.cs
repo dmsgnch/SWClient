@@ -29,7 +29,7 @@ namespace Assets.Scripts.LocalManagers._0_RegisterLoginRequests.ResponseHandlers
 			GameManager.Instance.MainDataStore.AccessToken = authResponse.Token;
 			GameManager.Instance.MainDataStore.UserId = authResponse.UserId;
 
-			GameManager.Instance.ChangeState(GameState.LoadConnectToGameScene);
+			GameManager.Instance.ChangeState(GameState.LoadMainMenuScene);
 		}
 
 		public void OnRequestFinished()

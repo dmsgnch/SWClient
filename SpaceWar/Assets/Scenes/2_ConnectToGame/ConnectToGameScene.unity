@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.18028378, g: 0.22571412, b: 0.30692285, a: 1}
+  m_IndirectSpecularColor: {r: 0.18028334, g: 0.2257134, b: 0.30692226, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -843,7 +843,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   heroInput: {fileID: 949243533}
   gameNameInput: {fileID: 1780937353}
-  quitButton: {fileID: 643585123}
+  toMainMenuButton: {fileID: 643585123}
   updateButton: {fileID: 408376}
   connectToGameButton: {fileID: 216824686}
   createGameButton: {fileID: 1527337886}
@@ -1815,7 +1815,7 @@ GameObject:
   - component: {fileID: 643585124}
   - component: {fileID: 643585123}
   m_Layer: 5
-  m_Name: bt_quitGame
+  m_Name: bt_ToMainMenu
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3178,9 +3178,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 'Quit the game
-
-'
+  m_Text: To menu
 --- !u!222 &1225023801
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -4309,7 +4307,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1751935893
 RectTransform:
   m_ObjectHideFlags: 0

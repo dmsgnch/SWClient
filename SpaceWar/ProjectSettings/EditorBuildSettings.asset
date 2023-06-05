@@ -9,9 +9,12 @@ EditorBuildSettings:
     path: Assets/Scenes/0_RegisterLogin/RegisterLoginScene.unity
     guid: 9fc0d4010bbf28b4594072e72b8655ab
   - enabled: 1
-    path: Assets/Scenes/1_ConnectToGame/ConnectToGameScene.unity
+    path: Assets/Scenes/1_MainMenu/MainMenuScene.unity
+    guid: 0ff296292d49df74f8de985759bfcf2b
+  - enabled: 1
+    path: Assets/Scenes/2_ConnectToGame/ConnectToGameScene.unity
     guid: 23ad55fade8be594c9688af28bc23b7c
   - enabled: 1
-    path: Assets/Scenes/2_MainGame/MainGameScene.unity
+    path: Assets/Scenes/3_MainGame/MainGameScene.unity
     guid: 47cd513b8c4397e4ca272a1ff269d933
   m_configObjects: {}

@@ -72,12 +72,9 @@ namespace Assets.Scripts.ViewModels
 			}
 		}
 
-		public void CloseApplication()
+		public void ToMainMenu()
 		{
-			if (Debug.isDebugBuild)
-				Debug.Log("Application quiting");
-
-			Application.Quit();
+			GameManager.Instance.ChangeState(GameState.LoadMainMenuScene);
 		}
 
 		#endregion

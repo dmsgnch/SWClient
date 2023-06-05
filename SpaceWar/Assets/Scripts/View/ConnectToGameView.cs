@@ -42,7 +42,7 @@ namespace Assets.Scripts.View
 		[SerializeField] private InputField heroInput;
 		[SerializeField] private InputField gameNameInput;
 
-		[SerializeField] private UnityEngine.UI.Button quitButton;
+		[SerializeField] private UnityEngine.UI.Button toMainMenuButton;
 		[SerializeField] private UnityEngine.UI.Button updateButton;
 		[SerializeField] private UnityEngine.UI.Button connectToGameButton;
 		[SerializeField] private UnityEngine.UI.Button createGameButton;
@@ -59,7 +59,7 @@ namespace Assets.Scripts.View
 		{
 			heroInput.onValueChanged.AddListener(HeroNameValueChanged);
 			gameNameInput.onValueChanged.AddListener(GameNameValueChanged);
-			quitButton.onClick.AddListener(OnQuitButtonClick);
+			toMainMenuButton.onClick.AddListener(OnToMainMenuButtonClick);
 			updateButton.onClick.AddListener(OnUpdateButtonClick);
 			createGameButton.onClick.AddListener(OnCreateGameButtonClick);
 			connectToGameButton.onClick.AddListener(OnConnectToGameClickAsync);
@@ -79,9 +79,9 @@ namespace Assets.Scripts.View
             SetInteractableToButtons();
         }
 
-        private void OnQuitButtonClick()
+        private void OnToMainMenuButtonClick()
 		{
-			_connectToGameViewModel.CloseApplication();
+			_connectToGameViewModel.ToMainMenu();
 		}
 
 		private void OnUpdateButtonClick()
@@ -113,16 +113,6 @@ namespace Assets.Scripts.View
 		private async void OnConnectToGameClickAsync()
 		{
 			await _connectToGameViewModel.ConnectToLobby();
-		}
-
-		private void Update()
-		{
-			if (Input.GetKey(KeyCode.Escape))
-			{
-				//TODO: Add confirm window
-
-				_connectToGameViewModel.CloseApplication();
-			}
 		}
 
 		private async void OnEnable()

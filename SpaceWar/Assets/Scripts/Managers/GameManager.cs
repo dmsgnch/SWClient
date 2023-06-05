@@ -53,11 +53,17 @@ namespace Assets.Scripts.Managers
 				case GameState.Login:
 					HandleLogin();
 					break;
-				case GameState.Register:
+				case GameState.Register:					
 					HandleRegister();
 					break;
+				case GameState.LoadMainMenuScene:
+					HandleLoadScene(1);
+					break;
+				case GameState.MainMenu:
+					HandleMainMenu();
+					break;
 				case GameState.LoadConnectToGameScene:
-					HandleLoadConnectToGameScene();
+					HandleLoadScene(2);
 					break;
 				case GameState.ConnectToGame:
 					HandleConnectToGame();
@@ -66,7 +72,7 @@ namespace Assets.Scripts.Managers
 					HandleLobby();
 					break;
 				case GameState.LoadMainGameScene:
-					HandleLoadMainGameScene();
+					HandleLoadScene(3);
 					break;
 				case GameState.MainGame:
 					HandleMainGame();
@@ -88,6 +94,27 @@ namespace Assets.Scripts.Managers
 		{
 			SceneManager.sceneLoaded += OnSceneLoaded;
 			ChangeState(GameState.LoadLoginRegisterScene);
+		}
+
+
+		private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+		{
+			switch (scene.buildIndex)
+			{
+				case 0:
+					break;
+				case 1:
+					OnMainMenuSceneLoaded(scene, mode);
+					break;
+				case 2:
+					OnConnectToGameSceneLoaded(scene, mode);
+					break;
+				case 3:
+					OnMainGameSceneLoaded(scene, mode);
+					break;
+				default:
+					throw new ArgumentException("scene build index out of range!");
+			}
 		}
 
 		private void HandleLoadLoginRegisterScene()
@@ -122,80 +149,56 @@ namespace Assets.Scripts.Managers
 			UiManager.Instance.Hide<LoginViewModel>();
 		}
 
-		private void HandleLoadConnectToGameScene()
-        {
-            //if (SceneManager.GetSceneByBuildIndex(1).IsValid()) return;
-
-            GameObject loadingManagerObject = Instantiate(loadManagerPrefab);
+		private void HandleLoadScene(int sceneNumber)
+		{
+			GameObject loadingManagerObject = Instantiate(loadManagerPrefab);
 
 			LoadingManager loadingManager = loadingManagerObject.GetComponent<LoadingManager>();
 
-            loadingManager.LoadScene(1);
+			loadingManager.LoadScene(sceneNumber);
 		}
 
-		private void HandleConnectToGame()
+		private void OnMainMenuSceneLoaded(Scene scene, LoadSceneMode mode)
 		{
-			UiManager.Instance.BindAndShow(new FPSViewModel());
-			UiManager.Instance.BindAndShow(new ConnectToGameViewModel());
-			UiManager.Instance.Hide<LobbyViewModel>();
-		}
+			if (scene.buildIndex != 1) throw new DataException();
 
-		private void HandleLobby()
-		{
-			UiManager.Instance.BindAndShow(new FPSViewModel());
-			UiManager.Instance.Hide<ConnectToGameViewModel>();
-			UiManager.Instance.BindAndShow(new LobbyViewModel());
-		}
+			GameObject[] canvases = Resources.FindObjectsOfTypeAll(typeof(Canvas))
+				.Select(o => (o as Canvas).gameObject).ToArray();
 
-		private void HandleLoadMainGameScene()
-		{
-			//if (SceneManager.GetSceneByBuildIndex(2).IsValid()) return;
-
-            GameObject loadingManagerObject = Instantiate(loadManagerPrefab);
-
-			LoadingManager loadingManager = loadingManagerObject.GetComponent<LoadingManager>();
-
-            loadingManager.LoadScene(2);
-		}
-
-		private void HandleMainGame()
-		{
-			UiManager.Instance.BindAndShow(new HUDViewModel());
-			UiManager.Instance.BindAndShow(new FPSViewModel());
-			UiManager.Instance.BindAndShow(new MainGameCameraViewModel());
-            UiManager.Instance.BindAndShow(new PlanetsViewModel());
-			UiManager.Instance.Hide<MenuViewModel>();
-        }
-
-		private void HandleMainGameMenu()
-		{
-			UiManager.Instance.BindAndShow(new MenuViewModel());
-			UiManager.Instance.BindAndShow(new MainGameCameraViewModel());
-			UiManager.Instance.Hide<HUDViewModel>();
-			UiManager.Instance.Hide<FPSViewModel>();
-			UiManager.Instance.Hide<PlanetsViewModel>();
-		}
-
-		private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
-		{
-			switch (scene.buildIndex)
+			if (canvases is null || canvases.Length.Equals(0))
 			{
-				case 0:
-					break;
-				case 1:
-					OnConnectToGameSceneLoaded(scene,mode);
-					break;
-				case 2:
-                    OnMainGameSceneLoaded(scene, mode);
-					break;
-				default:
-					throw new ArgumentException("scene build index out of range!");
+				throw new DataException();
 			}
-        }
 
-        private void OnConnectToGameSceneLoaded(Scene scene, LoadSceneMode mode)
+			FPSView fpsView = canvases.FirstOrDefault(c => c.name == "cnvs_FPS")?
+				.GetComponent<FPSView>() ?? throw new DataException();
+
+			MainMenuView mainMenuView = canvases.FirstOrDefault(c => c.name == "cnvs_menu")?
+				.GetComponent<MainMenuView>();
+
+			if (fpsView is null || mainMenuView is null)
+			{
+				throw new DataException();
+			}
+
+			List<BaseScreen> screens = new List<BaseScreen>() { fpsView, mainMenuView };
+
+			UiManager.Instance.Init(screens);
+
+			SceneManager.sceneLoaded -= OnMainMenuSceneLoaded;
+
+			ChangeState(GameState.MainMenu);
+		}
+
+		private void HandleMainMenu()
+		{
+			UiManager.Instance.BindAndShow(new FPSViewModel());
+			UiManager.Instance.BindAndShow(new MainMenuViewModel());
+		}
+
+		private void OnConnectToGameSceneLoaded(Scene scene, LoadSceneMode mode)
         {
-            if (scene.buildIndex != 1) throw new DataException();
+            if (scene.buildIndex != 2) throw new DataException();
 
             GameObject[] canvases = Resources.FindObjectsOfTypeAll(typeof(Canvas))
                 .Select(o => (o as Canvas).gameObject).ToArray();
@@ -206,7 +209,7 @@ namespace Assets.Scripts.Managers
             }
 
             FPSView fpsView = canvases.FirstOrDefault(c => c.name == "cnvs_FPS")?
-                .GetComponent<FPSView>();
+                .GetComponent<FPSView>() ?? throw new DataException();
 
             ConnectToGameView connectToGameView = canvases.FirstOrDefault(c => c.name == "cnvs_connectToGame")?
                 .GetComponent<ConnectToGameView>();
@@ -228,9 +231,23 @@ namespace Assets.Scripts.Managers
             ChangeState(GameState.ConnectToGame);
         }
 
-        private async void OnMainGameSceneLoaded(Scene scene, LoadSceneMode mode)
+		private void HandleConnectToGame()
+		{
+			UiManager.Instance.BindAndShow(new FPSViewModel());
+			UiManager.Instance.BindAndShow(new ConnectToGameViewModel());
+			UiManager.Instance.Hide<LobbyViewModel>();
+		}
+
+		private void HandleLobby()
+		{
+			UiManager.Instance.BindAndShow(new FPSViewModel());
+			UiManager.Instance.Hide<ConnectToGameViewModel>();
+			UiManager.Instance.BindAndShow(new LobbyViewModel());
+		}
+
+		private async void OnMainGameSceneLoaded(Scene scene, LoadSceneMode mode)
         {
-            if (scene.buildIndex != 2) throw new DataException("Index is not match");
+            if (scene.buildIndex != 3) throw new DataException("Index is not match");
 
             FPSView fpsView = GameObject.Find("cnvs_FPS")?.GetComponent<FPSView>();
 
@@ -245,27 +262,6 @@ namespace Assets.Scripts.Managers
             if (fpsView is null || hudView is null || planetsView is null
                 || mainGameCameraView is null || menuView is null)
             {
-                if (fpsView is null)
-                {
-                    Debug.Log("fpsView was not found");
-                    InformationPanelController.Instance.CreateMessage(InformationPanelController.MessageType.ERROR, "fpsView was not found");
-                }
-                if (hudView is null)
-                {
-                    Debug.Log("hudView was not found");
-                    InformationPanelController.Instance.CreateMessage(InformationPanelController.MessageType.ERROR, "hudView was not found");
-                }
-                if (planetsView is null)
-                {
-                    Debug.Log("planetsView was not found");
-                    InformationPanelController.Instance.CreateMessage(InformationPanelController.MessageType.ERROR, "planetsView was not found");
-                }
-                if (mainGameCameraView is null)
-                {
-                    Debug.Log("mainGameCameraView was not found");
-                    InformationPanelController.Instance.CreateMessage(InformationPanelController.MessageType.ERROR, "mainGameCameraView was not found");
-                }
-
                 throw new DataException("Views were not found");
             }
 
@@ -286,7 +282,25 @@ namespace Assets.Scripts.Managers
 
             ChangeState(GameState.MainGame);
         }
-    }
+
+		private void HandleMainGame()
+		{
+			UiManager.Instance.BindAndShow(new HUDViewModel());
+			UiManager.Instance.BindAndShow(new FPSViewModel());
+			UiManager.Instance.BindAndShow(new MainGameCameraViewModel());
+			UiManager.Instance.BindAndShow(new PlanetsViewModel());
+			UiManager.Instance.Hide<MenuViewModel>();
+		}
+
+		private void HandleMainGameMenu()
+		{
+			UiManager.Instance.BindAndShow(new MenuViewModel());
+			UiManager.Instance.BindAndShow(new MainGameCameraViewModel());
+			UiManager.Instance.Hide<HUDViewModel>();
+			UiManager.Instance.Hide<FPSViewModel>();
+			UiManager.Instance.Hide<PlanetsViewModel>();
+		}
+	}
 
 	public enum GameState
 	{
@@ -294,11 +308,13 @@ namespace Assets.Scripts.Managers
 		LoadLoginRegisterScene = 1,
 		Login = 2,
 		Register = 3,
-		LoadConnectToGameScene = 4,
-		ConnectToGame = 5,
-		Lobby = 6,
-		LoadMainGameScene = 7,
-		MainGame = 8,
-		MainGameMenu = 9,
+		LoadMainMenuScene = 4,
+		MainMenu = 5,
+		LoadConnectToGameScene = 6,
+		ConnectToGame = 7,
+		Lobby = 8,
+		LoadMainGameScene = 9,
+		MainGame = 10,
+		MainGameMenu = 11,
 	}
 }
