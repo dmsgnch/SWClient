@@ -143,8 +143,16 @@ namespace Assets.Scripts.ViewModels
 
         private void AddStatusIconToPlanet(PlanetCreationForm planetCreationForm)
         {
-            GameObject iconPrefab = GetIconPrefabByPlanetStatus(planetCreationForm.Planet.Status,
-                planetCreationForm.PlanetGenerationForm.PlanetIconsPrefabs);
+            GameObject iconPrefab = null;
+            if (planetCreationForm.Planet.IsCapital)
+            {
+                iconPrefab = planetCreationForm.PlanetGenerationForm.PlanetIconsPrefabs.First(p => p.name.Equals("CapitalIcon"));
+            }
+            else
+            {
+                iconPrefab = GetIconPrefabByPlanetStatus(planetCreationForm.Planet.Status,
+                    planetCreationForm.PlanetGenerationForm.PlanetIconsPrefabs);
+            }
             if (iconPrefab is null) return;
 
             GameObject statusIcon = Object.Instantiate(iconPrefab);
