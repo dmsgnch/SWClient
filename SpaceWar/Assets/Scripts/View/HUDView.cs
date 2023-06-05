@@ -19,7 +19,6 @@ namespace Assets.Scripts.View
 	public class HUDView : AbstractScreen<HUDViewModel>
 	{
 		[SerializeField] private GameObject TurnPanel;
-
 		[SerializeField] private GameObject ResourcesPanel;
 		[SerializeField] private GameObject SoldiersPanel;
 		[SerializeField] private GameObject ResearchShipPanel;
@@ -30,9 +29,11 @@ namespace Assets.Scripts.View
 		[SerializeField] private GameObject SoldiersInfoPanelPrefab;
 		[SerializeField] private GameObject ResearchShipInfoPanelPrefab;
 		[SerializeField] private GameObject ColonizeShipInfoPanelPrefab;
-        [SerializeField] private GameObject ChangesLinePrefab;
+        [SerializeField] private GameObject ChangeMessagePrefab;
 
-		private HUDViewModel _hudViewModel;
+		private bool firstValuesSet = true;
+
+        private HUDViewModel _hudViewModel;
 
 		private void Awake()
 		{
@@ -118,10 +119,30 @@ namespace Assets.Scripts.View
 		}
 
 		#endregion
+		
+		public void callResourcesChangedPanel(string value) {
+            if (firstValuesSet) return;
+            _hudViewModel.ShowChangePanel(value, ChangeMessagePrefab, ResourcesPanel);
+        }
+        public void callSoldiersChangedPanel(string value)
+        {
+            if (firstValuesSet) return;
+            _hudViewModel.ShowChangePanel(value, ChangeMessagePrefab, SoldiersPanel);
+        }
+        public void callResearchShipsChangedPanel(string value)
+        {
+			if (firstValuesSet) return;
+            _hudViewModel.ShowChangePanel(value, ChangeMessagePrefab, ResearchShipPanel);
+        }
+        public void callColonizeShipsChangedPanel(string value)
+        {
+            if (firstValuesSet) return;
+            _hudViewModel.ShowChangePanel(value, ChangeMessagePrefab, ColonizeShipPanel);
+        }
 
 		#region Requests senders
-
-		public void UpdateSessionRequest()
+		
+        public void UpdateSessionRequest()
 		{
 			_hudViewModel.GetSessionRequestCreate();
 
@@ -141,6 +162,7 @@ namespace Assets.Scripts.View
 		{
 			UpdateHeroHudValues();
 			UpdateSessionHudValues();
+			firstValuesSet = false;
 		}
 
 		public void UpdateHeroHudValues()
@@ -159,7 +181,7 @@ namespace Assets.Scripts.View
 
 		public void SetHeroNewValues(Hero hero)
 		{
-			_hudViewModel.SetHeroNewValues(hero, ChangesLinePrefab);
+			_hudViewModel.SetHeroNewValues(hero);
 		}
 
 		public void SetTurnPanelTimer(int time)

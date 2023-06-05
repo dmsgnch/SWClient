@@ -129,162 +129,42 @@ namespace Assets.Scripts.ViewModels
 			}
 		}
 
-		public async void SetHeroNewValues(Hero hero, GameObject changesLinePrefab)
+		public void SetHeroNewValues(Hero hero)
 		{
-			var ChangesLines = new List<string[]>();
-
-			var oldHero = GameManager.Instance.HeroDataStore;
             GameManager.Instance.HeroDataStore.Name = hero.Name;
-			var ResDiff = hero.Resourses - oldHero.Resourses;
-			if (ResDiff != 0)
-			{
-                var symbol = ResDiff > 0 ? "+" : "";
-                var s = Enumerable.Repeat(string.Empty, 4).ToArray(); s[0] = $"Resources\n({symbol}{ResDiff})";
-				ChangesLines.Add(s);
-            }
 			GameManager.Instance.HeroDataStore.Resourses = hero.Resourses;
-
-            var SoldiersLimDiff = hero.SoldiersLimit - oldHero.SoldiersLimit;
-			if (SoldiersLimDiff != 0) {
-                var symbol = SoldiersLimDiff > 0 ? "+" : "";
-                if (ChangesLines.Count == 0)
-				{
-                    var s = Enumerable.Repeat(string.Empty, 4).ToArray();
-                    s[1] = $"Soldiers limit\n({symbol}{SoldiersLimDiff})";
-					ChangesLines.Add(s);
-                }
-				else {
-					ChangesLines[0][1] = $"Soldiers limit\n({symbol}{SoldiersLimDiff})";
-                }
-			}
             GameManager.Instance.HeroDataStore.SoldiersLimit = hero.SoldiersLimit;
-
-            var AvailableSoldiersDiff = hero.AvailableSoldiers - oldHero.AvailableSoldiers;
-            if (AvailableSoldiersDiff != 0)
-            {
-                var symbol = AvailableSoldiersDiff > 0 ? "+" : "";
-				if (ChangesLines.Count == 1 && ChangesLines[0][1] == string.Empty)
-				{
-					ChangesLines[0][1] = $"Available soldiers\n({symbol}{AvailableSoldiersDiff})";
-				}
-				else if (ChangesLines.Count == 2)
-				{
-					ChangesLines[1][1] = $"Available soldiers\n({symbol}{AvailableSoldiersDiff})";
-				}
-				else {
-                    var s = Enumerable.Repeat(string.Empty, 4).ToArray(); s[1] = $"Available soldiers\n({symbol}{AvailableSoldiersDiff})";
-                    ChangesLines.Add(s);
-                }
-            }
             GameManager.Instance.HeroDataStore.AvailableSoldiers = hero.AvailableSoldiers;
-
-            var ResearchShipLimitDiff = hero.ResearchShipLimit - oldHero.ResearchShipLimit;
-            if (ResearchShipLimitDiff != 0)
-            {
-                var symbol = ResearchShipLimitDiff > 0 ? "+" : "";
-                if (ChangesLines.Count == 0)
-                {
-                    var s = Enumerable.Repeat(string.Empty, 4).ToArray(); s[2] = $"Research ship limit\n({symbol}{ResearchShipLimitDiff})";
-                    ChangesLines.Add(s);
-                }
-                else
-                {
-                    ChangesLines[0][2] = $"Research ship limit\n({symbol}{ResearchShipLimitDiff})";
-                }
-            }
             GameManager.Instance.HeroDataStore.ResearchShipLimit = hero.ResearchShipLimit;
-
-            var AvailableResearchShipsDiff = hero.AvailableResearchShips - oldHero.AvailableResearchShips;
-            if (AvailableResearchShipsDiff != 0)
-            {
-                var symbol = AvailableResearchShipsDiff > 0 ? "+" : "";
-                if (ChangesLines.Count == 1 && ChangesLines[0][2] == string.Empty)
-                {					
-                    ChangesLines[0][2] = $"Available research ships\n({symbol}{AvailableResearchShipsDiff})";
-                }
-                else if (ChangesLines.Count == 2)
-                {
-                    ChangesLines[1][2] = $"Available research ships\n({symbol}{AvailableResearchShipsDiff})";
-                }
-                else
-                {
-                    var s = Enumerable.Repeat(string.Empty, 4).ToArray(); s[2] = $"Available research ships\n({symbol}{AvailableResearchShipsDiff})";
-                    ChangesLines.Add(s);
-                }
-            }
             GameManager.Instance.HeroDataStore.AvailableResearchShips = hero.AvailableResearchShips;
-
-            var ColonizationShipLimitDiff = hero.ColonizationShipLimit - oldHero.ColonizationShipLimit;
-            if (ColonizationShipLimitDiff != 0)
-            {
-                var symbol = ColonizationShipLimitDiff > 0 ? "+" : "";
-                if (ChangesLines.Count == 0)
-                {
-                    var s = Enumerable.Repeat(string.Empty, 4).ToArray(); s[3] = $"Colonization ship limit\n({symbol}{ColonizationShipLimitDiff})";
-                    ChangesLines.Add(s);
-                }
-                else
-                {
-                    ChangesLines[0][3] = $"Colonization ship limit\n({symbol}{ColonizationShipLimitDiff})";
-                }
-            }
-            GameManager.Instance.HeroDataStore.ColonizationShipLimit = hero.ColonizationShipLimit;
-
-            var AvailableColonizationShipsDiff = hero.AvailableColonizationShips - oldHero.AvailableColonizationShips;
-            if (AvailableColonizationShipsDiff != 0)
-            {
-                var symbol = AvailableColonizationShipsDiff > 0 ? "+" : "";
-                if (ChangesLines.Count == 1 && ChangesLines[0][3] == string.Empty)
-                {
-                    ChangesLines[0][3] = $"Available colonization ships\n({symbol}{AvailableColonizationShipsDiff})";
-                }
-                else if (ChangesLines.Count == 2)
-                {
-                    ChangesLines[1][3] = $"Available colonization ships\n({symbol}{AvailableColonizationShipsDiff})";
-                }
-                else
-                {
-                    var s = Enumerable.Repeat(string.Empty, 4).ToArray();
-					s[3] = $"Available colonization ships\n({symbol}{AvailableColonizationShipsDiff})";
-                    ChangesLines.Add(s);
-                }
-            }
+			GameManager.Instance.HeroDataStore.ColonizationShipLimit = hero.ColonizationShipLimit;       
             GameManager.Instance.HeroDataStore.AvailableColonizationShips = hero.AvailableColonizationShips;
-
-			if (ChangesLines.Count != 0) await ShowChangesLines(ChangesLines, changesLinePrefab);
 		}
 
-        private async Task ShowChangesLines(List<string[]> lines, GameObject changesLinePrefab)
+        public async void ShowChangePanel(string message, GameObject changePanelPrefab, GameObject parentPanel)
         {
-            List<GameObject> GOes = new List<GameObject>();
+            GameObject changePanelGO = null;
+            string panelName = parentPanel.name + "_message";
+			for (int i = 1; i <= 10; i++)
+			{
+				if (!GameObject.Find(panelName + $"_{i}"))
+				{
+					changePanelGO = GameObject.Instantiate(changePanelPrefab, GameObject.Find("cnvs_HUD").transform);
+					panelName += $"_{i}";
+					changePanelGO.name = panelName;
+					changePanelGO.transform.position = parentPanel.transform.position + Vector3.down * 45 * i;
+                    var text = changePanelGO.GetComponentInChildren<TMP_Text>();
+                    text.text = message;
 
-            for (int i = 0; i < lines.Count; i++)
-            {
-                var line = lines[i];
-                var lineGO = GameObject.Instantiate(changesLinePrefab, GameObject.Find("cnvs_HUD").transform);
-                lineGO.name += "_" + i.ToString();
-                GOes.Add(lineGO);
-                lineGO.transform.position += Vector3.down * i * 45;
-				var texts = lineGO.transform.GetComponentsInChildren<TMP_Text>();
-                for (int j = 0; j < line.Length; j++)
-                {
-					texts[j].text = line[j];
-                    if (line[j].Contains('-'))
-                        texts[j].color = UnityEngine.Color.red;
-                    else
-                        texts[j].color = UnityEngine.Color.green;
+                    if (text.text.Contains('-')) text.color = UnityEngine.Color.red;
+                    else text.color = UnityEngine.Color.green;
+
+                    await Task.Delay(2000);
+                    GameObject.Destroy(changePanelGO);
+					return;
                 }
-            }
-
-            await Task.Delay(3000);
-
-            foreach (var GO in GOes)
-            {
-                GameObject.DestroyImmediate(GO);
-            }
+			}
         }
-
-
 
         public void GetSessionRequestCreate()
 		{
