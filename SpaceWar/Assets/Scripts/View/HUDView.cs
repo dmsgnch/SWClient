@@ -44,17 +44,8 @@ namespace Assets.Scripts.View
 		}
 
 		private void MenuButton_Click()
-		{ var hero = new Hero();
-			hero.Name = "dsvdsv";
-			hero.Resourses = GameManager.Instance.HeroDataStore.Resourses + 30;
-			hero.AvailableColonizationShips = GameManager.Instance.HeroDataStore.AvailableColonizationShips;
-			hero.AvailableResearchShips = (byte)(GameManager.Instance.HeroDataStore.AvailableResearchShips + 30);
-			hero.AvailableSoldiers = GameManager.Instance.HeroDataStore.AvailableSoldiers;
-			hero.ColonizationShipLimit = GameManager.Instance.HeroDataStore.ColonizationShipLimit;
-			hero.ResearchShipLimit = (byte)(GameManager.Instance.HeroDataStore.ResearchShipLimit + 30);
-			hero.SoldiersLimit = GameManager.Instance.HeroDataStore.SoldiersLimit;
-			_hudViewModel.SetHeroNewValues(hero, ChangesLinePrefab);
-			//_hudViewModel.ToMenu();
+		{ 
+			_hudViewModel.ToMenu();
 		}
 
 		private void Update()

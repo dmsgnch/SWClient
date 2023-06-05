@@ -1488,7 +1488,7 @@ MonoBehaviour:
   btn_SaveGame: {fileID: 791854418}
   btn_LoadGame: {fileID: 832232283}
   btn_Settings: {fileID: 1129811822}
-  btn_QuitTheGame: {fileID: 1674315491}
+  btn_QuitApplication: {fileID: 1674315491}
   btn_LeaveTheGame: {fileID: 1307658004}
 --- !u!1 &647666214
 GameObject:
@@ -3936,7 +3936,7 @@ GameObject:
   - component: {fileID: 1674315492}
   - component: {fileID: 1674315491}
   m_Layer: 0
-  m_Name: bt_quitTheGame
+  m_Name: bt_quitApplication
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

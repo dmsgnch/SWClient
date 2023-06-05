@@ -280,7 +280,7 @@ namespace Assets.Scripts.ViewModels
 
             foreach (var GO in GOes)
             {
-                GameObject.Destroy(GO);
+                GameObject.DestroyImmediate(GO);
             }
         }
 
