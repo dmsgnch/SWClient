@@ -425,6 +425,7 @@ namespace Assets.Scripts.ViewModels
 		private void ClearChildren(GameObject parent)
 		{
 			parent.transform.DestroyChildren();
+			parent.transform.DetachChildren();
 		}
 
 		private Vector3 GetPlanetScale(int size)

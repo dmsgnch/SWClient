@@ -12,6 +12,7 @@ public class ConnectionController : MonoBehaviour
 
     private void Update()
     {
+        if (fromPlanet is null || toPlanet is null) return;
         
         Vector3 direction = toPlanet.transform.position - fromPlanet.transform.position;
         float distance = direction.magnitude;
