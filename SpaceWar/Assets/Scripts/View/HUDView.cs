@@ -130,21 +130,25 @@ namespace Assets.Scripts.View
 		public void callResourcesChangedPanel(string value) {
             if (firstValuesSet) return;
             _hudViewModel.ShowChangePanel(value, ChangeMessagePrefab, ResourcesPanel);
+            UpdateHeroHudValues();
         }
         public void callSoldiersChangedPanel(string value)
         {
             if (firstValuesSet) return;
             _hudViewModel.ShowChangePanel(value, ChangeMessagePrefab, SoldiersPanel);
+            UpdateHeroHudValues();
         }
         public void callResearchShipsChangedPanel(string value)
         {
 			if (firstValuesSet) return;
             _hudViewModel.ShowChangePanel(value, ChangeMessagePrefab, ResearchShipPanel);
+            UpdateHeroHudValues();
         }
         public void callColonizeShipsChangedPanel(string value)
         {
             if (firstValuesSet) return;
             _hudViewModel.ShowChangePanel(value, ChangeMessagePrefab, ColonizeShipPanel);
+            UpdateHeroHudValues();
         }
 
 		#region Requests senders
