@@ -5488,7 +5488,7 @@ MonoBehaviour:
   SoldiersInfoPanelPrefab: {fileID: 3071834164421856080, guid: 3cfd08ea45d9d3f4c9b1981f5bbc44d6, type: 3}
   ResearchShipInfoPanelPrefab: {fileID: 1178361436119345521, guid: dd5ad6a1a69143d44996f62129a88cb5, type: 3}
   ColonizeShipInfoPanelPrefab: {fileID: 8387410819121622001, guid: 1f081fb280254024797ded6bd85848f7, type: 3}
-  ChangesLinePrefab: {fileID: 947527224079975729, guid: 50e444a063260c348a2dfbed0ff25043, type: 3}
+  ChangeMessagePrefab: {fileID: 2057146396422157238, guid: c304eebeaf704d44ba0ee322eeafa7ea, type: 3}
 --- !u!1 &2138206894
 GameObject:
   m_ObjectHideFlags: 0
