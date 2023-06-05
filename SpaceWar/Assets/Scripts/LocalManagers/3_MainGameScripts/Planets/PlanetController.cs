@@ -163,7 +163,7 @@ public class PlanetController : MonoBehaviour
 		TMP_Text buttonText = buttonObject.GetComponentInChildren<TMP_Text>();
 		buttonText.text = buttonName;
 
-		buttonObject.transform.localPosition = new Vector3(0f, (-ActionsButtons.Count * 25f) - 30f, 0f);
+		buttonObject.transform.localPosition = new Vector3(0f, (-ActionsButtons.Count * 33f) - 30f, 0f);
 
 		onClick = button;
 

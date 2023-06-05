@@ -80,7 +80,7 @@ namespace Assets.Scripts.ViewModels
 			UnityEngine.ColorUtility.TryParseHtmlString("#CD393F", out color);
             buttonImage.color = color;
 			buttonText.text = "Wait for other player";
-			button.enabled = false;
+			button.interactable = false;
 		}
         public void SetTurnButtonActiveStatus(GameObject turnPanel)
         {
@@ -92,7 +92,7 @@ namespace Assets.Scripts.ViewModels
             UnityEngine.ColorUtility.TryParseHtmlString("#539F61", out color);
             buttonImage.color = color; ;
             buttonText.text = "Next Turn";
-            button.enabled = true;
+            button.interactable = true;
         }
         public void UpdateHeroDataPanelTexts(
 			GameObject resourcesPanel, 
@@ -159,7 +159,7 @@ namespace Assets.Scripts.ViewModels
                     if (text.text.Contains('-')) text.color = UnityEngine.Color.red;
                     else text.color = UnityEngine.Color.green;
 
-                    await Task.Delay(2000);
+                    await Task.Delay(3000);
                     GameObject.Destroy(changePanelGO);
 					return;
                 }
