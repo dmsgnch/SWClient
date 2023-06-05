@@ -16,6 +16,7 @@ using Assets.Scripts.View;
 using Task = System.Threading.Tasks.Task;
 using SharedLibrary.Responses;
 using Unity.VisualScripting;
+using Edge = SharedLibrary.Models.Edge;
 
 namespace Scripts.RegisterLoginScripts
 {
@@ -177,7 +178,7 @@ namespace Scripts.RegisterLoginScripts
 					GameManager.Instance.HeroDataStore.AvailableColonizationShips = fortificationResponse.AvailableColonizationShips;
 					GameManager.Instance.HeroDataStore.AvailableResearchShips = fortificationResponse.AvailableResearchShips;
 
-					//planetsView.UpdatePlanet(newPlanet);
+					planetsView.UpdatePlanet(newPlanet);
 				});
 			});
 
@@ -192,8 +193,14 @@ namespace Scripts.RegisterLoginScripts
 						GameManager.Instance.BattleDataStore.Battles.Add(battle);
 					}
 
-					//planetsView.UpdateConnection();
-				});
+					Edge[] connections = GameManager.Instance.HeroDataStore.HeroMapView.Connections.ToArray();
+					Edge battleConnection = connections.FirstOrDefault(c =>
+						(c.FromPlanetId.Equals(battle.AttackedPlanetId) || c.FromPlanetId.Equals(battle.AttackedFromId)) &&
+						(c.ToPlanetId.Equals(battle.AttackedFromId) || c.ToPlanetId.Equals(battle.AttackedPlanetId))
+					);
+
+                    planetsView.UpdateConnection(battleConnection);
+                });
 			});
 
 			hubConnection.On<NextTurnResponse>(ClientHandlers.Session.NextTurnHandler, HandleUpdateAllParams());
@@ -215,7 +222,7 @@ namespace Scripts.RegisterLoginScripts
 					GameManager.Instance.HeroDataStore.AvailableColonizationShips = newPlanetStatus.AvailableColonizationShips;
 					GameManager.Instance.HeroDataStore.AvailableResearchShips = newPlanetStatus.AvailableResearchShips;
 
-					//planetsView.UpdatePlanet(newPlanet);
+					planetsView.UpdatePlanet(newPlanet);
 				});
 			});
 

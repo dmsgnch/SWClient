@@ -39,7 +39,12 @@ namespace Assets.Scripts.View
             _planetsViewModel.UpdatePlanet(planet,GetPlanetsGenerationForm());
         }
 
-		public async void Attack(Planet planet)
+        public void UpdateConnection(Edge connection)
+        {
+            _planetsViewModel.UpdateConnection(connection, connectionsParent);
+        }
+
+        public async void Attack(Planet planet)
 		{
 			_planetsViewModel.Attack(planet);
 		}
