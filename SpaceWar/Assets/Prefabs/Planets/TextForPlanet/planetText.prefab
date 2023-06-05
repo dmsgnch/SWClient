@@ -94,7 +94,7 @@ TextMesh:
   m_GameObject: {fileID: 5653605300139628338}
   m_Text: planet text
   m_OffsetZ: 0
-  m_CharacterSize: 4
+  m_CharacterSize: 3.5
   m_LineSpacing: 1
   m_Anchor: 0
   m_Alignment: 0
