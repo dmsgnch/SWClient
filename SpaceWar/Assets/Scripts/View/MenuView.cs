@@ -14,43 +14,48 @@ using Unity.VisualScripting;
 using UnityEngine.UIElements;
 namespace Assets.Scripts.View
 {
-    public class MenuView : AbstractScreen <MenuViewModel>
-    {
-        [SerializeField] private UnityEngine.UI.Button btn_Continue;
-        [SerializeField] private UnityEngine.UI.Button btn_SaveGame;
-        [SerializeField] private UnityEngine.UI.Button btn_LoadGame;
-        [SerializeField] private UnityEngine.UI.Button btn_Settings;
-        [SerializeField] private UnityEngine.UI.Button btn_QuitTheGame;
-        [SerializeField] private UnityEngine.UI.Button btn_LeaveTheGame;
-        private MenuViewModel _menuViewModel;
+	public class MenuView : AbstractScreen<MenuViewModel>
+	{
+		[SerializeField] private UnityEngine.UI.Button btn_Continue;
+		[SerializeField] private UnityEngine.UI.Button btn_SaveGame;
+		[SerializeField] private UnityEngine.UI.Button btn_LoadGame;
+		[SerializeField] private UnityEngine.UI.Button btn_Settings;
+		[SerializeField] private UnityEngine.UI.Button btn_QuitTheGame;
+		[SerializeField] private UnityEngine.UI.Button btn_LeaveTheGame;
+		private MenuViewModel _menuViewModel;
 
+		private void Awake()
+		{
+			btn_Continue.onClick.AddListener(bt_Continue_Click);
+			btn_SaveGame.onClick.AddListener(bt_SaveGame_Click);
+			btn_LoadGame.onClick.AddListener(bt_LoadGame_Click);
+			btn_Settings.onClick.AddListener(bt_Settings_Click);
+			btn_QuitTheGame.onClick.AddListener(bt_LeaveTheGame_Click);
+			btn_LeaveTheGame.onClick.AddListener(bt_QuitTheGame_Click);
+		}
 
-        private void Awake()
-        {
-            btn_Continue.onClick.AddListener(bt_Continue_Click);
-            btn_SaveGame.onClick.AddListener(bt_SaveGame_Click);
-            btn_LoadGame.onClick.AddListener (bt_LoadGame_Click);
-            btn_Settings.onClick.AddListener(bt_Settings_Click);
-            btn_QuitTheGame.onClick.AddListener(bt_LeaveTheGame_Click);
-            btn_LeaveTheGame.onClick.AddListener(bt_QuitTheGame_Click);
-        }
+		private void Update()
+		{
+			if (Input.GetKeyDown(KeyCode.Escape))
+				bt_Continue_Click();
+		}
 
-        void bt_Continue_Click() => _menuViewModel.ContinueGame();
+		void bt_Continue_Click() => _menuViewModel.ContinueGame();
 
-        void bt_SaveGame_Click() => _menuViewModel.SaveGame();
+		void bt_SaveGame_Click() => _menuViewModel.SaveGame();
 
-        void bt_LoadGame_Click() => _menuViewModel.LoadGame();
+		void bt_LoadGame_Click() => _menuViewModel.LoadGame();
 
-        void bt_Settings_Click() => _menuViewModel.Settings();
+		void bt_Settings_Click() => _menuViewModel.Settings();
 
-        void bt_LeaveTheGame_Click() => _menuViewModel.LeaveTheGame();
+		void bt_LeaveTheGame_Click() => _menuViewModel.LeaveTheGame();
 
-        void bt_QuitTheGame_Click() =>  _menuViewModel.QuitTheGame();
+		void bt_QuitTheGame_Click() => _menuViewModel.QuitTheGame();
 
-        protected override void OnBind(MenuViewModel menuViewModel)
-        {
-            _menuViewModel = menuViewModel;
-        }
-    }
+		protected override void OnBind(MenuViewModel menuViewModel)
+		{
+			_menuViewModel = menuViewModel;
+		}
+	}
 }
 
