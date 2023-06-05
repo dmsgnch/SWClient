@@ -65,12 +65,14 @@ public class PlanetController : MonoBehaviour
 		{
 			if (!actMenuEnabled)
 			{
+				
 				Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 				RaycastHit hit;
 
 				if (Physics.Raycast(ray, out hit) && hit.collider.gameObject == gameObject)
 				{
-					GenerateActMenus();
+                    DestroyInfoPanels();
+                    GenerateActMenus();
 				}
 			}
 			else
@@ -183,7 +185,12 @@ public class PlanetController : MonoBehaviour
 	{
 		var planetsView = GetPlanetsView();
 
-		switch (planet.Status)
+        Destroy(PlanetInfoPanel);
+        PlanetInfoPanel = null;
+        hoverTime = 0f;
+        createNewPlanetInfoPanel = false;
+
+        switch (planet.Status)
 		{
 			case PlanetStatus.Known:
 				CreateActMenu("Research (R: 10)", out Button researchButton);
@@ -197,20 +204,27 @@ public class PlanetController : MonoBehaviour
 				colonizeButton.onClick.AddListener(() => planetsView.Colonize(planet));
 				break;
 
-			case PlanetStatus.Enemy:
-				if (IsAvaibleToAttack())
+			case PlanetStatus.Colonized:
+				if (planet.IsEnemy)
 				{
-					CreateActMenu("Attack", out Button attackButton);
-					attackButton.onClick.AddListener(DestroyActMenu);
-					attackButton.onClick.AddListener(() => planetsView.Attack(planet));
+                    if (IsAvaibleToAttack())
+                    {
+                        CreateActMenu("Attack", out Button attackButton);
+                        attackButton.onClick.AddListener(DestroyActMenu);
+                        attackButton.onClick.AddListener(() => planetsView.Attack(planet));
+                    }
+                }
+				else
+				{
+					OpearationDefenceChoosing(planetsView);
 				}
 				break;
 
-			case PlanetStatus.Colonized:
-				OpearationDefenceChoosing(planetsView);
-				break;
+            case PlanetStatus.Colonizing:
+            case PlanetStatus.Researching:
+                break;
 
-			default:
+            default:
 				throw new DataException();
 		}
 
@@ -220,8 +234,8 @@ public class PlanetController : MonoBehaviour
 			defenceButton.onClick.AddListener(DestroyActMenu);
 			defenceButton.onClick.AddListener(() => planetsView.Defence(planet));
 		}
-		ResizeButtons();
-	}
+		if(ActionsButtons.Any()) ResizeButtons();
+    }
 
 	/// <summary>
 	/// Perform sugery and binding according to planet defence status
@@ -331,6 +345,14 @@ public class PlanetController : MonoBehaviour
 		}
 	}
 
+	private void DestroyInfoPanels()
+    {
+        Destroy(PlanetInfoPanel);
+        PlanetInfoPanel = null;
+        hoverTime = 0f;
+        createNewPlanetInfoPanel = false;
+    }
+
 	private void OnMouseEnter()
 	{
 		hoverTime = Time.time;
@@ -339,11 +361,8 @@ public class PlanetController : MonoBehaviour
 
 	private void OnMouseExit()
 	{
-		Destroy(PlanetInfoPanel);
-		PlanetInfoPanel = null;
-		hoverTime = 0f;
-		createNewPlanetInfoPanel = false;
-	}
+		DestroyInfoPanels();
+    }
 
 	private void OnMouseOver()
 	{

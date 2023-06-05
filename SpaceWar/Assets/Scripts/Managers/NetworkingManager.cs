@@ -167,18 +167,18 @@ namespace Scripts.RegisterLoginScripts
 				{
 					var planetsView = GetView<PlanetsView>();
 
-					Planet newPlanet = new Planet()
-					{
-						Id = fortificationResponse.PlanetId,
-						FortificationLevel = fortificationResponse.Fortification,
-						IterationsLeftToNextStatus = fortificationResponse.IterationsToTheNextStatus
-					};
+					Planet updatedPlanet = GameManager.Instance
+					.HeroDataStore.HeroMapView.Planets
+					.FirstOrDefault(p => p.Id.Equals(fortificationResponse.PlanetId));
 
-					GameManager.Instance.HeroDataStore.Resourses = fortificationResponse.Resources;
+					updatedPlanet.FortificationLevel = fortificationResponse.Fortification;
+					updatedPlanet.IterationsLeftToNextStatus = fortificationResponse.IterationsToTheNextStatus;
+
+                    GameManager.Instance.HeroDataStore.Resourses = fortificationResponse.Resources;
 					GameManager.Instance.HeroDataStore.AvailableColonizationShips = fortificationResponse.AvailableColonizationShips;
 					GameManager.Instance.HeroDataStore.AvailableResearchShips = fortificationResponse.AvailableResearchShips;
 
-					planetsView.UpdatePlanet(newPlanet);
+					planetsView.UpdatePlanet(updatedPlanet);
 				});
 			});
 
@@ -211,18 +211,17 @@ namespace Scripts.RegisterLoginScripts
 				{
 					var planetsView = GetView<PlanetsView>();
 
-					Planet newPlanet = new Planet()
-					{
-						Id = newPlanetStatus.PlanetId,
-						Status = newPlanetStatus.RelationStatus,
-						IterationsLeftToNextStatus = newPlanetStatus.IterationsToTheNextStatus
-					};
+                    Planet updatedPlanet = GameManager.Instance
+                    .HeroDataStore.HeroMapView.Planets
+                    .FirstOrDefault(p => p.Id.Equals(newPlanetStatus.PlanetId));
+					updatedPlanet.Status = newPlanetStatus.RelationStatus;
+					updatedPlanet.IterationsLeftToNextStatus = newPlanetStatus.IterationsToTheNextStatus;
 
 					GameManager.Instance.HeroDataStore.Resourses = newPlanetStatus.Resources;
 					GameManager.Instance.HeroDataStore.AvailableColonizationShips = newPlanetStatus.AvailableColonizationShips;
 					GameManager.Instance.HeroDataStore.AvailableResearchShips = newPlanetStatus.AvailableResearchShips;
 
-					planetsView.UpdatePlanet(newPlanet);
+					planetsView.UpdatePlanet(updatedPlanet);
 				});
 			});
 

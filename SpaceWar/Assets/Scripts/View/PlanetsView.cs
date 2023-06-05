@@ -36,7 +36,7 @@ namespace Assets.Scripts.View
 
         public void UpdatePlanet(Planet planet)
         {
-            _planetsViewModel.UpdatePlanet(planet,GetPlanetsGenerationForm());
+            _planetsViewModel.UpdatePlanet(planet,GetPlanetsGenerationForm(),connectionsParent);
         }
 
         public void UpdateConnection(Edge connection)

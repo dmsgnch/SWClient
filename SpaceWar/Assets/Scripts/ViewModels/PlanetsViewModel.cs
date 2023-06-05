@@ -55,18 +55,28 @@ namespace Assets.Scripts.ViewModels
 			}
 		}
 
-		public void UpdatePlanet(Planet planet, PlanetsGenerationForm planetsGenerationForm)
+		public void UpdatePlanet(Planet planet, PlanetsGenerationForm planetsGenerationForm, 
+            GameObject connectionsParent)
 		{
 			//TODO: find planet on scene by name
 			GameObject planetObject = GameObject.Find(planet.PlanetName);
-			Object.Destroy(planetObject);
+			Object.DestroyImmediate(planetObject);
 
 			CreatePlanetGameObject(planet,planetsGenerationForm);
-		}
+
+            Edge[] connections = GameManager.Instance.HeroDataStore.HeroMapView.Connections
+                .Where(c => c.FromPlanetId.Equals(planet.Id) || c.ToPlanetId.Equals(planet.Id))
+                .ToArray();
+
+            foreach(var connection in connections)
+            {
+                UpdateConnection(connection,connectionsParent);
+            }
+        }
         public void UpdateConnection(Edge connection, GameObject connectionsParent)
         {
             GameObject connectionObject = GameObject.Find(connection.Id.ToString());
-            Object.Destroy(connectionObject);
+            Object.DestroyImmediate(connectionObject);
 
             GameObject[] planets = GetPlanets();
             CreateConnection(connection, connectionsParent, planets);
@@ -388,6 +398,7 @@ namespace Assets.Scripts.ViewModels
 		private GameObject GetIconPrefabByPlanetStatus(PlanetStatus planetStatus, 
 			GameObject[] planetsIconsPrefabs)
 		{
+            Debug.Log(planetStatus);
 			switch (planetStatus)
 			{
 				case PlanetStatus.Researching:
