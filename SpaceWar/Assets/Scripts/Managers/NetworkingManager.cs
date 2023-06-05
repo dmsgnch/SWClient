@@ -268,7 +268,8 @@ namespace Scripts.RegisterLoginScripts
 					hudView.UpdateHeroHudValues();
 					hudView.UpdateSessionHudValues();
 
-					//planetsView.RecreateMap();
+					//recreate map
+					planetsView.GeneratePlanetsWithConnections();
 				});
 			};
 		}
