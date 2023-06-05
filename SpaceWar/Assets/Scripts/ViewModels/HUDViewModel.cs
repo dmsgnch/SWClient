@@ -1,4 +1,5 @@
-﻿using Assets.Scripts.LocalManagers._2_MainGameScripts.RequestsAndResponses.Requests;
+﻿using Assets.Scripts.Components.DataStores;
+using Assets.Scripts.LocalManagers._2_MainGameScripts.RequestsAndResponses.Requests;
 using Assets.Scripts.Managers;
 using SharedLibrary.Models;
 using System.Drawing;
@@ -8,6 +9,11 @@ using UnityEngine;
 using UnityEngine.UI;
 using ViewModels.Abstract;
 using Object = UnityEngine.Object;
+using System.Collections;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using System.Linq;
+using SharedLibrary.Models.Enums;
 
 namespace Assets.Scripts.ViewModels
 {
@@ -94,17 +100,18 @@ namespace Assets.Scripts.ViewModels
 			GameObject researchShipsPanel, 
 			GameObject colonizationShipsPanel)
 		{
-			resourcesPanel.GetComponentInChildren<TMP_Text>().text = 
-				GameManager.Instance.HeroDataStore.Resourses.ToString();
+			resourcesPanel.GetComponentInChildren<TMP_Text>().text = $"{GameManager.Instance.HeroDataStore.Resourses}" +
+				$"(+{GameManager.Instance.HeroDataStore.HeroMapView.Planets.Where(p => p.ResourceType.Equals(ResourceType.OnlyResources) && p.Status.Equals(PlanetStatus.Colonized)).Select(p =>p.ResourceCount).Sum()})";
 
-			soldiersPanel.GetComponentInChildren<TMP_Text>().text = 
-				GameManager.Instance.HeroDataStore.AvailableSoldiers.ToString();
+			soldiersPanel.GetComponentInChildren<TMP_Text>().text = $"{GameManager.Instance.HeroDataStore.AvailableSoldiers}" +
+				$"(+{(int)(GameManager.Instance.HeroDataStore.SoldiersLimit*0.2)})";
 
-			researchShipsPanel.GetComponentInChildren<TMP_Text>().text =
-				GameManager.Instance.HeroDataStore.AvailableResearchShips.ToString();
+			researchShipsPanel.GetComponentInChildren<TMP_Text>().text = $"{GameManager.Instance.HeroDataStore.AvailableResearchShips}/" +
+				$"{GameManager.Instance.HeroDataStore.ResearchShipLimit}";
 
-			colonizationShipsPanel.GetComponentInChildren<TMP_Text>().text = 
-				GameManager.Instance.HeroDataStore.AvailableColonizationShips.ToString();
+            colonizationShipsPanel.GetComponentInChildren<TMP_Text>().text = $"{GameManager.Instance.HeroDataStore.AvailableColonizationShips}/" +
+            $"{GameManager.Instance.HeroDataStore.ColonizationShipLimit}";
+
 		}
 
 		public void UpdateSessionDataPanelTexts(GameObject turnPanel)
@@ -122,19 +129,164 @@ namespace Assets.Scripts.ViewModels
 			}
 		}
 
-		public void SetHeroNewValues(Hero hero)
+		public async void SetHeroNewValues(Hero hero, GameObject changesLinePrefab)
 		{
-			GameManager.Instance.HeroDataStore.Name = hero.Name;
+			var ChangesLines = new List<string[]>();
+
+			var oldHero = GameManager.Instance.HeroDataStore;
+            GameManager.Instance.HeroDataStore.Name = hero.Name;
+			var ResDiff = hero.Resourses - oldHero.Resourses;
+			if (ResDiff != 0)
+			{
+                var symbol = ResDiff > 0 ? "+" : "";
+                var s = Enumerable.Repeat(string.Empty, 4).ToArray(); s[0] = $"Resources\n({symbol}{ResDiff})";
+				ChangesLines.Add(s);
+            }
 			GameManager.Instance.HeroDataStore.Resourses = hero.Resourses;
-			GameManager.Instance.HeroDataStore.SoldiersLimit = hero.SoldiersLimit;
-			GameManager.Instance.HeroDataStore.AvailableSoldiers = hero.AvailableSoldiers;
-			GameManager.Instance.HeroDataStore.ResearchShipLimit = hero.ResearchShipLimit;
-			GameManager.Instance.HeroDataStore.AvailableResearchShips = hero.AvailableResearchShips;
-			GameManager.Instance.HeroDataStore.ColonizationShipLimit = hero.ColonizationShipLimit;
-			GameManager.Instance.HeroDataStore.AvailableColonizationShips = hero.AvailableColonizationShips;
+
+            var SoldiersLimDiff = hero.SoldiersLimit - oldHero.SoldiersLimit;
+			if (SoldiersLimDiff != 0) {
+                var symbol = SoldiersLimDiff > 0 ? "+" : "";
+                if (ChangesLines.Count == 0)
+				{
+                    var s = Enumerable.Repeat(string.Empty, 4).ToArray();
+                    s[1] = $"Soldiers limit\n({symbol}{SoldiersLimDiff})";
+					ChangesLines.Add(s);
+                }
+				else {
+					ChangesLines[0][1] = $"Soldiers limit\n({symbol}{SoldiersLimDiff})";
+                }
+			}
+            GameManager.Instance.HeroDataStore.SoldiersLimit = hero.SoldiersLimit;
+
+            var AvailableSoldiersDiff = hero.AvailableSoldiers - oldHero.AvailableSoldiers;
+            if (AvailableSoldiersDiff != 0)
+            {
+                var symbol = AvailableSoldiersDiff > 0 ? "+" : "";
+				if (ChangesLines.Count == 1 && ChangesLines[0][1] == string.Empty)
+				{
+					ChangesLines[0][1] = $"Available soldiers\n({symbol}{AvailableSoldiersDiff})";
+				}
+				else if (ChangesLines.Count == 2)
+				{
+					ChangesLines[1][1] = $"Available soldiers\n({symbol}{AvailableSoldiersDiff})";
+				}
+				else {
+                    var s = Enumerable.Repeat(string.Empty, 4).ToArray(); s[1] = $"Available soldiers\n({symbol}{AvailableSoldiersDiff})";
+                    ChangesLines.Add(s);
+                }
+            }
+            GameManager.Instance.HeroDataStore.AvailableSoldiers = hero.AvailableSoldiers;
+
+            var ResearchShipLimitDiff = hero.ResearchShipLimit - oldHero.ResearchShipLimit;
+            if (ResearchShipLimitDiff != 0)
+            {
+                var symbol = ResearchShipLimitDiff > 0 ? "+" : "";
+                if (ChangesLines.Count == 0)
+                {
+                    var s = Enumerable.Repeat(string.Empty, 4).ToArray(); s[2] = $"Research ship limit\n({symbol}{ResearchShipLimitDiff})";
+                    ChangesLines.Add(s);
+                }
+                else
+                {
+                    ChangesLines[0][2] = $"Research ship limit\n({symbol}{ResearchShipLimitDiff})";
+                }
+            }
+            GameManager.Instance.HeroDataStore.ResearchShipLimit = hero.ResearchShipLimit;
+
+            var AvailableResearchShipsDiff = hero.AvailableResearchShips - oldHero.AvailableResearchShips;
+            if (AvailableResearchShipsDiff != 0)
+            {
+                var symbol = AvailableResearchShipsDiff > 0 ? "+" : "";
+                if (ChangesLines.Count == 1 && ChangesLines[0][2] == string.Empty)
+                {					
+                    ChangesLines[0][2] = $"Available research ships\n({symbol}{AvailableResearchShipsDiff})";
+                }
+                else if (ChangesLines.Count == 2)
+                {
+                    ChangesLines[1][2] = $"Available research ships\n({symbol}{AvailableResearchShipsDiff})";
+                }
+                else
+                {
+                    var s = Enumerable.Repeat(string.Empty, 4).ToArray(); s[2] = $"Available research ships\n({symbol}{AvailableResearchShipsDiff})";
+                    ChangesLines.Add(s);
+                }
+            }
+            GameManager.Instance.HeroDataStore.AvailableResearchShips = hero.AvailableResearchShips;
+
+            var ColonizationShipLimitDiff = hero.ColonizationShipLimit - oldHero.ColonizationShipLimit;
+            if (ColonizationShipLimitDiff != 0)
+            {
+                var symbol = ColonizationShipLimitDiff > 0 ? "+" : "";
+                if (ChangesLines.Count == 0)
+                {
+                    var s = Enumerable.Repeat(string.Empty, 4).ToArray(); s[3] = $"Colonization ship limit\n({symbol}{ColonizationShipLimitDiff})";
+                    ChangesLines.Add(s);
+                }
+                else
+                {
+                    ChangesLines[0][3] = $"Colonization ship limit\n({symbol}{ColonizationShipLimitDiff})";
+                }
+            }
+            GameManager.Instance.HeroDataStore.ColonizationShipLimit = hero.ColonizationShipLimit;
+
+            var AvailableColonizationShipsDiff = hero.AvailableColonizationShips - oldHero.AvailableColonizationShips;
+            if (AvailableColonizationShipsDiff != 0)
+            {
+                var symbol = AvailableColonizationShipsDiff > 0 ? "+" : "";
+                if (ChangesLines.Count == 1 && ChangesLines[0][3] == string.Empty)
+                {
+                    ChangesLines[0][3] = $"Available colonization ships\n({symbol}{AvailableColonizationShipsDiff})";
+                }
+                else if (ChangesLines.Count == 2)
+                {
+                    ChangesLines[1][3] = $"Available colonization ships\n({symbol}{AvailableColonizationShipsDiff})";
+                }
+                else
+                {
+                    var s = Enumerable.Repeat(string.Empty, 4).ToArray();
+					s[3] = $"Available colonization ships\n({symbol}{AvailableColonizationShipsDiff})";
+                    ChangesLines.Add(s);
+                }
+            }
+            GameManager.Instance.HeroDataStore.AvailableColonizationShips = hero.AvailableColonizationShips;
+
+			if (ChangesLines.Count != 0) await ShowChangesLines(ChangesLines, changesLinePrefab);
 		}
 
-		public void GetSessionRequestCreate()
+        private async Task ShowChangesLines(List<string[]> lines, GameObject changesLinePrefab)
+        {
+            List<GameObject> GOes = new List<GameObject>();
+
+            for (int i = 0; i < lines.Count; i++)
+            {
+                var line = lines[i];
+                var lineGO = GameObject.Instantiate(changesLinePrefab, GameObject.Find("cnvs_HUD").transform);
+                lineGO.name += "_" + i.ToString();
+                GOes.Add(lineGO);
+                lineGO.transform.position += Vector3.down * i * 45;
+				var texts = lineGO.transform.GetComponentsInChildren<TMP_Text>();
+                for (int j = 0; j < line.Length; j++)
+                {
+					texts[j].text = line[j];
+                    if (line[j].Contains('-'))
+                        texts[j].color = UnityEngine.Color.red;
+                    else
+                        texts[j].color = UnityEngine.Color.green;
+                }
+            }
+
+            await Task.Delay(3000);
+
+            foreach (var GO in GOes)
+            {
+                GameObject.Destroy(GO);
+            }
+        }
+
+
+
+        public void GetSessionRequestCreate()
 		{
 			CreateGetSessionRequestObject = new GameObject("GetSessionRequest");
 

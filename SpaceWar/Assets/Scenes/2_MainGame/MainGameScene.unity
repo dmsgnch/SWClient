@@ -1818,10 +1818,10 @@ RectTransform:
   m_Father: {fileID: 1473761135}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: -359.979}
-  m_AnchorMin: {x: 0, y: 0.88570374}
-  m_AnchorMax: {x: 0.07945831, y: 0.95900005}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_AnchorMin: {x: 0.92018765, y: 0.8867409}
+  m_AnchorMax: {x: 1, y: 0.95900005}
+  m_AnchoredPosition: {x: -0.099975586, y: -0.5}
+  m_SizeDelta: {x: -1, y: 1}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &751748014
 MonoBehaviour:
@@ -5720,6 +5720,7 @@ MonoBehaviour:
   SoldiersInfoPanelPrefab: {fileID: 3071834164421856080, guid: 3cfd08ea45d9d3f4c9b1981f5bbc44d6, type: 3}
   ResearchShipInfoPanelPrefab: {fileID: 1178361436119345521, guid: dd5ad6a1a69143d44996f62129a88cb5, type: 3}
   ColonizeShipInfoPanelPrefab: {fileID: 8387410819121622001, guid: 1f081fb280254024797ded6bd85848f7, type: 3}
+  ChangesLinePrefab: {fileID: 947527224079975729, guid: 50e444a063260c348a2dfbed0ff25043, type: 3}
 --- !u!1 &2138206894
 GameObject:
   m_ObjectHideFlags: 0

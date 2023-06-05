@@ -56,6 +56,7 @@ namespace Assets.Scripts.View
 
 		public async void Research(Planet planet)
         {
+            
             await _planetsViewModel.ResearchOrColonizeRequest(planet);
         }
 
