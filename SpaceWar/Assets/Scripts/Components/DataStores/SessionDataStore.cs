@@ -22,5 +22,12 @@ namespace Assets.Scripts.Components.DataStores
 
 		public int TurnTimeLimit { get; set; }
 
+		public List<PanelHeroForm> PanelHeroForms { get; set; } 
+
+		public class PanelHeroForm
+		{
+			public Guid HeroId { get; set; } 
+			public string HeroName { get; set; }
+		}
 	}
 }

@@ -13,6 +13,8 @@ using SharedLibrary.Models;
 using System.Data;
 using UnityEngine.UI;
 using Assets.Scripts.View;
+using static Assets.Scripts.Components.DataStores.SessionDataStore;
+using Assets.Scripts.Components.DataStores;
 
 namespace Assets.Scripts.LocalManagers._2_MainGameScripts.RequestsAndResponses.ResponseHandlers
 {
@@ -32,6 +34,12 @@ namespace Assets.Scripts.LocalManagers._2_MainGameScripts.RequestsAndResponses.R
 			GameManager.Instance.SessionDataStore.SessionId = session.Id;
 			GameManager.Instance.SessionDataStore.TurnNumber = session.TurnNumber;
 			GameManager.Instance.SessionDataStore.TurnTimeLimit = session.TurnTimeLimit;
+
+			GameManager.Instance.SessionDataStore.PanelHeroForms = session.Heroes.Select(h => new PanelHeroForm()
+			{
+				HeroId = h.HeroId,
+				HeroName = h.Name
+			}).ToList();
 
 			//TODO: Move to method in viewModel
 			#region ToMethod
