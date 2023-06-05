@@ -20,7 +20,7 @@ namespace Assets.Scripts.View
 		[SerializeField] private UnityEngine.UI.Button btn_SaveGame;
 		[SerializeField] private UnityEngine.UI.Button btn_LoadGame;
 		[SerializeField] private UnityEngine.UI.Button btn_Settings;
-		[SerializeField] private UnityEngine.UI.Button btn_QuitTheGame;
+		[SerializeField] private UnityEngine.UI.Button btn_QuitApplication;
 		[SerializeField] private UnityEngine.UI.Button btn_LeaveTheGame;
 		private MenuViewModel _menuViewModel;
 
@@ -30,8 +30,8 @@ namespace Assets.Scripts.View
 			btn_SaveGame.onClick.AddListener(bt_SaveGame_Click);
 			btn_LoadGame.onClick.AddListener(bt_LoadGame_Click);
 			btn_Settings.onClick.AddListener(bt_Settings_Click);
-			btn_QuitTheGame.onClick.AddListener(bt_LeaveTheGame_Click);
-			btn_LeaveTheGame.onClick.AddListener(bt_QuitTheGame_Click);
+			btn_LeaveTheGame.onClick.AddListener(bt_LeaveTheGame_Click);
+			btn_QuitApplication.onClick.AddListener(bt_QuitApplication_Click);
 		}
 
 		private void Update()
@@ -48,9 +48,9 @@ namespace Assets.Scripts.View
 
 		void bt_Settings_Click() => _menuViewModel.Settings();
 
-		void bt_LeaveTheGame_Click() => _menuViewModel.LeaveTheGame();
+		async void bt_LeaveTheGame_Click() => await _menuViewModel.LeaveTheGame();
 
-		void bt_QuitTheGame_Click() => _menuViewModel.QuitTheGame();
+		async void bt_QuitApplication_Click() => await _menuViewModel.QuitApplication();
 
 		protected override void OnBind(MenuViewModel menuViewModel)
 		{

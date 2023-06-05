@@ -157,7 +157,7 @@ namespace Scripts.RegisterLoginScripts
 					GameManager.Instance.SessionDataStore.TurnNumber = session.TurnNumber;
 					GameManager.Instance.SessionDataStore.TurnTimeLimit = session.TurnTimeLimit;
 
-					hudView.UpdateSessionRequest();
+					hudView.UpdateSessionHudValues();
 				});
 			});
 

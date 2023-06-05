@@ -86,6 +86,7 @@ namespace Assets.Scripts.Managers
 
 		private void HandleStarting()
 		{
+			SceneManager.sceneLoaded += OnSceneLoaded;
 			ChangeState(GameState.LoadLoginRegisterScene);
 		}
 
@@ -122,49 +123,14 @@ namespace Assets.Scripts.Managers
 		}
 
 		private void HandleLoadConnectToGameScene()
-		{
-			GameObject loadingManagerObject = Instantiate(loadManagerPrefab);
+        {
+            //if (SceneManager.GetSceneByBuildIndex(1).IsValid()) return;
+
+            GameObject loadingManagerObject = Instantiate(loadManagerPrefab);
 
 			LoadingManager loadingManager = loadingManagerObject.GetComponent<LoadingManager>();
 
-			SceneManager.sceneLoaded += OnConnectToGameSceneLoaded;
-
-			loadingManager.LoadScene(1);
-		}
-
-        private void OnConnectToGameSceneLoaded(Scene scene, LoadSceneMode mode)
-		{
-			if(scene.buildIndex != 1) throw new DataException();
-
-            GameObject[] canvases = Resources.FindObjectsOfTypeAll(typeof(Canvas))
-                .Select(o => (o as Canvas).gameObject).ToArray();
-
-			if (canvases is null || canvases.Length.Equals(0))
-			{
-				throw new DataException();
-			}
-
-			FPSView fpsView = canvases.FirstOrDefault(c => c.name == "cnvs_FPS")?
-				.GetComponent<FPSView>();
-
-			ConnectToGameView connectToGameView = canvases.FirstOrDefault(c => c.name == "cnvs_connectToGame")?
-				.GetComponent<ConnectToGameView>();
-
-			LobbyView lobbyView = canvases.FirstOrDefault(c => c.name == "cnvs_lobby")?
-				.GetComponent<LobbyView>();
-
-			if (fpsView is null || connectToGameView is null || lobbyView is null)
-			{
-				throw new DataException();
-			}
-
-			List<BaseScreen> screens = new List<BaseScreen>() { fpsView, connectToGameView, lobbyView };
-
-			UiManager.Instance.Init(screens);
-
-			SceneManager.sceneLoaded -= OnConnectToGameSceneLoaded;
-
-			ChangeState(GameState.ConnectToGame);		
+            loadingManager.LoadScene(1);
 		}
 
 		private void HandleConnectToGame()
@@ -183,71 +149,13 @@ namespace Assets.Scripts.Managers
 
 		private void HandleLoadMainGameScene()
 		{
-			GameObject loadingManagerObject = Instantiate(loadManagerPrefab);
+			//if (SceneManager.GetSceneByBuildIndex(2).IsValid()) return;
+
+            GameObject loadingManagerObject = Instantiate(loadManagerPrefab);
 
 			LoadingManager loadingManager = loadingManagerObject.GetComponent<LoadingManager>();
 
-			SceneManager.sceneLoaded += OnMainGameSceneLoaded;
-
-			loadingManager.LoadScene(2);
-		}
-
-		private async void OnMainGameSceneLoaded(Scene scene, LoadSceneMode mode)
-		{
-			if (scene.buildIndex != 2) throw new DataException("Index is not match");
-
-			FPSView fpsView = GameObject.Find("cnvs_FPS")?.GetComponent<FPSView>(); 
-
-            MainGameCameraView mainGameCameraView = GameObject.Find("Look_Camera")?.GetComponent<MainGameCameraView>();
-
-			HUDView hudView = GameObject.Find("cnvs_HUD")?.GetComponent<HUDView>();
-
-            PlanetsView planetsView = GameObject.Find("cnvs_mainGame")?.GetComponent<PlanetsView>();
-
-			MenuView menuView = GameObject.Find("cnvs_menu")?.GetComponent<MenuView>();
-
-            if (fpsView is null || hudView is null || planetsView is null || mainGameCameraView is null || menuView is null)
-			{
-				if(fpsView is null)
-				{
-					Debug.Log("fpsView was not found");
-					InformationPanelController.Instance.CreateMessage(InformationPanelController.MessageType.ERROR, "fpsView was not found");
-				}
-				if (hudView is null)
-				{
-					Debug.Log("hudView was not found");
-					InformationPanelController.Instance.CreateMessage(InformationPanelController.MessageType.ERROR, "hudView was not found");
-				}
-				if (planetsView is null)
-				{
-					Debug.Log("planetsView was not found");
-					InformationPanelController.Instance.CreateMessage(InformationPanelController.MessageType.ERROR, "planetsView was not found");
-				}
-				if (mainGameCameraView is null)
-				{
-					Debug.Log("mainGameCameraView was not found");
-					InformationPanelController.Instance.CreateMessage(InformationPanelController.MessageType.ERROR, "mainGameCameraView was not found");
-				}
-
-				throw new DataException("Views were not found");
-			}
-
-			List<BaseScreen> screens = new List<BaseScreen>() 
-			{
-				fpsView, 
-				hudView, 
-				mainGameCameraView, 
-				planetsView, 
-				menuView
-			};
-
-			UiManager.Instance.Init(screens);
-
-			SceneManager.sceneLoaded -= OnMainGameSceneLoaded;
-
-			await NetworkingManager.Instance.StartHub("session");
-
-			ChangeState(GameState.MainGame);
+            loadingManager.LoadScene(2);
 		}
 
 		private void HandleMainGame()
@@ -267,6 +175,117 @@ namespace Assets.Scripts.Managers
 			UiManager.Instance.Hide<FPSViewModel>();
 			UiManager.Instance.Hide<PlanetsViewModel>();
 		}
+
+		private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+		{
+			switch (scene.buildIndex)
+			{
+				case 0:
+					break;
+				case 1:
+					OnConnectToGameSceneLoaded(scene,mode);
+					break;
+				case 2:
+                    OnMainGameSceneLoaded(scene, mode);
+					break;
+				default:
+					throw new ArgumentException("scene build index out of range!");
+			}
+        }
+
+        private void OnConnectToGameSceneLoaded(Scene scene, LoadSceneMode mode)
+        {
+            if (scene.buildIndex != 1) throw new DataException();
+
+            GameObject[] canvases = Resources.FindObjectsOfTypeAll(typeof(Canvas))
+                .Select(o => (o as Canvas).gameObject).ToArray();
+
+            if (canvases is null || canvases.Length.Equals(0))
+            {
+                throw new DataException();
+            }
+
+            FPSView fpsView = canvases.FirstOrDefault(c => c.name == "cnvs_FPS")?
+                .GetComponent<FPSView>();
+
+            ConnectToGameView connectToGameView = canvases.FirstOrDefault(c => c.name == "cnvs_connectToGame")?
+                .GetComponent<ConnectToGameView>();
+
+            LobbyView lobbyView = canvases.FirstOrDefault(c => c.name == "cnvs_lobby")?
+                .GetComponent<LobbyView>();
+
+            if (fpsView is null || connectToGameView is null || lobbyView is null)
+            {
+                throw new DataException();
+            }
+
+            List<BaseScreen> screens = new List<BaseScreen>() { fpsView, connectToGameView, lobbyView };
+
+            UiManager.Instance.Init(screens);
+
+            SceneManager.sceneLoaded -= OnConnectToGameSceneLoaded;
+
+            ChangeState(GameState.ConnectToGame);
+        }
+
+        private async void OnMainGameSceneLoaded(Scene scene, LoadSceneMode mode)
+        {
+            if (scene.buildIndex != 2) throw new DataException("Index is not match");
+
+            FPSView fpsView = GameObject.Find("cnvs_FPS")?.GetComponent<FPSView>();
+
+            MainGameCameraView mainGameCameraView = GameObject.Find("Look_Camera")?.GetComponent<MainGameCameraView>();
+
+            HUDView hudView = GameObject.Find("cnvs_HUD")?.GetComponent<HUDView>();
+
+            PlanetsView planetsView = GameObject.Find("cnvs_mainGame")?.GetComponent<PlanetsView>();
+
+            MenuView menuView = GameObject.Find("cnvs_menu")?.GetComponent<MenuView>();
+
+            if (fpsView is null || hudView is null || planetsView is null
+                || mainGameCameraView is null || menuView is null)
+            {
+                if (fpsView is null)
+                {
+                    Debug.Log("fpsView was not found");
+                    InformationPanelController.Instance.CreateMessage(InformationPanelController.MessageType.ERROR, "fpsView was not found");
+                }
+                if (hudView is null)
+                {
+                    Debug.Log("hudView was not found");
+                    InformationPanelController.Instance.CreateMessage(InformationPanelController.MessageType.ERROR, "hudView was not found");
+                }
+                if (planetsView is null)
+                {
+                    Debug.Log("planetsView was not found");
+                    InformationPanelController.Instance.CreateMessage(InformationPanelController.MessageType.ERROR, "planetsView was not found");
+                }
+                if (mainGameCameraView is null)
+                {
+                    Debug.Log("mainGameCameraView was not found");
+                    InformationPanelController.Instance.CreateMessage(InformationPanelController.MessageType.ERROR, "mainGameCameraView was not found");
+                }
+
+                throw new DataException("Views were not found");
+            }
+
+            List<BaseScreen> screens = new List<BaseScreen>()
+            {
+                fpsView,
+                hudView,
+                mainGameCameraView,
+                planetsView,
+                menuView
+            };
+
+            UiManager.Instance.Init(screens);
+
+            SceneManager.sceneLoaded -= OnMainGameSceneLoaded;
+
+            await NetworkingManager.Instance.StartHub("session");
+
+            ChangeState(GameState.MainGame);
+        }
     }
 
 	public enum GameState
@@ -283,5 +302,3 @@ namespace Assets.Scripts.Managers
 		MainGameMenu = 9,
 	}
 }
-
-

@@ -9,6 +9,8 @@ using UnityEngine;
 using ViewModels.Abstract;
 using System.Security.Cryptography.X509Certificates;
 using Unity.VisualScripting;
+using Scripts.RegisterLoginScripts;
+using System.Threading.Tasks;
 
 namespace Assets.Scripts.ViewModels
 {
@@ -35,16 +37,18 @@ namespace Assets.Scripts.ViewModels
 			Debug.Log("Settings");
 		}
 
-		public void LeaveTheGame() 
+		public async Task LeaveTheGame() 
 		{
 			Debug.Log("LeaveTheGame");
+			await NetworkingManager.Instance.StopHub();
             GameManager.Instance.ChangeState(GameState.LoadConnectToGameScene);
         }
 
-        public void QuitTheGame()
+        public async Task QuitApplication()
 		{
 			Debug.Log("Quit");
-			Application.Quit();
+            await NetworkingManager.Instance.StopHub();
+            Application.Quit();
 		}
 	}
 }
