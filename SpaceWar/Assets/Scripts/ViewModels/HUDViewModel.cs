@@ -101,7 +101,7 @@ namespace Assets.Scripts.ViewModels
 			GameObject colonizationShipsPanel)
 		{
 			resourcesPanel.GetComponentInChildren<TMP_Text>().text = $"{GameManager.Instance.HeroDataStore.Resourses}" +
-				$"(+{GameManager.Instance.HeroDataStore.HeroMapView.Planets.Where(p => p.ResourceType.Equals(ResourceType.OnlyResources)).Select(p =>p.ResourceCount).Sum()})";
+				$"(+{GameManager.Instance.HeroDataStore.HeroMapView.Planets.Where(p => p.ResourceType.Equals(ResourceType.OnlyResources) && p.Status.Equals(PlanetStatus.Colonized)).Select(p =>p.ResourceCount).Sum()})";
 
 			soldiersPanel.GetComponentInChildren<TMP_Text>().text = $"{GameManager.Instance.HeroDataStore.AvailableSoldiers}" +
 				$"(+{(int)(GameManager.Instance.HeroDataStore.SoldiersLimit*0.2)})";
