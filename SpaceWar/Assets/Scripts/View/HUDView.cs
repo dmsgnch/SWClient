@@ -24,6 +24,7 @@ namespace Assets.Scripts.View
 		[SerializeField] private GameObject ResearchShipPanel;
 		[SerializeField] private GameObject ColonizeShipPanel;
 		[SerializeField] private Button MenuButton;
+		[SerializeField] private Button NextTurnButton;
 
 		[SerializeField] private GameObject ResourcesInfoPanelPrefab;
 		[SerializeField] private GameObject SoldiersInfoPanelPrefab;
@@ -37,16 +38,22 @@ namespace Assets.Scripts.View
 
 		private void Awake()
 		{
-			MenuButton.onClick.AddListener(MenuButton_Click);
+			MenuButton.onClick.AddListener(OnMenuButtonClick);
+			NextTurnButton.onClick.AddListener(OnNextTurnButtonClick);
 			AddHoverListeners(ResourcesPanel, OnResourcesPanelHoverEnter, OnResourcesPanelHoverExit);
 			AddHoverListeners(SoldiersPanel, OnSoldiersPanelHoverEnter, OnSoldiersPanelHoverExit);
 			AddHoverListeners(ResearchShipPanel, OnResearchShipPanelHoverEnter, OnResearchShipPanelHoverExit);
 			AddHoverListeners(ColonizeShipPanel, OnColonizeShipPanelHoverEnter, OnColonizeShipPanelHoverExit);
 		}
 
-		private void MenuButton_Click()
+		private void OnMenuButtonClick()
 		{ 
 			_hudViewModel.ToMenu();
+		}
+
+		private void OnNextTurnButtonClick()
+		{
+			_hudViewModel.SendNextTurnRequest();
 		}
 
 		private void Update()

@@ -14,6 +14,11 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Linq;
 using SharedLibrary.Models.Enums;
+using Microsoft.AspNetCore.SignalR.Client;
+using Scripts.RegisterLoginScripts;
+using SharedLibrary.Contracts.Hubs;
+using System;
+using SharedLibrary.Requests;
 
 namespace Assets.Scripts.ViewModels
 {
@@ -69,6 +74,18 @@ namespace Assets.Scripts.ViewModels
 			//Time.timeScale = 0f;
             GameManager.Instance.ChangeState(GameState.MainGameMenu);
         }
+
+		public async void SendNextTurnRequest()
+		{
+			HubConnection hubConnection = NetworkingManager.Instance.HubConnection;
+			Guid lobbyId = GameManager.Instance.LobbyDataStore.LobbyId;
+
+			await hubConnection.InvokeAsync(ServerHandlers.Session.NextTurn, new NextTurnRequest
+			{
+				HeroId = GameManager.Instance.HeroDataStore.HeroId,
+				SessionId = GameManager.Instance.SessionDataStore.SessionId
+			});
+		}
 
 
 		public void SetTurnButtonUnactiveStatus(GameObject turnPanel) {

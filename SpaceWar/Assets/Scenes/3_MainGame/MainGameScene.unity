@@ -5717,6 +5717,7 @@ MonoBehaviour:
   ResearchShipPanel: {fileID: 348807455}
   ColonizeShipPanel: {fileID: 230827238}
   MenuButton: {fileID: 2138206896}
+  NextTurnButton: {fileID: 1800423067}
   ResourcesInfoPanelPrefab: {fileID: 1259020614547905818, guid: 174af05abb39edf428e94d73aa2be60b, type: 3}
   SoldiersInfoPanelPrefab: {fileID: 3071834164421856080, guid: 3cfd08ea45d9d3f4c9b1981f5bbc44d6, type: 3}
   ResearchShipInfoPanelPrefab: {fileID: 1178361436119345521, guid: dd5ad6a1a69143d44996f62129a88cb5, type: 3}
