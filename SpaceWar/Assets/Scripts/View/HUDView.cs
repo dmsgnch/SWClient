@@ -24,41 +24,38 @@ namespace Assets.Scripts.View
 		[SerializeField] private GameObject SoldiersPanel;
 		[SerializeField] private GameObject ResearchShipPanel;
 		[SerializeField] private GameObject ColonizeShipPanel;
-        [SerializeField] private Button MenuButton;
+		[SerializeField] private Button MenuButton;
 
-        [SerializeField] private GameObject ResourcesInfoPanelPrefab;
+		[SerializeField] private GameObject ResourcesInfoPanelPrefab;
 		[SerializeField] private GameObject SoldiersInfoPanelPrefab;
 		[SerializeField] private GameObject ResearchShipInfoPanelPrefab;
 		[SerializeField] private GameObject ColonizeShipInfoPanelPrefab;
-		
 
-        private HUDViewModel _hudViewModel;
+		private HUDViewModel _hudViewModel;
 
 		private void Awake()
 		{
-            MenuButton.onClick.AddListener(MenuButton_Click);
-            AddHoverListeners(ResourcesPanel, OnResourcesPanelHoverEnter, OnResourcesPanelHoverExit);
+			MenuButton.onClick.AddListener(MenuButton_Click);
+			AddHoverListeners(ResourcesPanel, OnResourcesPanelHoverEnter, OnResourcesPanelHoverExit);
 			AddHoverListeners(SoldiersPanel, OnSoldiersPanelHoverEnter, OnSoldiersPanelHoverExit);
 			AddHoverListeners(ResearchShipPanel, OnResearchShipPanelHoverEnter, OnResearchShipPanelHoverExit);
 			AddHoverListeners(ColonizeShipPanel, OnColonizeShipPanelHoverEnter, OnColonizeShipPanelHoverExit);
-			
 		}
+
 		private void MenuButton_Click()
 		{
 			_hudViewModel.ToMenu();
 		}
 
-        private void Update()
-        {
-            if (Input.GetKey(KeyCode.Escape))
-            {
-                //TODO: Add confirm window	
-                _hudViewModel.ToMenu();
-            }
+		private void Update()
+		{
+			if (Input.GetKeyDown(KeyCode.Escape))			
+				_hudViewModel.ToMenu();
+			
 			_hudViewModel.ReduceTurnPanelTime(TurnPanel, Time.deltaTime);
-        }
+		}
 
-        private void AddHoverListeners(GameObject panel, UnityAction<PointerEventData> onEnter, UnityAction<PointerEventData> onExit)
+		private void AddHoverListeners(GameObject panel, UnityAction<PointerEventData> onEnter, UnityAction<PointerEventData> onExit)
 		{
 			EventTrigger trigger = panel.GetComponent<EventTrigger>();
 			if (trigger == null)
@@ -121,15 +118,23 @@ namespace Assets.Scripts.View
 
 		#endregion
 
+		#region Requests senders
+
 		public void UpdateSessionRequest()
 		{
 			_hudViewModel.GetSessionRequestCreate();
+
+			//In response execute UpdateHeroRequest
 		}
 
 		public void UpdateHeroRequest()
 		{
 			_hudViewModel.GetHeroRequestCreate();
 		}
+
+		#endregion
+
+		#region Update HUD values
 
 		public void UpdateHUDValues()
 		{
@@ -147,24 +152,32 @@ namespace Assets.Scripts.View
 			_hudViewModel.UpdateSessionDataPanelTexts(TurnPanel);
 		}
 
+		#endregion
+
+		#region Setters
+
 		public void SetHeroNewValues(Hero hero)
 		{
 			_hudViewModel.SetHeroNewValues(hero);
 		}
 
-		private void OnEnable()
+		public void SetTurnPanelTimer(int time)
 		{
-			if (_hudViewModel is null) return;
-			UpdateSessionRequest();
-        }
-
-		public void SetTurnPanelTimer(int time) {
 			_hudViewModel.SetTurnPanelTimer(TurnPanel, time);
 		}
-		
-        protected override void OnBind(HUDViewModel hudViewModel)
+
+		#endregion
+
+		private void OnEnable()
 		{
-			_hudViewModel = hudViewModel;            
-        }
+			if (_hudViewModel is null || transform.childCount.Equals(0)) return;
+
+			UpdateSessionRequest();
+		}
+
+		protected override void OnBind(HUDViewModel hudViewModel)
+		{
+			_hudViewModel = hudViewModel;
+		}
 	}
 }

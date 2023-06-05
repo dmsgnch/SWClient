@@ -442,8 +442,10 @@ namespace Assets.Scripts.ViewModels
 		/// <param name="parent"></param>
 		private void ClearChildren(GameObject parent)
 		{
-			parent.transform.DestroyChildren();
-			parent.transform.DetachChildren();
+			while (parent.transform.childCount > 0)
+			{
+				MonoBehaviour.DestroyImmediate(parent.transform.GetChild(0).gameObject);
+			}
 		}
 
 		private Vector3 GetPlanetScale(int size)
