@@ -18,7 +18,8 @@ namespace Components
 				{ ColorStatus.Red, Color.red },
 				{ ColorStatus.Blue, Color.blue },
 				{ ColorStatus.Yellow, Color.yellow },
-			};
+                { ColorStatus.Undefined, Color.white },
+            };
 
 
 		public static Color GetColor(ColorStatus colorStatus)

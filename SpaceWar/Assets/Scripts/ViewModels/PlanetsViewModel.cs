@@ -146,7 +146,8 @@ namespace Assets.Scripts.ViewModels
             GameObject iconPrefab = null;
             if (planetCreationForm.Planet.IsCapital)
             {
-                iconPrefab = planetCreationForm.PlanetGenerationForm.PlanetIconsPrefabs.First(p => p.name.Equals("CapitalIcon"));
+                iconPrefab = planetCreationForm.PlanetGenerationForm.PlanetIconsPrefabs
+                    .First(p => p.name.Equals("CapitalIcon"));
             }
             else
             {
@@ -157,8 +158,7 @@ namespace Assets.Scripts.ViewModels
 
             GameObject statusIcon = Object.Instantiate(iconPrefab);
             statusIcon.transform.SetParent(planetCreationForm.PlanetGO.transform);
-            statusIcon.transform.GetComponent<SpriteRenderer>().color =
-                GameManager.Instance.HeroDataStore.Color;
+            statusIcon.transform.GetComponent<SpriteRenderer>().color = GameManager.Instance.HeroDataStore.Color;
             var text = statusIcon.transform.GetComponentInChildren<TMP_Text>();
             if (text is not null) text.text = planetCreationForm.Planet.IterationsLeftToNextStatus.ToString();
 
@@ -180,7 +180,7 @@ namespace Assets.Scripts.ViewModels
                 GameObject fortificationIcon = Object.Instantiate(fortPrefab);
                 fortificationIcon.transform.SetParent(planetCreationForm.PlanetGO.transform);
                 fortificationIcon.transform.GetComponent<SpriteRenderer>().color =
-                    GameManager.Instance.HeroDataStore.Color;
+                    ColorParser.GetColor(planetCreationForm.Planet.ColorStatus);
 
                 GameObject planetSphere = planetCreationForm.PlanetGO.transform.GetChild(0).gameObject;
 
@@ -234,8 +234,7 @@ namespace Assets.Scripts.ViewModels
 
             if (planet.Status is PlanetStatus.Colonized)
             {
-                rightDownText.GetComponent<TextMesh>().color =
-                    GameManager.Instance.HeroDataStore.Color;
+                rightDownText.GetComponent<TextMesh>().color = ColorParser.GetColor(planet.ColorStatus);
             }
 
             if (planet.ResourceType is ResourceType.OnlyResources)

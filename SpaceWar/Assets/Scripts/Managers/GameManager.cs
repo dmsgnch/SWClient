@@ -5,7 +5,6 @@ using Assets.Scripts.ViewModels;
 using Components;
 using Scripts.RegisterLoginScripts;
 using LocalManagers.RegisterLoginRequests;
-using OpenCover.Framework.Model;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -138,13 +137,13 @@ namespace Assets.Scripts.Managers
 			ChangeState(GameState.Login);
 		}
 
-		private void PlayMusic(byte numberOfSoundtreck)
+		private void PlayMusic(byte numberOfSoundtrack)
 		{
-			if (Audios.Length <= numberOfSoundtreck) throw new ArgumentException();
+			if (Audios.Length <= numberOfSoundtrack) throw new ArgumentException();
 
 			AudioSystem audioSystem = GetSceneComponent<AudioSystem>();
 
-			audioSystem.PlayMusic(Audios[numberOfSoundtreck]);
+			audioSystem.PlayMusic(Audios[numberOfSoundtrack]);
 		}
 
 		private T GetSceneComponent<T>() where T : Component
@@ -295,6 +294,7 @@ namespace Assets.Scripts.Managers
 
             SceneManager.sceneLoaded -= OnMainGameSceneLoaded;
 
+            await NetworkingManager.Instance.StopHub();
             await NetworkingManager.Instance.StartHub("session");
 
 			PlayMusic(1);

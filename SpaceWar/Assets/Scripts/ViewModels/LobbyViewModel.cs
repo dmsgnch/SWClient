@@ -116,7 +116,6 @@ namespace Assets.Scripts.ViewModels
             {
                 Id = lobbyId
             });
-            await NetworkingManager.Instance.StopHub();
         }
 
         private async void OnReadyButtonClick()

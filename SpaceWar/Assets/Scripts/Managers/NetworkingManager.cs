@@ -127,8 +127,9 @@ namespace Scripts.RegisterLoginScripts
 				{
 					GameManager.Instance.SessionDataStore.SessionId = sessionId;
 
+                    StopHub();
 					GameManager.Instance.ChangeState(GameState.LoadMainGameScene);
-				});
+                });
 			});
 
 			hubConnection.On<string>(ClientHandlers.Lobby.Error, HandleStringMessageOutput());
@@ -205,7 +206,9 @@ namespace Scripts.RegisterLoginScripts
 
 			hubConnection.On<NextTurnResponse>(ClientHandlers.Session.NextTurnHandler, HandleUpdateAllParams());
 
-			hubConnection.On<UpdatedPlanetStatusResponse>(ClientHandlers.Session.StartPlanetResearchingOrColonization, (newPlanetStatus) =>
+			hubConnection.On<UpdatedPlanetStatusResponse>(
+				ClientHandlers.Session.StartPlanetResearchingOrColonization, 
+				(newPlanetStatus) =>
 			{
 				UnityMainThreadDispatcher.Instance().Enqueue(() =>
 				{
@@ -218,14 +221,17 @@ namespace Scripts.RegisterLoginScripts
 					updatedPlanet.IterationsLeftToNextStatus = newPlanetStatus.IterationsToTheNextStatus;
 
 					GameManager.Instance.HeroDataStore.Resourses = newPlanetStatus.Resources;
-					GameManager.Instance.HeroDataStore.AvailableColonizationShips = newPlanetStatus.AvailableColonizationShips;
-					GameManager.Instance.HeroDataStore.AvailableResearchShips = newPlanetStatus.AvailableResearchShips;
+					GameManager.Instance.HeroDataStore.AvailableColonizationShips = 
+					newPlanetStatus.AvailableColonizationShips;
+					GameManager.Instance.HeroDataStore.AvailableResearchShips = 
+					newPlanetStatus.AvailableResearchShips;
 
 					planetsView.UpdatePlanet(updatedPlanet);
 				});
 			});
 
-			hubConnection.On<NextTurnResponse>(ClientHandlers.Session.GetHeroDataHandler, HandleUpdateAllParams());
+			hubConnection.On<NextTurnResponse>(ClientHandlers.Session.GetHeroDataHandler, 
+				HandleUpdateAllParams());
 
 			hubConnection.On<string>(ClientHandlers.Session.PostResearchOrColonizeErrorHandler,
 				HandleStringMessageOutput());
