@@ -40,39 +40,51 @@ namespace Assets.Scripts.View
 
 		private void OnContinueButtonClick()
 		{
+			PlayButtonClickSound();
+
 			Debug.Log("Continue");
 		}
 
 		private void OnLoadButtonClick()
 		{
+			PlayButtonClickSound();
+
 			Debug.Log("Load");
 		}
 
 		private void OnNewGameButtonClick()
 		{
+			PlayButtonClickSound();
+
 			GameManager.Instance.ChangeState(GameState.LoadConnectToGameScene);
 		}
 
 		private void OnSettingsButtonClick()
 		{
+			PlayButtonClickSound();
+
 			Debug.Log("Settings");
 		}
 
 		private void OnAboutButtonClick()
 		{
+			PlayButtonClickSound();
+
 			Debug.Log("About");
 		}
 
 		private void OnQuitGameButtonClick()
 		{
-			_mainMenuViewModel.CloseApplication(confirmationPrefab, gameObject);
+			PlayButtonClickSound();
+
+			_mainMenuViewModel.CloseApplication(this, confirmationPrefab, gameObject);
 		}
 
 		private void Update()
 		{
 			if (Input.GetKey(KeyCode.Escape))
 			{
-				_mainMenuViewModel.CloseApplication(confirmationPrefab, gameObject);
+				_mainMenuViewModel.CloseApplication(this, confirmationPrefab, gameObject);
 			}
 		}
 

@@ -30,6 +30,8 @@ namespace Assets.Scripts.View
 
 		private void OnRegisterButtonClick()
 		{
+			PlayButtonClickSound();
+
 			if (_registerViewModel.ValidateName(usernameInput.text) &&
 				_registerViewModel.ValidateEmail(emailInput.text) &&
 				_registerViewModel.ValidatePassword(passwordInput.text, confirmPasswordInput.text))
@@ -40,6 +42,8 @@ namespace Assets.Scripts.View
 
 		private void OnToLoginButtonClick()
 		{
+			PlayButtonClickSound();
+
 			_registerViewModel.ToLogin();
 		}
 

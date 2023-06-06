@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 0.18028378, g: 0.22571412, b: 0.30692285, a: 1}
+  m_IndirectSpecularColor: {r: 0.18028334, g: 0.2257134, b: 0.30692226, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -1138,6 +1138,22 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 802013817, guid: 1a32bb5aaf21df040a86121d1db770fb, type: 3}
+      propertyPath: m_Volume
+      value: 0.25
+      objectReference: {fileID: 0}
+    - target: {fileID: 802013817, guid: 1a32bb5aaf21df040a86121d1db770fb, type: 3}
+      propertyPath: m_audioClip
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 1461370446, guid: 1a32bb5aaf21df040a86121d1db770fb, type: 3}
+      propertyPath: m_Volume
+      value: 0.15
+      objectReference: {fileID: 0}
+    - target: {fileID: 1461370446, guid: 1a32bb5aaf21df040a86121d1db770fb, type: 3}
+      propertyPath: m_audioClip
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 1163341471010937456, guid: 1a32bb5aaf21df040a86121d1db770fb, type: 3}
       propertyPath: m_Name
       value: Systems
@@ -1502,6 +1518,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0c0015f2252b47441927e193e5da4533, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ButtonClick: {fileID: 8300000, guid: 728d4805bb38d1949af7ae936079e665, type: 3}
   emailInput: {fileID: 2011237585}
   passwordInput: {fileID: 861657062}
   loginButton: {fileID: 1125209969}
@@ -1953,6 +1970,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 09ff787b5f1c8ed4fa7c71fb69fc11ac, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ButtonClick: {fileID: 8300000, guid: 728d4805bb38d1949af7ae936079e665, type: 3}
   usernameInput: {fileID: 1778421644}
   emailInput: {fileID: 999544578}
   passwordInput: {fileID: 1930160179}
@@ -3114,6 +3132,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fdf8ce93ea853d24ba7ef82e168a9e64, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ButtonClick: {fileID: 8300000, guid: 728d4805bb38d1949af7ae936079e665, type: 3}
   _text: {fileID: 240144385}
 --- !u!1 &1452163726
 GameObject:
@@ -4297,6 +4316,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   loadManagerPrefab: {fileID: 2906419223695681568, guid: 83bc5257bb0a5404fa90967e189755be, type: 3}
+  Audios:
+  - {fileID: 8300000, guid: c4aaa6edf0ed50342a060cb0eafdfc74, type: 3}
+  - {fileID: 8300000, guid: 22f3e19b801d3f549bce78dd29c40209, type: 3}
+  - {fileID: 8300000, guid: a60ab125eed799b4483b993ade22ea8e, type: 3}
 --- !u!114 &1953159889
 MonoBehaviour:
   m_ObjectHideFlags: 0

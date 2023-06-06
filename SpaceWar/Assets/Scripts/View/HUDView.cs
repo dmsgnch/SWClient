@@ -47,12 +47,16 @@ namespace Assets.Scripts.View
 		}
 
 		private void OnMenuButtonClick()
-		{ 
+		{
+			PlayButtonClickSound();
+
 			_hudViewModel.ToMenu();
 		}
 
 		private void OnNextTurnButtonClick()
 		{
+			PlayButtonClickSound();
+
 			_hudViewModel.SendNextTurnRequest();
 		}
 

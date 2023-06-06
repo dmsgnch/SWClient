@@ -81,11 +81,15 @@ namespace Assets.Scripts.View
 
         private void OnToMainMenuButtonClick()
 		{
+			PlayButtonClickSound();
+
 			_connectToGameViewModel.ToMainMenu();
 		}
 
 		private void OnUpdateButtonClick()
 		{
+			PlayButtonClickSound();
+
 			_connectToGameViewModel.UpdateLobbiesList();
         }
 
@@ -106,12 +110,16 @@ namespace Assets.Scripts.View
 
         private void OnCreateGameButtonClick()
 		{
+			PlayButtonClickSound();
+
 			//Sending CreateLobbyRequest
 			_connectToGameViewModel.CreateLobby();
 		}
 
 		private async void OnConnectToGameClickAsync()
 		{
+			PlayButtonClickSound();
+
 			await _connectToGameViewModel.ConnectToLobby();
 		}
 
