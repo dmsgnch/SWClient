@@ -34,6 +34,7 @@ namespace Assets.Scripts.LocalManagers._2_MainGameScripts.RequestsAndResponses.R
 			GameManager.Instance.SessionDataStore.SessionId = session.Id;
 			GameManager.Instance.SessionDataStore.TurnNumber = session.TurnNumber;
 			GameManager.Instance.SessionDataStore.TurnTimeLimit = session.TurnTimeLimit;
+			GameManager.Instance.SessionDataStore.CurrentHeroTurnId = session.HeroTurnId;
 
 			GameManager.Instance.SessionDataStore.PanelHeroForms = session.Heroes.Select(h => new PanelHeroForm()
 			{
