@@ -74,7 +74,7 @@ namespace Assets.Scripts.View
 			if (Input.GetKeyDown(KeyCode.Escape))			
 				_hudViewModel.ToMenu();
 			
-			_hudViewModel.ReduceTurnPanelTime(TurnPanel, Time.deltaTime);
+			_hudViewModel.ReduceTimerValue(TurnPanel);
 		}
 
 		private void AddHoverListeners(GameObject panel, UnityAction<PointerEventData> onEnter, UnityAction<PointerEventData> onExit)
@@ -214,7 +214,7 @@ namespace Assets.Scripts.View
 
 		public void SetTurnPanelTimer(int time)
 		{
-			_hudViewModel.SetTurnPanelTimer(TurnPanel, time);
+			_hudViewModel.SetTimerNewValue(TurnPanel, time);
 		}
 
 		#endregion

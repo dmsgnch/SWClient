@@ -151,25 +151,6 @@ namespace Assets.Scripts.ViewModels
             return isInLowerBorder;
         }
 
-   //     private bool IsInPlanetsBorders(Vector3 position)
-   //     {
-   //         Planet[] planets = GameManager.Instance.HeroDataStore.HeroMapView?.Planets.ToArray();
-   //         if (planets is null) return true;
-
-   //         float minX = planets.Min(p => p.X);
-   //         float minY = planets.Min(p => p.Y);
-   //         float maxX = planets.Max(p => p.X);
-   //         float maxY = planets.Max(p => p.Y);
-
-			//bool isInLeftBorder = position.x > minX;
-   //         bool isInRightBorder = position.x < maxX;
-   //         bool isInUpperBorder = position.y > minY;
-   //         bool isInLowerBorder = position.y < maxY;
-
-   //         return isInLeftBorder && isInRightBorder && isInUpperBorder && isInLowerBorder;
-
-   //     }
-
 		private Vector3 MoveIntoPlanetsBorders(Vector3 position)
         {
             Planet[] planets = GameManager.Instance.HeroDataStore.HeroMapView?.Planets.ToArray();

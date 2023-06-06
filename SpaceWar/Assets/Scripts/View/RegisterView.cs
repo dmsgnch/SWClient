@@ -36,7 +36,7 @@ namespace Assets.Scripts.View
 				_registerViewModel.ValidateEmail(emailInput.text) &&
 				_registerViewModel.ValidatePassword(passwordInput.text, confirmPasswordInput.text))
 			{
-				_registerViewModel.Register(usernameInput.text, emailInput.text, passwordInput.text);
+				_registerViewModel.SendRegisterRequest(usernameInput.text, emailInput.text, passwordInput.text);
 			}
 		}
 
