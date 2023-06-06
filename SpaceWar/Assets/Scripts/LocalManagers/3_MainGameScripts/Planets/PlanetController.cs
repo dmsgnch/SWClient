@@ -121,13 +121,100 @@ public class PlanetController : MonoBehaviour
 			}
 		}
 	}
-
+	
 	/// <summary>
-	/// Create ActionsButtons one uder the other
-	/// </summary>
-	/// <param name="buttonName"></param>
-	/// <param name="onClick"></param>
-	private void CreateActMenu(string buttonName, out Button onClick)
+    /// Perform sugery and binding according to planet status
+    /// </summary>
+    /// <exception cref="DataException"></exception>
+    private void GenerateActMenus()
+    {
+		Guid turnId = GameManager.Instance.SessionDataStore.CurrentHeroTurnId;
+		Guid heroId = GameManager.Instance.HeroDataStore.HeroId;
+        if (!turnId.Equals(heroId))
+        {
+            return;
+        }
+
+        var planetsView = GetPlanetsView();
+
+        Destroy(PlanetInfoPanel);
+        PlanetInfoPanel = null;
+        hoverTime = 0f;
+        createNewPlanetInfoPanel = false;
+
+        switch (planet.Status)
+        {
+            case PlanetStatus.Known:
+                CreateActMenu("Research (R: 10)", out Button researchButton);
+                researchButton.onClick.AddListener(() =>
+                {
+                    planetsView.Research(planet);
+                    DestroyActMenu();
+                    DestroyInfoPanels();
+                });
+                break;
+
+            case PlanetStatus.Researched:
+                CreateActMenu("Colonize (R: 30)", out Button colonizeButton);
+                colonizeButton.onClick.AddListener(() =>
+                {
+                    planetsView.Colonize(planet);
+                    DestroyActMenu();
+                    DestroyInfoPanels();
+                });
+                colonizeButton.onClick.AddListener(DestroyActMenu);
+                break;
+
+            case PlanetStatus.Colonized:
+                if (planet.IsEnemy)
+                {
+                    if (IsAvaibleToAttack())
+                    {
+                        CreateActMenu("Attack", out Button attackButton);
+                        attackButton.onClick.AddListener(() =>
+                        {
+                            planetsView.Attack(planet);
+                            DestroyActMenu();
+                            DestroyInfoPanels();
+                        });
+                    }
+                }
+                else
+                {
+                    DefenceLevelChoosing(planetsView);
+                }
+                break;
+
+            case PlanetStatus.Colonizing:
+            case PlanetStatus.Researching:
+                break;
+
+            default:
+                throw new DataException();
+        }
+
+        if (IsPlanetDefencing())
+        {
+            CreateActMenu("Send soldiers to defend", out Button defenceButton);
+
+            //TODO: Add sound
+            defenceButton.onClick.AddListener(DestroyActMenu);
+            defenceButton.onClick.AddListener(() =>
+            {
+                planetsView.Defence(planet);
+                DestroyActMenu();
+                DestroyInfoPanels();
+            });
+        }
+        if (ActionsButtons.Any()) ResizeButtons();
+    }
+
+    /// <summary>
+    /// Create ActionsButtons one uder the other
+    /// </summary>
+    /// <param name="buttonName"></param>
+    /// <param name="onClick"></param>
+    private void CreateActMenu(string buttonName, out Button onClick)
 	{
 		if (ActionsButtons.Count.Equals(0))
 			actMenu.transform.position = Input.mousePosition;
@@ -152,90 +239,10 @@ public class PlanetController : MonoBehaviour
 	}
 
 	/// <summary>
-	/// Perform sugery and binding according to planet status
-	/// </summary>
-	/// <exception cref="DataException"></exception>
-	private void GenerateActMenus()
-	{
-		var planetsView = GetPlanetsView();
-
-        Destroy(PlanetInfoPanel);
-        PlanetInfoPanel = null;
-        hoverTime = 0f;
-        createNewPlanetInfoPanel = false;
-
-        switch (planet.Status)
-		{
-			case PlanetStatus.Known:
-				CreateActMenu("Research (R: 10)", out Button researchButton);
-				researchButton.onClick.AddListener(() => 
-				{
-					planetsView.Research(planet);
-					DestroyActMenu();
-                    DestroyInfoPanels();
-                });
-				break;
-
-			case PlanetStatus.Researched:
-				CreateActMenu("Colonize (R: 30)", out Button colonizeButton);
-				colonizeButton.onClick.AddListener(() => 
-				{
-					planetsView.Colonize(planet); 
-                    DestroyActMenu();
-                    DestroyInfoPanels();
-                });
-				colonizeButton.onClick.AddListener(DestroyActMenu);
-				break;
-
-			case PlanetStatus.Colonized:
-				if (planet.IsEnemy)
-				{
-                    if (IsAvaibleToAttack())
-                    {
-                        CreateActMenu("Attack", out Button attackButton);
-                        attackButton.onClick.AddListener(() => 
-						{
-							planetsView.Attack(planet); 
-                            DestroyActMenu();
-							DestroyInfoPanels();
-                        });
-                    }
-                }
-				else
-				{
-					OpearationDefenceChoosing(planetsView);
-				}
-				break;
-
-            case PlanetStatus.Colonizing:
-            case PlanetStatus.Researching:
-                break;
-
-            default:
-				throw new DataException();
-		}
-
-		if (IsPlanetDefencing())
-		{
-			CreateActMenu("Send soldiers to defend", out Button defenceButton);
-
-			//TODO: Add sound
-			defenceButton.onClick.AddListener(DestroyActMenu);
-			defenceButton.onClick.AddListener(() => 
-			{
-				planetsView.Defence(planet);
-                DestroyActMenu();
-                DestroyInfoPanels();
-            });
-		}
-		if(ActionsButtons.Any()) ResizeButtons();
-    }
-
-	/// <summary>
 	/// Perform sugery and binding according to planet defence status
 	/// </summary>
 	/// <param name="planetsView"></param>
-	private void OpearationDefenceChoosing(PlanetsView planetsView)
+	private void DefenceLevelChoosing(PlanetsView planetsView)
 	{
 		switch (planet.FortificationLevel)
 		{

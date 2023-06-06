@@ -41,7 +41,7 @@ namespace Assets.Scripts.ViewModels
                 time -= value;
                 if (time <= 0f)
                 {
-                    TurnPanelTimeOut();
+                    TurnPanelTimeOut(turnPanel);
                     enableTimer = false;
                 }
                 SetTurnPanelTime(turnPanel);
@@ -65,9 +65,14 @@ namespace Assets.Scripts.ViewModels
             }
         }
 
-        private void TurnPanelTimeOut()
+        private void TurnPanelTimeOut(GameObject turnPanel)
         {
+            TMP_Text[] turnTexts = turnPanel.GetComponentsInChildren<TMP_Text>();
+			TMP_Text timeLeftText = turnTexts.FirstOrDefault(
+				t => t.gameObject.name.Equals("txt_leftTimeValue"));
+			timeLeftText.text = "OUT OF TIME";
             Debug.Log("OUT OF TIME");
+			enableTimer = false;
         }
 		public void ToMenu()
 		{
@@ -99,6 +104,7 @@ namespace Assets.Scripts.ViewModels
 			buttonText.text = "Wait for other player";
 			button.interactable = false;
 		}
+
         public void SetTurnButtonActiveStatus(GameObject turnPanel)
         {
             var buttonGO = turnPanel.transform.GetChild(0);
@@ -111,6 +117,7 @@ namespace Assets.Scripts.ViewModels
             buttonText.text = "Next Turn";
             button.interactable = true;
         }
+
         public void UpdateHeroDataPanelTexts(
 			GameObject resourcesPanel, 
 			GameObject soldiersPanel,

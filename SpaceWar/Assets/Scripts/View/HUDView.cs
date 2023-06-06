@@ -26,8 +26,8 @@ namespace Assets.Scripts.View
 		[SerializeField] private Button MenuButton;
 		[SerializeField] private Button NextTurnButton;
         [SerializeField] private GameObject playerList;
-
         [SerializeField] private GameObject playerName_Prefab;
+
         [SerializeField] private GameObject ResourcesInfoPanelPrefab;
 		[SerializeField] private GameObject SoldiersInfoPanelPrefab;
 		[SerializeField] private GameObject ResearchShipInfoPanelPrefab;
@@ -56,8 +56,15 @@ namespace Assets.Scripts.View
 		}
 
 		private void OnNextTurnButtonClick()
-		{
-			PlayButtonClickSound();
+        {
+            Guid turnId = GameManager.Instance.SessionDataStore.CurrentHeroTurnId;
+            Guid heroId = GameManager.Instance.HeroDataStore.HeroId;
+            if (!turnId.Equals(heroId))
+            {
+                return;
+            }
+
+            PlayButtonClickSound();
 
 			_hudViewModel.SendNextTurnRequest();
 		}

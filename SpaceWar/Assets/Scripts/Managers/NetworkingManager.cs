@@ -17,6 +17,7 @@ using Task = System.Threading.Tasks.Task;
 using SharedLibrary.Responses;
 using Unity.VisualScripting;
 using Edge = SharedLibrary.Models.Edge;
+using static Assets.Scripts.Components.DataStores.SessionDataStore;
 
 namespace Scripts.RegisterLoginScripts
 {
@@ -158,8 +159,17 @@ namespace Scripts.RegisterLoginScripts
 					GameManager.Instance.SessionDataStore.TurnNumber = session.TurnNumber;
 					GameManager.Instance.SessionDataStore.TurnTimeLimit = session.TurnTimeLimit;
                     GameManager.Instance.SessionDataStore.CurrentHeroTurnId = session.HeroTurnId;
+                    GameManager.Instance.SessionDataStore.PanelHeroForms = 
+					session.Heroes.Select(
+					h => new PanelHeroForm()
+					{
+					    HeroId = h.HeroId,
+					    HeroName = h.Name
+					}).ToList();
 
                     hudView.UpdateSessionHudValues();
+					hudView.UpdatePlayerList();
+					hudView.SetTurnPanelTimer(session.TurnTimeLimit);
 				});
 			});
 
@@ -268,14 +278,17 @@ namespace Scripts.RegisterLoginScripts
 
 					GameManager.Instance.SessionDataStore.TurnNumber = data.Session.TurnNumber;
 					GameManager.Instance.SessionDataStore.TurnTimeLimit = data.Session.TurnTimeLimit;
-
+					GameManager.Instance.SessionDataStore.CurrentHeroTurnId = data.Session.HeroTurnId;
 					GameManager.Instance.BattleDataStore.Battles = data.Battles;
 
 					hudView.UpdateHeroHudValues();
 					hudView.UpdateSessionHudValues();
+                    hudView.UpdateHeroRequest();
+                    hudView.UpdatePlayerList();
+                    hudView.SetTurnPanelTimer(data.Session.TurnTimeLimit);
 
-					//recreate map
-					planetsView.GeneratePlanetsWithConnections();
+                    //recreate map
+                    planetsView.GeneratePlanetsWithConnections();
 				});
 			};
 		}
