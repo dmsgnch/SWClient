@@ -25,8 +25,10 @@ namespace Assets.Scripts.View
 		[SerializeField] private GameObject ColonizeShipPanel;
 		[SerializeField] private Button MenuButton;
 		[SerializeField] private Button NextTurnButton;
+        [SerializeField] private GameObject playerList;
 
-		[SerializeField] private GameObject ResourcesInfoPanelPrefab;
+        [SerializeField] private GameObject playerName_Prefab;
+        [SerializeField] private GameObject ResourcesInfoPanelPrefab;
 		[SerializeField] private GameObject SoldiersInfoPanelPrefab;
 		[SerializeField] private GameObject ResearchShipInfoPanelPrefab;
 		[SerializeField] private GameObject ColonizeShipInfoPanelPrefab;
@@ -150,9 +152,22 @@ namespace Assets.Scripts.View
             _hudViewModel.ShowChangePanel(value, ChangeMessagePrefab, ColonizeShipPanel);
             UpdateHeroHudValues();
         }
+        
+        public void UpdatePlayerList()
+        {
+			while(playerList.transform.childCount > 0)
+			{
+				DestroyImmediate(playerList.transform.GetChild(0).gameObject);
+			}
+            var sessionDataStore = GameManager.Instance.SessionDataStore;
+            foreach (var player in sessionDataStore.PanelHeroForms)
+            {
+                GameObject playerPanel = Instantiate(playerName_Prefab, playerList.transform);
+                playerPanel.GetComponent<TMP_Text>().text = player.HeroName;
+            }
+        }
+        #region Requests senders
 
-		#region Requests senders
-		
         public void UpdateSessionRequest()
 		{
 			_hudViewModel.GetSessionRequestCreate();

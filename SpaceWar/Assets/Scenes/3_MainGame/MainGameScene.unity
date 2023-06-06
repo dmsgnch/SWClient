@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.031442195, g: 0.009468702, b: 0.013107872, a: 1}
+  m_IndirectSpecularColor: {r: 0.031483587, g: 0.009458372, b: 0.013140744, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -1864,6 +1864,97 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 751748012}
   m_CullTransparentMesh: 1
+--- !u!1 &786723711
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 786723712}
+  - component: {fileID: 786723714}
+  - component: {fileID: 786723713}
+  - component: {fileID: 786723715}
+  m_Layer: 5
+  m_Name: pnl_players
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &786723712
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 786723711}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2030184101}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.8132084, y: 0.2498889}
+  m_AnchorMax: {x: 0.99578065, y: 0.91051847}
+  m_AnchoredPosition: {x: 0.8087158, y: -1.7440796}
+  m_SizeDelta: {x: 14.400024, y: -7.9265137}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &786723713
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 786723711}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 0.32357666, g: 0.26130295, b: 0.3773585, a: 0.6392157}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: 10907, guid: 0000000000000000f000000000000000, type: 0}
+  m_Type: 1
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
+--- !u!222 &786723714
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 786723711}
+  m_CullTransparentMesh: 1
+--- !u!114 &786723715
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 786723711}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8be57fd0a09db6b4cb5746bdc7effa83, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerName_Prefab: {fileID: 4573698425052965377, guid: fe47f621478337948bcd6e2a91ea1fa9, type: 3}
+  playerList: {fileID: 786723711}
 --- !u!1 &791854416
 GameObject:
   m_ObjectHideFlags: 0
@@ -5693,6 +5784,7 @@ RectTransform:
   - {fileID: 983347300}
   - {fileID: 1990221102}
   - {fileID: 738987865}
+  - {fileID: 786723712}
   m_Father: {fileID: 468167680}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -5720,6 +5812,8 @@ MonoBehaviour:
   ColonizeShipPanel: {fileID: 230827238}
   MenuButton: {fileID: 2138206896}
   NextTurnButton: {fileID: 1800423067}
+  playerList: {fileID: 786723711}
+  playerName_Prefab: {fileID: 4573698425052965377, guid: fe47f621478337948bcd6e2a91ea1fa9, type: 3}
   ResourcesInfoPanelPrefab: {fileID: 1259020614547905818, guid: 174af05abb39edf428e94d73aa2be60b, type: 3}
   SoldiersInfoPanelPrefab: {fileID: 3071834164421856080, guid: 3cfd08ea45d9d3f4c9b1981f5bbc44d6, type: 3}
   ResearchShipInfoPanelPrefab: {fileID: 1178361436119345521, guid: dd5ad6a1a69143d44996f62129a88cb5, type: 3}

@@ -65,7 +65,8 @@ namespace Assets.Scripts.LocalManagers._2_MainGameScripts.RequestsAndResponses.R
 			if (view is null) throw new InvalidOperationException();
 
 			view.UpdateHeroRequest();
-		}
+            view.UpdatePlayerList();
+        }
 
 		public void OnRequestFinished()
 		{
