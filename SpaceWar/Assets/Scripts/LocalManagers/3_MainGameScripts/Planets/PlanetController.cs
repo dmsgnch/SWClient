@@ -35,25 +35,33 @@ public class PlanetController : MonoBehaviour
 	private GameObject PlanetInfoPanel = null;
 	private UnityEngine.UI.Slider slider;
 	private Camera mainCamera;
+	private GameObject PlanetInfoPanelParent;
 
-	private List<Button> ActionsButtons = new List<Button>();
+
+    private List<Button> ActionsButtons = new List<Button>();
 
 	private void Start()
 	{
 		cameraScripts = GameObject.Find("Look_Camera").GetComponents<MonoBehaviour>();
 		actMenu = GameObject.Find("ActionsMenu");
-		mainCamera = Camera.main;
+		PlanetInfoPanelParent = GameObject.Find("InfoPanel");
+       mainCamera = Camera.main;
 		CreateHealthBar();
 		slider.transform.localScale = Vector3.one * 0.7f;
 	}
 	private void Update()
 	{
-		if (slider != null && slider.gameObject.activeSelf)
+		if (Input.GetMouseButtonDown(0)&& !EventSystem.current.IsPointerOverGameObject())
+		{
+			DestroyActMenu();
+		}
+
+            if (slider != null && slider.gameObject.activeSelf)
 		{
 			UpdateHealthBar();
 		}
 
-		transform.Rotate(Vector3.up, rotationSpeed * Time.deltaTime);
+        transform.Rotate(Vector3.up, rotationSpeed * Time.deltaTime);
 	}
 
 	private void UpdateHealthBar()
@@ -74,7 +82,7 @@ public class PlanetController : MonoBehaviour
 
 	void CreatePlanetInfoPanel()
 	{
-		PlanetInfoPanel = Instantiate(InfoPanelPrefab, GameObject.Find("cnvs_HUD").transform);
+        PlanetInfoPanel = Instantiate(InfoPanelPrefab, PlanetInfoPanelParent.transform);
 		PlanetInfoPanel.transform.position = Input.mousePosition;
 		PlanetInfoPanel.AddComponent<HUDCursorFollower>();
 
@@ -159,10 +167,7 @@ public class PlanetController : MonoBehaviour
 	{
 		var planetsView = GetPlanetsView();
 
-        Destroy(PlanetInfoPanel);
-        PlanetInfoPanel = null;
-        hoverTime = 0f;
-        createNewPlanetInfoPanel = false;
+		DestroyInfoPanels();
 
         switch (planet.Status)
 		{
@@ -352,50 +357,47 @@ public class PlanetController : MonoBehaviour
 
 	private void DestroyInfoPanels()
     {
-        Destroy(PlanetInfoPanel);
+		PlanetInfoPanelParent.transform.DestroyChildren();
         PlanetInfoPanel = null;
-        hoverTime = Time.time;
         createNewPlanetInfoPanel = false;
     }
 
 	private void OnMouseEnter()
 	{
-		hoverTime = Time.time;
-		createNewPlanetInfoPanel = false;
+		if(!actMenuEnabled) hoverTime = Time.time;
+        createNewPlanetInfoPanel = false;
 	}
 
 	private void OnMouseExit()
 	{
-		DestroyInfoPanels();
+		hoverTime = 0f;
+        DestroyInfoPanels();
+        createNewPlanetInfoPanel = false;
     }
 
-	private void OnMouseOver()
+    private void OnMouseOver()
 	{
+        if (!createNewPlanetInfoPanel && Time.time - hoverTime >= timeThreshold)
+        {
+            createNewPlanetInfoPanel = true;
+        }
         if (Input.GetMouseButtonDown(1))
         {
             if (!actMenuEnabled)
             {
-                hoverTime = Time.time;
-				DestroyInfoPanels();
                 GenerateActMenus();
+                DestroyInfoPanels();
             }
             else
             {
-                hoverTime = Time.time;
                 DestroyActMenu();
             }
         }
-
         if (createNewPlanetInfoPanel && PlanetInfoPanel is null && !actMenuEnabled)
         {
             CreatePlanetInfoPanel();
             createNewPlanetInfoPanel = false;
-            hoverTime = Time.time;
         }
 
-        if (!createNewPlanetInfoPanel && Time.time - hoverTime >= timeThreshold)
-		{
-			createNewPlanetInfoPanel = true;
-		}
 	}
 }

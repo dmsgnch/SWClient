@@ -32,6 +32,12 @@ namespace Assets.Scripts.View
 
         private void OnEnable()
         {
+            MousePosition = Input.mousePosition;
+        }
+
+        private void OnDisable()
+        {
+            Debug.Log("off");
         }
 
         private void Update()
