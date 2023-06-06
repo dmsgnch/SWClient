@@ -43,17 +43,20 @@ namespace Assets.Scripts.View
 			if (_lobbyViewModel is null) return;
 
 			_lobbyViewModel.DefineButton(this, startButton, readyButton);
+
 			SetInteractableStartButton();
         }
 
 		public void UpdatePlayersListInLobby(Lobby lobby)
 		{
 			PlayersListController.Instance.UpdatePlayersList(lobby);
+
+			SetInteractableStartButton();
 		}
 
 		public void SetInteractableStartButton()
 		{
-			if(startButton.activeSelf) _lobbyViewModel.SetInteractableStartButton(startButton);
+			if(startButton.activeInHierarchy) _lobbyViewModel.SetInteractableStartButton(startButton);
         }
 
 		protected override void OnBind(LobbyViewModel lobbyViewModel)

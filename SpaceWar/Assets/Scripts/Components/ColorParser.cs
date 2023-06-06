@@ -11,16 +11,14 @@ namespace Components
 {
 	public static class ColorParser
 	{
-
 		private static Dictionary<ColorStatus, Color> Colors { get; set; } =
 			new Dictionary<ColorStatus, Color>()
 			{
 				{ ColorStatus.Red, Color.red },
 				{ ColorStatus.Blue, Color.blue },
 				{ ColorStatus.Yellow, Color.yellow },
-                { ColorStatus.Undefined, Color.white },
+                { ColorStatus.Undefined, Color.white }, //Must be last component
             };
-
 
 		public static Color GetColor(ColorStatus colorStatus)
 		{
@@ -43,14 +41,14 @@ namespace Components
 		{
 			var actualIndex = GetColorStatusIndex(actualColorStatus);
 
-			return (ColorStatus)(actualIndex + 1 != Colors.Count ? actualIndex + 1 : 0);
+			return (ColorStatus)(actualIndex + 1 != Colors.Count - 1 ? actualIndex + 1 : 0);
 		}
 
 		public static ColorStatus GetPreviousColor(ColorStatus actualColorStatus)
 		{
 			var actualIndex = GetColorStatusIndex(actualColorStatus);
 
-			return (ColorStatus)(actualIndex != 0 ? actualIndex - 1 : Colors.Count - 1);
+			return (ColorStatus)(actualIndex != 0 ? actualIndex - 1 : Colors.Count - 2);
 		}
 
 		private static int GetColorStatusIndex(ColorStatus actualColorStatus)

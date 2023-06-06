@@ -79,7 +79,7 @@ namespace Scripts.RegisterLoginScripts
 					Debug.Log($"Game state before updating: {GameManager.Instance.State}");
 					if (GameManager.Instance.State is GameState.Lobby)
 					{
-						PlayersListController.Instance.UpdatePlayersList(lobby);
+						FindAnyObjectByType<LobbyView>()?.UpdatePlayersListInLobby(lobby);
 					}
 				});
 			});
@@ -109,6 +109,7 @@ namespace Scripts.RegisterLoginScripts
 				UnityMainThreadDispatcher.Instance().Enqueue(() =>
 				{
 					PlayersListController.Instance.ChangeColor(info);
+					GetView<LobbyView>().SetInteractableStartButton();
 				});
 			});
 
@@ -117,7 +118,7 @@ namespace Scripts.RegisterLoginScripts
 				UnityMainThreadDispatcher.Instance().Enqueue(() =>
 				{
 					PlayersListController.Instance.ChangeReadyStatus(info);
-					FindAnyObjectByType<LobbyView>().SetInteractableStartButton();
+					GetView<LobbyView>().SetInteractableStartButton();
 				});
 			});
 

@@ -101,8 +101,9 @@ namespace Assets.Scripts.ViewModels
         public void SetInteractableStartButton(GameObject startButton)
         {
             bool isAllReady = PlayersListController.Instance.IsAllPlayersReady();
+            bool isAllColorsNotMatch = PlayersListController.Instance.IsAllColorsNotMatch();
 
-            startButton.GetComponent<Button>().interactable = isAllReady;
+            startButton.GetComponent<Button>().interactable = isAllReady && isAllColorsNotMatch;
         }
 
         private async void OnStartButtonClick()

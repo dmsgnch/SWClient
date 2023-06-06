@@ -84,7 +84,7 @@ namespace Assets.Scripts.Components
 			// Check for equality between password and confirm password  
 			if (confirmPassword is not null && password != confirmPassword)
 			{
-				result = "Password must contain at least one digit!";
+				result = "Password mismatch!";
 				return false;
 			}
 

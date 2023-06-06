@@ -90,6 +90,24 @@ namespace LocalManagers.ConnectToGame
 			return true;
         }
 
+		public bool IsAllColorsNotMatch()
+		{
+			HashSet<Color> images = new HashSet<Color>();
+
+			foreach (Transform child in gameObject.transform)
+			{
+				if (images.Contains(child.transform.GetChild(1).GetComponent<Image>().color))
+				{
+					return false;
+				}
+				else
+				{
+					images.Add(child.transform.GetChild(1).GetComponent<Image>().color);
+				}
+			}
+			return true;
+		}
+
 		private GameObject GetLobbyInfoView(Guid userId)
 		{
 			GameObject lobbyInfoView = null;
