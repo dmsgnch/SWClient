@@ -53,33 +53,7 @@ public class PlanetController : MonoBehaviour
 			UpdateHealthBar();
 		}
 
-		if (createNewPlanetInfoPanel && PlanetInfoPanel is null && !actMenuEnabled)
-		{
-			CreatePlanetInfoPanel();
-			createNewPlanetInfoPanel = false;
-		}
-
 		transform.Rotate(Vector3.up, rotationSpeed * Time.deltaTime);
-
-		if (Input.GetMouseButtonDown(1))
-		{
-			if (!actMenuEnabled)
-			{
-				
-				Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-				RaycastHit hit;
-
-				if (Physics.Raycast(ray, out hit) && hit.collider.gameObject == gameObject)
-				{
-                    DestroyInfoPanels();
-                    GenerateActMenus();
-				}
-			}
-			else
-			{
-				DestroyActMenu();
-			}
-		}
 	}
 
 	private void UpdateHealthBar()
@@ -194,14 +168,23 @@ public class PlanetController : MonoBehaviour
 		{
 			case PlanetStatus.Known:
 				CreateActMenu("Research (R: 10)", out Button researchButton);
-				researchButton.onClick.AddListener(DestroyActMenu);
-				researchButton.onClick.AddListener(() => planetsView.Research(planet));
+				researchButton.onClick.AddListener(() => 
+				{
+					planetsView.Research(planet);
+					DestroyActMenu();
+                    DestroyInfoPanels();
+                });
 				break;
 
 			case PlanetStatus.Researched:
 				CreateActMenu("Colonize (R: 30)", out Button colonizeButton);
+				colonizeButton.onClick.AddListener(() => 
+				{
+					planetsView.Colonize(planet); 
+                    DestroyActMenu();
+                    DestroyInfoPanels();
+                });
 				colonizeButton.onClick.AddListener(DestroyActMenu);
-				colonizeButton.onClick.AddListener(() => planetsView.Colonize(planet));
 				break;
 
 			case PlanetStatus.Colonized:
@@ -210,8 +193,12 @@ public class PlanetController : MonoBehaviour
                     if (IsAvaibleToAttack())
                     {
                         CreateActMenu("Attack", out Button attackButton);
-                        attackButton.onClick.AddListener(DestroyActMenu);
-                        attackButton.onClick.AddListener(() => planetsView.Attack(planet));
+                        attackButton.onClick.AddListener(() => 
+						{
+							planetsView.Attack(planet); 
+                            DestroyActMenu();
+							DestroyInfoPanels();
+                        });
                     }
                 }
 				else
@@ -228,11 +215,16 @@ public class PlanetController : MonoBehaviour
 				throw new DataException();
 		}
 
-		if (IsDefencing(planetsView))
+		if (IsPlanetDefencing())
 		{
 			CreateActMenu("Send soldiers to defend", out Button defenceButton);
 			defenceButton.onClick.AddListener(DestroyActMenu);
-			defenceButton.onClick.AddListener(() => planetsView.Defence(planet));
+			defenceButton.onClick.AddListener(() => 
+			{
+				planetsView.Defence(planet);
+                DestroyActMenu();
+                DestroyInfoPanels();
+            });
 		}
 		if(ActionsButtons.Any()) ResizeButtons();
     }
@@ -246,29 +238,39 @@ public class PlanetController : MonoBehaviour
 		switch (planet.FortificationLevel)
 		{
 			case Fortification.None:
-				CreateActMenu("Build light defence (R: later)", out Button liteDefButton);
-				AddListeners(liteDefButton);
-				break;
+            {
+                CreateActMenu("Build light defence (R: later)", out Button defButton);
+                AddDefendListener(defButton);
+                break;
+            }
 
 			case Fortification.Weak:
-				CreateActMenu("Build medium defence (R: later)", out Button mediumDefButton);
-				AddListeners(mediumDefButton);
-				break;
+            {
+                CreateActMenu("Build medium defence (R: later)", out Button defButton);
+                AddDefendListener(defButton);
+                break;
+            }
 
 			case Fortification.Reliable:
-				CreateActMenu("Build strong defence (R: later)", out Button strongDefButton);
-				AddListeners(strongDefButton);
-				break;
+            {
+                CreateActMenu("Build strong defence (R: later)", out Button defButton);
+                AddDefendListener(defButton);
+                break;
+            }
 
 			default:
 				break;
 		}
 
-		void AddListeners(Button button)
+		void AddDefendListener(Button defButton)
 		{
-			button.onClick.AddListener(DestroyActMenu);
-			button.onClick.AddListener(() => planetsView.BuildDefence(planet));
-		}
+			defButton.onClick.AddListener(() => 
+			{
+				planetsView.BuildDefence(planet);
+                DestroyActMenu();
+                DestroyInfoPanels();
+            });
+        }
 	}
 
 	private void ResizeButtons()
@@ -293,7 +295,7 @@ public class PlanetController : MonoBehaviour
 	/// </summary>
 	/// <param name="planetsView"></param>
 	/// <returns>True if the specified connection is found</returns>
-	private bool IsDefencing(PlanetsView planetsView)
+	private bool IsPlanetDefencing()
 	{
 		return GameManager.Instance.BattleDataStore.Battles?.Any(b =>
 		b.AttackedPlanetId.Equals(planet.Id)) ?? false;
@@ -349,7 +351,7 @@ public class PlanetController : MonoBehaviour
     {
         Destroy(PlanetInfoPanel);
         PlanetInfoPanel = null;
-        hoverTime = 0f;
+        hoverTime = Time.time;
         createNewPlanetInfoPanel = false;
     }
 
@@ -366,10 +368,31 @@ public class PlanetController : MonoBehaviour
 
 	private void OnMouseOver()
 	{
-		if (Time.time - hoverTime >= timeThreshold)
+        if (Input.GetMouseButtonDown(1))
+        {
+            if (!actMenuEnabled)
+            {
+                hoverTime = Time.time;
+				DestroyInfoPanels();
+                GenerateActMenus();
+            }
+            else
+            {
+                hoverTime = Time.time;
+                DestroyActMenu();
+            }
+        }
+
+        if (createNewPlanetInfoPanel && PlanetInfoPanel is null && !actMenuEnabled)
+        {
+            CreatePlanetInfoPanel();
+            createNewPlanetInfoPanel = false;
+            hoverTime = Time.time;
+        }
+
+        if (!createNewPlanetInfoPanel && Time.time - hoverTime >= timeThreshold)
 		{
 			createNewPlanetInfoPanel = true;
 		}
 	}
-
 }

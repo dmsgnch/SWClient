@@ -46,12 +46,12 @@ namespace Assets.Scripts.View
 
         public async void Attack(Planet planet)
 		{
-			_planetsViewModel.Attack(planet);
+			await _planetsViewModel.Attack(planet);
 		}
 
 		public async void Defence(Planet planet)
 		{
-			_planetsViewModel.Defend(planet);
+			await _planetsViewModel.Defend(planet);
 		}
 
 		public async void Research(Planet planet)
