@@ -231,6 +231,8 @@ public class PlanetController : MonoBehaviour
 		if (IsDefencing(planetsView))
 		{
 			CreateActMenu("Send soldiers to defend", out Button defenceButton);
+
+			//TODO: Add sound
 			defenceButton.onClick.AddListener(DestroyActMenu);
 			defenceButton.onClick.AddListener(() => planetsView.Defence(planet));
 		}
@@ -266,6 +268,7 @@ public class PlanetController : MonoBehaviour
 
 		void AddListeners(Button button)
 		{
+			//TODO: Add sound
 			button.onClick.AddListener(DestroyActMenu);
 			button.onClick.AddListener(() => planetsView.BuildDefence(planet));
 		}

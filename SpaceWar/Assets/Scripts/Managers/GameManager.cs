@@ -22,6 +22,7 @@ namespace Assets.Scripts.Managers
 	public class GameManager : ComponentPersistentSingleton<GameManager>
 	{
 		[SerializeField] private GameObject loadManagerPrefab;
+		[SerializeField] private AudioClip[] Audios;
 
 		internal MainDataStore MainDataStore { get; private set; } = new MainDataStore();
 		internal ConnectToGameDataStore ConnectToGameDataStore { get; private set; } = new ConnectToGameDataStore();
@@ -132,7 +133,23 @@ namespace Assets.Scripts.Managers
 
 			UiManager.Instance.Init(screens);
 
+			PlayMusic(0);
+
 			ChangeState(GameState.Login);
+		}
+
+		private void PlayMusic(byte numberOfSoundtreck)
+		{
+			if (Audios.Length <= numberOfSoundtreck) throw new ArgumentException();
+
+			AudioSystem audioSystem = GetSceneComponent<AudioSystem>();
+
+			audioSystem.PlayMusic(Audios[numberOfSoundtreck]);
+		}
+
+		private T GetSceneComponent<T>() where T : Component
+		{
+			return FindFirstObjectByType<T>() ?? throw new Exception();
 		}
 
 		private void HandleLogin()
@@ -280,7 +297,9 @@ namespace Assets.Scripts.Managers
 
             await NetworkingManager.Instance.StartHub("session");
 
-            ChangeState(GameState.MainGame);
+			PlayMusic(1);
+
+			ChangeState(GameState.MainGame);
         }
 
 		private void HandleMainGame()

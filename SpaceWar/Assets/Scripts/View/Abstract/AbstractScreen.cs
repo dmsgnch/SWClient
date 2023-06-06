@@ -1,17 +1,27 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using View.Abstract;
 using ViewModels.Abstract;
+using UnityEngine;
 
 namespace Assets.View.Abstract
 {
 	public abstract class AbstractScreen<TModel> : BaseScreen
 		where TModel : IViewModel
 	{
+		[SerializeField] private AudioClip ButtonClick;
+
+		internal void PlayButtonClickSound()
+		{
+			AudioSystem audioSystem = GetSceneComponent<AudioSystem>();
+
+			audioSystem.PlaySound(ButtonClick);
+		}
+
+		private T GetSceneComponent<T>() where T : Component
+		{
+			return FindFirstObjectByType<T>() ?? throw new Exception();
+		}
+
 		public override Type ModelType => typeof(TModel);
 		protected TModel _model;
 

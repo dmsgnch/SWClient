@@ -42,17 +42,47 @@ namespace Assets.Scripts.View
 				bt_Continue_Click();
 		}
 
-		void bt_Continue_Click() => _menuViewModel.ContinueGame();
+		void bt_Continue_Click()
+		{
+			PlayButtonClickSound();
 
-		void bt_SaveGame_Click() => _menuViewModel.SaveGame();
+			_menuViewModel.ContinueGame();
+		}
 
-		void bt_LoadGame_Click() => _menuViewModel.LoadGame();
+		void bt_SaveGame_Click()
+		{
+			PlayButtonClickSound();
 
-		void bt_Settings_Click() => _menuViewModel.Settings();
+			_menuViewModel.SaveGame();
+		}
 
-		async void bt_LeaveTheGame_Click() => await _menuViewModel.LeaveTheGame();
+		void bt_LoadGame_Click()
+		{
+			PlayButtonClickSound();
 
-		void bt_QuitApplication_Click() => _menuViewModel.CloseApplication(confirmationPanel,gameObject);
+			_menuViewModel.LoadGame();
+		}
+
+		void bt_Settings_Click()
+		{
+			PlayButtonClickSound();
+
+			_menuViewModel.Settings();
+		}
+
+		async void bt_LeaveTheGame_Click()
+		{
+			PlayButtonClickSound();
+
+			await _menuViewModel.LeaveTheGame();
+		}
+
+		void bt_QuitApplication_Click()
+		{
+			PlayButtonClickSound();
+
+			_menuViewModel.CloseApplication(this, confirmationPanel, gameObject);
+		}
 
 		protected override void OnBind(MenuViewModel menuViewModel)
 		{

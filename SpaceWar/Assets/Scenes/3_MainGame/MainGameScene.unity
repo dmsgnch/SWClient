@@ -936,6 +936,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 76bf70b42192971439b75fcccbdceacd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ButtonClick: {fileID: 8300000, guid: 728d4805bb38d1949af7ae936079e665, type: 3}
   planetsParent: {fileID: 1007345832}
   connectionsParent: {fileID: 1301584073}
   dropdownPrefab: {fileID: 7509516478028689195, guid: 45e297ca21b25ee4dbb6581e8cf0763f, type: 3}
@@ -1484,6 +1485,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 45748a5cd70006d4d99549ab5009f5fe, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ButtonClick: {fileID: 8300000, guid: 728d4805bb38d1949af7ae936079e665, type: 3}
   btn_Continue: {fileID: 1804810106}
   btn_SaveGame: {fileID: 791854418}
   btn_LoadGame: {fileID: 832232283}
@@ -3544,6 +3546,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fdf8ce93ea853d24ba7ef82e168a9e64, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ButtonClick: {fileID: 8300000, guid: 728d4805bb38d1949af7ae936079e665, type: 3}
   _text: {fileID: 834660443}
 --- !u!114 &1473761137
 MonoBehaviour:
@@ -4046,63 +4049,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1674315489}
   m_CullTransparentMesh: 1
---- !u!1001 &1730492892
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: 1163341471010937456, guid: 1a32bb5aaf21df040a86121d1db770fb, type: 3}
-      propertyPath: m_Name
-      value: Systems
-      objectReference: {fileID: 0}
-    - target: {fileID: 1163341471010937462, guid: 1a32bb5aaf21df040a86121d1db770fb, type: 3}
-      propertyPath: m_RootOrder
-      value: 8
-      objectReference: {fileID: 0}
-    - target: {fileID: 1163341471010937462, guid: 1a32bb5aaf21df040a86121d1db770fb, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1163341471010937462, guid: 1a32bb5aaf21df040a86121d1db770fb, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1163341471010937462, guid: 1a32bb5aaf21df040a86121d1db770fb, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1163341471010937462, guid: 1a32bb5aaf21df040a86121d1db770fb, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 1163341471010937462, guid: 1a32bb5aaf21df040a86121d1db770fb, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1163341471010937462, guid: 1a32bb5aaf21df040a86121d1db770fb, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1163341471010937462, guid: 1a32bb5aaf21df040a86121d1db770fb, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1163341471010937462, guid: 1a32bb5aaf21df040a86121d1db770fb, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1163341471010937462, guid: 1a32bb5aaf21df040a86121d1db770fb, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1163341471010937462, guid: 1a32bb5aaf21df040a86121d1db770fb, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 1a32bb5aaf21df040a86121d1db770fb, type: 3}
 --- !u!1 &1737858948
 GameObject:
   m_ObjectHideFlags: 0
@@ -5294,6 +5240,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dcbf30ecded8aaf49b8c005b2f97efab, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ButtonClick: {fileID: 0}
 --- !u!1 &1963360904
 GameObject:
   m_ObjectHideFlags: 0
@@ -5711,6 +5658,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c0761481355df614e86ec0b1bfa89f9e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ButtonClick: {fileID: 8300000, guid: 728d4805bb38d1949af7ae936079e665, type: 3}
   TurnPanel: {fileID: 1990221101}
   ResourcesPanel: {fileID: 647855411}
   SoldiersPanel: {fileID: 100594218}

@@ -59,6 +59,8 @@ namespace LocalManagers.ConnectToGame
 
 				var lobbyButton = lobbyView.GetComponent<Button>();
 				lobbyButton.onClick.RemoveAllListeners();
+
+				//TODO: Add sound
 				lobbyButton.onClick.AddListener(() =>
 				{
 					GameManager.Instance.ConnectToGameDataStore.SelectedLobbyId = lobby.Id;

@@ -33,6 +33,8 @@ namespace Assets.Scripts.View
 
 		private async void OnQuitButtonClick()
 		{
+			PlayButtonClickSound();
+
 			await _lobbyViewModel.ExitFromLobby();
 		}
 
@@ -40,7 +42,7 @@ namespace Assets.Scripts.View
 		{
 			if (_lobbyViewModel is null) return;
 
-			_lobbyViewModel.DefineButton(startButton, readyButton);
+			_lobbyViewModel.DefineButton(this, startButton, readyButton);
 			SetInteractableStartButton();
         }
 

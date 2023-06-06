@@ -12,18 +12,19 @@ using Unity.VisualScripting;
 using Scripts.RegisterLoginScripts;
 using System.Threading.Tasks;
 using UnityEngine.UI;
+using Assets.Scripts.View;
 
 namespace Assets.Scripts.ViewModels
 {
 	public class MenuViewModel : ViewModelBase
-	{	
+	{
 		public void ContinueGame()
 		{
 			Debug.Log("Continue");
-            GameManager.Instance.ChangeState(GameState.MainGame);
-        }
+			GameManager.Instance.ChangeState(GameState.MainGame);
+		}
 
-        public void SaveGame()
+		public void SaveGame()
 		{
 			Debug.Log("Save Game");
 		}
@@ -38,23 +39,28 @@ namespace Assets.Scripts.ViewModels
 			Debug.Log("Settings");
 		}
 
-		public async Task LeaveTheGame() 
+		public async Task LeaveTheGame()
 		{
 			Debug.Log("LeaveTheGame");
 			await NetworkingManager.Instance.StopHub();
-            GameManager.Instance.ChangeState(GameState.LoadConnectToGameScene);
-        }
+			GameManager.Instance.ChangeState(GameState.LoadConnectToGameScene);
+		}
 
-        public void CloseApplication(GameObject confirmPrefab, GameObject parent)
-        {
-            var panel = MonoBehaviour.Instantiate(confirmPrefab, parent.transform);
-            //panel.transform.SetParent(parent.transform);
-            panel.SetActive(true);
-            panel.transform.GetChild(0).GetComponent<Text>().text = "Are you sure you want to quit?";
-            panel.transform.GetChild(1).gameObject.
-                GetComponent<Button>().onClick.AddListener(() => Application.Quit());
-            panel.transform.GetChild(2).gameObject.
-                GetComponent<Button>().onClick.AddListener(() => Object.Destroy(panel));
-        }
+		public void CloseApplication(MenuView menuView, GameObject confirmPrefab, GameObject parent)
+		{
+			var panel = MonoBehaviour.Instantiate(confirmPrefab, parent.transform);
+			//panel.transform.SetParent(parent.transform);
+			panel.SetActive(true);
+			panel.transform.GetChild(0).GetComponent<Text>().text = "Are you sure you want to quit?";
+			panel.transform.GetChild(1).gameObject.
+				GetComponent<Button>().onClick.AddListener(() => Application.Quit());
+			panel.transform.GetChild(1).gameObject.
+				GetComponent<Button>().onClick.AddListener(() => menuView.PlayButtonClickSound());
+
+			panel.transform.GetChild(2).gameObject.
+				GetComponent<Button>().onClick.AddListener(() => Object.Destroy(panel));
+			panel.transform.GetChild(2).gameObject.
+				GetComponent<Button>().onClick.AddListener(() => menuView.PlayButtonClickSound());
+		}
 	}
 }

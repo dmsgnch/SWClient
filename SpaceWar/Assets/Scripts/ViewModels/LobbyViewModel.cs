@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.SignalR.Client;
 using Scripts.RegisterLoginScripts;
 using SharedLibrary.Contracts.Hubs;
 using System.Threading.Tasks;
+using Assets.Scripts.View;
 
 namespace Assets.Scripts.ViewModels
 {
@@ -79,20 +80,22 @@ namespace Assets.Scripts.ViewModels
         /// <param name="readyButton">
         /// ready button, which should be viewed when current user is not a lobby leade
         /// r</param>
-        public void DefineButton(GameObject startButton, GameObject readyButton)
+        public void DefineButton(LobbyView lobbyView, GameObject startButton, GameObject readyButton)
         {
             if (GameManager.Instance.LobbyDataStore.IsLobbyLeader)
             {
                 startButton.SetActive(true);
                 readyButton.SetActive(false);
                 startButton.GetComponent<Button>().onClick.AddListener(OnStartButtonClick);
-            }
+				startButton.GetComponent<Button>().onClick.AddListener(lobbyView.PlayButtonClickSound);
+			}
             else
             {
                 startButton.SetActive(false);
                 readyButton.SetActive(true);
                 readyButton.GetComponent<Button>().onClick.AddListener(OnReadyButtonClick);
-            }
+				startButton.GetComponent<Button>().onClick.AddListener(lobbyView.PlayButtonClickSound);
+			}
         }
 
         public void SetInteractableStartButton(GameObject startButton)
