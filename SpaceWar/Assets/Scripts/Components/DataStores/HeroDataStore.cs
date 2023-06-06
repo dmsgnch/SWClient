@@ -35,6 +35,7 @@ namespace Assets.Scripts.Components.DataStores
             {
                 var diff = value - resourses;
                 resourses = value;
+                if (diff == 0) return;
                 var symbol = diff > 0 ? "+" : "";
                 var hudView = GetView<HUDView>();
                 hudView.callResourcesChangedPanel($"Resources\n({symbol}{diff})");
@@ -47,6 +48,7 @@ namespace Assets.Scripts.Components.DataStores
             {
                 var diff = value - soldiersLimit;
                 soldiersLimit = value;
+                if (diff == 0) return;
                 var symbol = diff > 0 ? "+" : "";
                 var hudView = GetView<HUDView>();
                 hudView.callSoldiersChangedPanel($"Soldiers limit\n({symbol}{diff})");
@@ -59,6 +61,7 @@ namespace Assets.Scripts.Components.DataStores
             {
                 var diff = value - availableSoldiers;
                 availableSoldiers = value;
+                if (diff == 0) return;
                 var symbol = diff > 0 ? "+" : "";
                 var hudView = GetView<HUDView>();
                 hudView.callSoldiersChangedPanel($"Available soldiers\n({symbol}{diff})");
@@ -71,6 +74,7 @@ namespace Assets.Scripts.Components.DataStores
             {
                 var diff = value - researchShipLimit;
                 researchShipLimit = value;
+                if (diff == 0) return;
                 var symbol = diff > 0 ? "+" : "";
                 var hudView = GetView<HUDView>();
                 hudView.callResearchShipsChangedPanel($"Research ship limit\n({symbol}{diff})");
@@ -83,6 +87,7 @@ namespace Assets.Scripts.Components.DataStores
             {
                 var diff = value - availableResearchShips;
                 availableResearchShips = value;
+                if (diff == 0) return;
                 var symbol = diff > 0 ? "+" : "";
                 var hudView = GetView<HUDView>();
                 hudView.callResearchShipsChangedPanel($"Available research ships\n({symbol}{diff})");
@@ -95,6 +100,7 @@ namespace Assets.Scripts.Components.DataStores
             {
                 var diff = value - colonizationShipLimit;
                 colonizationShipLimit = value;
+                if (diff == 0) return;
                 var symbol = diff > 0 ? "+" : "";
                 var hudView = GetView<HUDView>();
                 hudView.callColonizeShipsChangedPanel($"Colonization ship limit\n({symbol}{diff})");
@@ -105,6 +111,7 @@ namespace Assets.Scripts.Components.DataStores
             set {
                 var diff = value - availableColonizationShips;
                 availableColonizationShips = value;
+                if (diff == 0) return; 
                 var symbol = diff > 0 ? "+" : "";
                 var hudView = GetView<HUDView>();
                 hudView.callColonizeShipsChangedPanel($"Available colonization ships\n({symbol}{diff})");
