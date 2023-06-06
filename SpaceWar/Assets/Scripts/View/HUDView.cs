@@ -159,16 +159,7 @@ namespace Assets.Scripts.View
         
         public void UpdatePlayerList()
         {
-			while(playerList.transform.childCount > 0)
-			{
-				DestroyImmediate(playerList.transform.GetChild(0).gameObject);
-			}
-            var sessionDataStore = GameManager.Instance.SessionDataStore;
-            foreach (var player in sessionDataStore.PanelHeroForms)
-            {
-                GameObject playerPanel = Instantiate(playerName_Prefab, playerList.transform);
-                playerPanel.GetComponent<TMP_Text>().text = player.HeroName;
-            }
+			_hudViewModel.UpdatePlayerList(playerList,playerName_Prefab);
         }
         #region Requests senders
 

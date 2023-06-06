@@ -199,9 +199,34 @@ namespace Assets.Scripts.ViewModels
 			var createGetHeroRequest = CreateGetHeroRequestObject.AddComponent<GetHeroRequest>();
 
 			createGetHeroRequest.CreateRequest();
-		}
+        }
 
-		public void CreateResourcePanel(GameObject resourcesInfoPanelPrefab, Transform parent)
+        public void UpdatePlayerList(GameObject playerList,GameObject playerName_Prefab)
+        {
+            while (playerList.transform.childCount > 0)
+            {
+                GameObject.DestroyImmediate(playerList.transform.GetChild(0).gameObject);
+            }
+            var sessionDataStore = GameManager.Instance.SessionDataStore;
+
+			Vector3 panelPosition = Vector3.zero;
+            foreach (var player in sessionDataStore.PanelHeroForms)
+            {
+                GameObject playerPanel = GameObject.Instantiate(playerName_Prefab, playerList.transform);
+				if (player.HeroId.Equals(GameManager.Instance.SessionDataStore.CurrentHeroTurnId))
+				{
+					playerPanel.GetComponent<Image>().color = 
+						new UnityEngine.Color((float)163/256, (float)8/256, (float)166/256);
+                }
+                if(!panelPosition.Equals(Vector3.zero))
+					playerPanel.transform.position = playerPanel.transform.position + panelPosition;
+                panelPosition = panelPosition + Vector3.down * 80;
+                playerPanel.transform.GetChild(0).gameObject.GetComponent<TMP_Text>().text = player.HeroName;
+            }
+        }
+
+        #region HUD panels
+        public void CreateResourcePanel(GameObject resourcesInfoPanelPrefab, Transform parent)
 		{
 			if (_resourcesInfoPanel is null)
 			{
@@ -309,5 +334,6 @@ namespace Assets.Scripts.ViewModels
 			Object.Destroy(_colonizeShipInfoPanel);
 			_colonizeShipInfoPanel = null;
 		}
-	}
+        #endregion
+    }
 }
