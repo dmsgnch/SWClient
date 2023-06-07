@@ -10,13 +10,11 @@ namespace Assets.Scripts.ViewModels
 {
 	public class RegisterViewModel : ViewModelBase
 	{
+		#region Requests
 
 		public static GameObject CreateRegisterRequestObject { get; set; }
 
-		public RegisterViewModel()
-		{ }
-
-		public void Register(string name, string email, string password)
+		public void SendRegisterRequest(string name, string email, string password)
 		{
 			CreateRegisterRequestObject = new GameObject("ReisterRequest");
 
@@ -24,6 +22,10 @@ namespace Assets.Scripts.ViewModels
 
 			createRegisterRequest.CreateRequest(name, email, password);
 		}
+
+		#endregion
+
+		#region Button handlers
 
 		public void ToLogin()
 		{
@@ -37,6 +39,10 @@ namespace Assets.Scripts.ViewModels
 
 			Application.Quit();
 		}
+
+		#endregion
+
+		#region Validators
 
 		public bool ValidateName(string name)
 		{
@@ -70,6 +76,7 @@ namespace Assets.Scripts.ViewModels
 			InformationPanelController.Instance.CreateMessage(
 					InformationPanelController.MessageType.ERROR, message);
 		}
-	}
 
+		#endregion
+	}
 }

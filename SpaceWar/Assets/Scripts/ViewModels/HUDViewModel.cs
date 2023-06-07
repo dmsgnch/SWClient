@@ -19,6 +19,8 @@ using Scripts.RegisterLoginScripts;
 using SharedLibrary.Contracts.Hubs;
 using System;
 using SharedLibrary.Requests;
+using ColorUtility = UnityEngine.ColorUtility;
+using Color = UnityEngine.Color;
 
 namespace Assets.Scripts.ViewModels
 {
@@ -31,49 +33,77 @@ namespace Assets.Scripts.ViewModels
 		private GameObject _soldiersInfoPanel;
 		private GameObject _researchShipInfoPanel;
 		private GameObject _colonizeShipInfoPanel;
-        private float time = 60f;
-        private bool enableTimer = true;
 
-        public void ReduceTurnPanelTime(GameObject turnPanel, float value)
+		#region Timer
+
+		private float timer = 0f;
+
+		public void SetTimerNewValue(float value)
+		{
+			timer = value;
+		}
+
+		public void ReduceTimerValue(GameObject turnPanel)
         {
-            if (enableTimer)
+            if (timer > 0f)
             {
-                time -= value;
-                if (time <= 0f)
+                timer -= Time.deltaTime;
+
+                if (timer <= 0f)
                 {
-                    TurnPanelTimeOut();
-                    enableTimer = false;
+                    PostTimerTimeOutAction(turnPanel);
                 }
-                SetTurnPanelTime(turnPanel);
-            }
-        }
-        public void SetTurnPanelTimer(GameObject turnPanel, float value)
-        {
-            time = value;
-            enableTimer = true;
-        }
-        private void SetTurnPanelTime(GameObject turnPanel)
-        {
-            TMP_Text[] turnTexts = turnPanel.GetComponentsInChildren<TMP_Text>();
-            foreach (TMP_Text tmpText in turnTexts)
-            {
-                if (tmpText.gameObject.name == "txt_leftTimeValue")
-                {
-                    tmpText.text = ((int)time).ToString();
-                    break;
-                }
+
+                SetTimerValueOnHUD(turnPanel);
             }
         }
 
-        private void TurnPanelTimeOut()
-        {
-            Debug.Log("OUT OF TIME");
+        private void SetTimerValueOnHUD(GameObject turnPanel, string value = null)
+		{
+            TMP_Text timerText = FindChildRecursive(turnPanel.transform, "txt_leftTimeValue").GetComponent<TMP_Text>();
+
+			timerText.text = value ?? ((int)timer).ToString();   
         }
+
+		public static Transform FindChildRecursive(Transform parent, string name)
+		{
+			Transform result = parent.Find(name);
+			if (result != null)
+				return result;
+
+			foreach (Transform child in parent)
+			{
+				result = FindChildRecursive(child, name);
+				if (result != null)
+					return result;
+			}
+
+			return null;
+		}
+
+		private void PostTimerTimeOutAction(GameObject turnPanel)
+        {
+            TMP_Text timeLeftText = turnPanel.GetComponentsInChildren<TMP_Text>()?.FirstOrDefault(
+				t => t.gameObject.name.Equals("txt_leftTimeValue"));
+
+			timeLeftText.text = "OUT OF TIME";
+			if (Debug.isDebugBuild) Debug.Log("OUT OF TIME");
+        }
+
+		#endregion
+
+		#region Commands
+
 		public void ToMenu()
 		{
-			//Time.timeScale = 0f;
             GameManager.Instance.ChangeState(GameState.MainGameMenu);
         }
+
+		#endregion
+
+		#region Requests
+
+		#region SignalR
 
 		public async void SendNextTurnRequest()
 		{
@@ -87,31 +117,35 @@ namespace Assets.Scripts.ViewModels
 			});
 		}
 
+		#endregion
 
-		public void SetTurnButtonUnactiveStatus(GameObject turnPanel) {
-			var buttonGO = turnPanel.transform.GetChild(0);
-			var buttonImage = buttonGO.GetComponent<Image>();
-			var buttonText = buttonGO.GetComponentInChildren<TMP_Text>();
-            var button = buttonGO.GetComponent<Button>();
-            UnityEngine.Color color;
-			UnityEngine.ColorUtility.TryParseHtmlString("#CD393F", out color);
-            buttonImage.color = color;
-			buttonText.text = "Wait for other player";
-			button.interactable = false;
+		#region REST requests
+
+		public void GetSessionRequestCreate()
+		{
+			CreateGetSessionRequestObject = new GameObject("GetSessionRequest");
+
+			var createGetSessionRequest = CreateGetSessionRequestObject.AddComponent<GetSessionRequest>();
+
+			createGetSessionRequest.CreateRequest();
 		}
-        public void SetTurnButtonActiveStatus(GameObject turnPanel)
-        {
-            var buttonGO = turnPanel.transform.GetChild(0);
-            var buttonImage = buttonGO.GetComponent<Image>();
-            var buttonText = buttonGO.GetComponentInChildren<TMP_Text>();
-            var button = buttonGO.GetComponent<Button>();
-            UnityEngine.Color color;
-            UnityEngine.ColorUtility.TryParseHtmlString("#539F61", out color);
-            buttonImage.color = color; ;
-            buttonText.text = "Next Turn";
-            button.interactable = true;
-        }
-        public void UpdateHeroDataPanelTexts(
+
+		public void GetHeroRequestCreate()
+		{
+			CreateGetHeroRequestObject = new GameObject("GetHeroRequest");
+
+			var createGetHeroRequest = CreateGetHeroRequestObject.AddComponent<GetHeroRequest>();
+
+			createGetHeroRequest.CreateRequest();
+		}
+
+		#endregion
+
+		#endregion
+
+		#region HUD panels values updators
+
+		public void UpdateHeroDataPanelTexts(
 			GameObject resourcesPanel, 
 			GameObject soldiersPanel,
 			GameObject researchShipsPanel, 
@@ -146,6 +180,10 @@ namespace Assets.Scripts.ViewModels
 			}
 		}
 
+		#endregion
+
+		#region DataStores values setters
+
 		public void SetHeroNewValues(Hero hero)
 		{
             GameManager.Instance.HeroDataStore.Name = hero.Name;
@@ -158,11 +196,17 @@ namespace Assets.Scripts.ViewModels
             GameManager.Instance.HeroDataStore.AvailableColonizationShips = hero.AvailableColonizationShips;
 		}
 
-        public async void ShowChangePanel(string message, GameObject changePanelPrefab, GameObject parentPanel)
+		#endregion
+
+		#region Ui controllers
+
+		public async void ShowChangePanel(string message, GameObject changePanelPrefab, GameObject parentPanel)
         {
             GameObject changePanelGO = null;
+
             string panelName = parentPanel.name + "_message";
-			for (int i = 1; i <= 10; i++)
+
+			for (int i = 1; i <= 2; i++)
 			{
 				if (!GameObject.Find(panelName + $"_{i}"))
 				{
@@ -183,114 +227,163 @@ namespace Assets.Scripts.ViewModels
 			}
         }
 
-        public void GetSessionRequestCreate()
+		#endregion
+
+		#region Players list panel
+
+		private static Color heroTurnColor = new Color((float)163 / 256, (float)8 / 256, (float)166 / 256);
+
+		public void UpdatePlayersInHUDPanel(GameObject playerList, GameObject playerName_Prefab)
+        {
+			DestroyChildrenImmediately(playerList);
+
+			var sessionDataStore = GameManager.Instance.SessionDataStore;
+
+			Vector3 panelPosition = Vector3.zero;
+
+            foreach (var hero in sessionDataStore.PanelHeroForms)
+            {
+                GameObject playerPanel = Object.Instantiate(playerName_Prefab, playerList.transform);
+
+				if (hero.HeroId.Equals(GameManager.Instance.SessionDataStore.CurrentHeroTurnId))
+				{
+					playerPanel.GetComponent<Image>().color = heroTurnColor;
+				}
+
+				playerPanel.transform.position += panelPosition;
+                panelPosition += Vector3.down * 80;
+
+                playerPanel.transform.GetChild(0).gameObject.GetComponent<TMP_Text>().text = hero.HeroName;
+            }
+        }
+
+		private void DestroyChildrenImmediately(GameObject playerList)
 		{
-			CreateGetSessionRequestObject = new GameObject("GetSessionRequest");
-
-			var createGetSessionRequest = CreateGetSessionRequestObject.AddComponent<GetSessionRequest>();
-
-			createGetSessionRequest.CreateRequest();
+			while (playerList.transform.childCount > 0)
+			{
+				Object.DestroyImmediate(playerList.transform.GetChild(0).gameObject);
+			}
 		}
 
-		public void GetHeroRequestCreate()
+		#endregion
+
+		#region NextTurn panel
+
+		public void SetNextTurnPanelValues(GameObject turnPanel)
 		{
-			CreateGetHeroRequestObject = new GameObject("GetHeroRequest");
+			if(GameManager.Instance.SessionDataStore.CurrentHeroTurnId.Equals(GameManager.Instance.HeroDataStore.HeroId))
+			{
+				SetTurnButtonInteractableStatus(turnPanel);
 
-			var createGetHeroRequest = CreateGetHeroRequestObject.AddComponent<GetHeroRequest>();
+				SetTimerNewValue(GameManager.Instance.SessionDataStore.TurnTimeLimit);
+			}
+			else
+			{
+				SetTurnButtonUninteractableStatus(turnPanel);
 
-			createGetHeroRequest.CreateRequest();
+				SetTimerValueOnHUD(turnPanel, "---");
+			}
+		}
+
+		public void SetTurnButtonUninteractableStatus(GameObject turnPanel)
+		{
+			var buttonGO = turnPanel.transform.GetChild(0);
+
+			ColorUtility.TryParseHtmlString("#CD393F", out UnityEngine.Color color);
+
+			buttonGO.GetComponentInChildren<TMP_Text>().text = "Wait for other player";
+			buttonGO.GetComponent<Button>().interactable = false;
+			buttonGO.GetComponent<Image>().color = color;
+		}
+
+		public void SetTurnButtonInteractableStatus(GameObject turnPanel)
+		{
+			var buttonGO = turnPanel.transform.GetChild(0);
+
+			ColorUtility.TryParseHtmlString("#539F61", out UnityEngine.Color color);
+
+			buttonGO.GetComponent<Image>().color = color;
+			buttonGO.GetComponentInChildren<TMP_Text>().text = "Next Turn";
+			buttonGO.GetComponent<Button>().interactable = true;
+		}
+
+		#endregion
+
+		#region HUD panels
+
+		#region Creating
+
+		private void InstantiateResourceInfoPanel(ref GameObject panelStore, 
+			GameObject infoPanelPrefab, Transform parent)
+		{
+			if (panelStore is null)
+			{
+				panelStore = Object.Instantiate(infoPanelPrefab, parent);
+			}
+		}
+
+		private TMP_Text GetTextComponentByChildObjectName(Transform panelStore, string objectName)
+		{
+            return panelStore.transform.Find(objectName)?.gameObject.GetComponent<TMP_Text>() 
+				?? throw new NullReferenceException();
 		}
 
 		public void CreateResourcePanel(GameObject resourcesInfoPanelPrefab, Transform parent)
 		{
-			if (_resourcesInfoPanel is null)
-			{
-				_resourcesInfoPanel = MonoBehaviour.Instantiate(resourcesInfoPanelPrefab, parent);
-			}
+			InstantiateResourceInfoPanel(ref _resourcesInfoPanel, resourcesInfoPanelPrefab, parent);
 
-			TMP_Text[] tmpTextComponents = _resourcesInfoPanel.GetComponentsInChildren<TMP_Text>();
-
-			foreach (TMP_Text tmpText in tmpTextComponents)
-			{
-				if (tmpText.gameObject.name == "txt_resourcesValue")
-					tmpText.text = GameManager.Instance.HeroDataStore.Resourses.ToString();
-			}
+			GetTextComponentByChildObjectName(_resourcesInfoPanel.transform.GetChild(0), 
+				"txt_resourcesValue").text = 
+				GameManager.Instance.HeroDataStore.Resourses.ToString();
 		}
 
 		public void CreateSoldiersPanel(GameObject soldiersInfoPanelPrefab, Transform parent)
 		{
-			if (_soldiersInfoPanel is null)
-			{
-				_soldiersInfoPanel = MonoBehaviour.Instantiate(soldiersInfoPanelPrefab, parent);
-			}
+			InstantiateResourceInfoPanel(ref _soldiersInfoPanel, soldiersInfoPanelPrefab, parent);
 
-			TMP_Text[] tmpTextComponents = _soldiersInfoPanel.GetComponentsInChildren<TMP_Text>();
+			GetTextComponentByChildObjectName(_soldiersInfoPanel.transform.GetChild(0), 
+				"txt_totalSoldiersValue").text =
+				GameManager.Instance.HeroDataStore.SoldiersLimit.ToString();
 
-			foreach (TMP_Text tmpText in tmpTextComponents)
-			{
-				switch (tmpText.gameObject.name)
-				{
-					case "txt_totalSoldiersValue":
-						tmpText.text = GameManager.Instance.HeroDataStore.SoldiersLimit.ToString();
-						break;
-					case "txt_usedSoldiersValue":
-						tmpText.text = GameManager.Instance.HeroDataStore.AvailableSoldiers.ToString();
-						break;
-				}
-			}
+			GetTextComponentByChildObjectName(_soldiersInfoPanel.transform.GetChild(1), 
+				"txt_usedSoldiersValue").text =
+				GameManager.Instance.HeroDataStore.AvailableSoldiers.ToString();
 		}
 
 		public void CreateResearchShipPanel(GameObject researchShipInfoPanelPrefab, Transform parent)
 		{
-			if (_researchShipInfoPanel is null)
-			{
-				_researchShipInfoPanel = MonoBehaviour.Instantiate(researchShipInfoPanelPrefab, parent);
-			}
+			InstantiateResourceInfoPanel(ref _researchShipInfoPanel, researchShipInfoPanelPrefab, parent);
 
-			TMP_Text[] tmpTextComponents = _researchShipInfoPanel.GetComponentsInChildren<TMP_Text>();
+			GetTextComponentByChildObjectName(_researchShipInfoPanel.transform.GetChild(0), 
+				"txt_totalShipsValue").text =
+				GameManager.Instance.HeroDataStore.ResearchShipLimit.ToString();
 
-			foreach (TMP_Text tmpText in tmpTextComponents)
-			{
-				switch (tmpText.gameObject.name)
-				{
-					case "txt_totalShipsValue":
-						tmpText.text = GameManager.Instance.HeroDataStore.ResearchShipLimit.ToString();
-						break;
-					case "txt_usedShipsValue":
-						tmpText.text = GameManager.Instance.HeroDataStore.AvailableResearchShips.ToString();
-						break;
-				}
-			}
+			GetTextComponentByChildObjectName(_researchShipInfoPanel.transform.GetChild(1), 
+				"txt_usedShipsValue").text =
+				GameManager.Instance.HeroDataStore.AvailableResearchShips.ToString();
 		}
 
 		public void CreateColonizeShipPanel(GameObject colonizeShipInfoPanelPrefab, Transform parent)
 		{
-			if (_colonizeShipInfoPanel is null)
-			{
-				_colonizeShipInfoPanel = MonoBehaviour.Instantiate(colonizeShipInfoPanelPrefab, parent);
-			}
+			InstantiateResourceInfoPanel(ref _colonizeShipInfoPanel, colonizeShipInfoPanelPrefab, parent);
 
-			TMP_Text[] tmpTextComponents = _colonizeShipInfoPanel.GetComponentsInChildren<TMP_Text>();
-
-			foreach (TMP_Text tmpText in tmpTextComponents)
-			{
-				switch (tmpText.gameObject.name)
-				{
-					case "txt_totalShipsValue":
-						tmpText.text = GameManager.Instance.HeroDataStore.ColonizationShipLimit.ToString();
-						break;
-					case "txt_usedShipsValue":
-						tmpText.text = GameManager.Instance.HeroDataStore.AvailableColonizationShips.ToString();
-						break;
-				}
-			}
+			GetTextComponentByChildObjectName(_colonizeShipInfoPanel.transform.GetChild(0), 
+				"txt_totalShipsValue").text = 
+				GameManager.Instance.HeroDataStore.ColonizationShipLimit.ToString();
+            GetTextComponentByChildObjectName(_colonizeShipInfoPanel.transform.GetChild(1), 
+				"txt_usedShipsValue").text = 
+				GameManager.Instance.HeroDataStore.AvailableColonizationShips.ToString(); 
 		}
+
+		#endregion
+
+		#region Deleting
 
 		public void DeleteResourcePanel()
 		{
 			Object.Destroy(_resourcesInfoPanel);
 			_resourcesInfoPanel = null;
-		}
+        }
 
 		public void DeleteSoldiersPanel()
 		{
@@ -301,13 +394,17 @@ namespace Assets.Scripts.ViewModels
 		public void DeleteResearchShipPanel()
 		{
 			Object.Destroy(_researchShipInfoPanel);
-			_researchShipInfoPanel = null;
-		}
+            _researchShipInfoPanel = null;
+        }
 
 		public void DeleteColonizeShipPanel()
 		{
 			Object.Destroy(_colonizeShipInfoPanel);
-			_colonizeShipInfoPanel = null;
-		}
+            _colonizeShipInfoPanel = null;
+        }
+
+		#endregion
+
+		#endregion
 	}
 }

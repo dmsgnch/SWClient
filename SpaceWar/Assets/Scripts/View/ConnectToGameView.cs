@@ -55,6 +55,8 @@ namespace Assets.Scripts.View
 
 		private ConnectToGameViewModel _connectToGameViewModel;
 
+		#region Unity methods
+
 		private void Awake()
 		{
 			heroInput.onValueChanged.AddListener(HeroNameValueChanged);
@@ -65,21 +67,40 @@ namespace Assets.Scripts.View
 			connectToGameButton.onClick.AddListener(OnConnectToGameClickAsync);
 		}
 
+		private async void OnEnable()
+		{
+			if (_connectToGameViewModel is null) return;
+
+			await _connectToGameViewModel.StopHub();
+
+			SetInteractableToButtons();
+
+			OnUpdateButtonClick();
+		}
+
+		#endregion
+
+		#region Input fields values changed handlers
+
 		private void HeroNameValueChanged(string value)
 		{
 			_connectToGameViewModel.OnHeroNameValueChanged(_heroIcon, _validSprite, _errorSprite, value);
 
-            SetInteractableToButtons();
-        }
+			SetInteractableToButtons();
+		}
 
-        private void GameNameValueChanged(string value)
+		private void GameNameValueChanged(string value)
 		{
 			_connectToGameViewModel.OnLobbyNameValueChanged(_gameIcon, _validSprite, _errorSprite, value);
 
-            SetInteractableToButtons();
-        }
+			SetInteractableToButtons();
+		}
 
-        private void OnToMainMenuButtonClick()
+		#endregion
+
+		#region Buttons handlers
+
+		private void OnToMainMenuButtonClick()
 		{
 			PlayButtonClickSound();
 
@@ -90,8 +111,27 @@ namespace Assets.Scripts.View
 		{
 			PlayButtonClickSound();
 
-			_connectToGameViewModel.UpdateLobbiesList();
-        }
+			_connectToGameViewModel.SendUpdateLobbiesListRequest();
+		}
+
+		private void OnCreateGameButtonClick()
+		{
+			PlayButtonClickSound();
+
+			//Sending CreateLobbyRequest
+			_connectToGameViewModel.SendCreateLobbyRequest();
+		}
+
+		private async void OnConnectToGameClickAsync()
+		{
+			PlayButtonClickSound();
+
+			await _connectToGameViewModel.SendConnectToLobbyRequest();
+		}
+
+		#endregion
+
+		#region Commands
 
 		public void OnLobbiesListUpdate()
 		{
@@ -100,39 +140,19 @@ namespace Assets.Scripts.View
 				lobbiesListItemPrefab,
 				connectToGameButton);
 
-			SetInteractableToButtons(); 
+			SetInteractableToButtons();
 		}
+
+		#endregion
+
+		#region Ui controllers
 
 		public void SetInteractableToButtons()
 		{
-            _connectToGameViewModel.SetInteractableToButtons(connectToGameButton, createGameButton);
-        }
-
-        private void OnCreateGameButtonClick()
-		{
-			PlayButtonClickSound();
-
-			//Sending CreateLobbyRequest
-			_connectToGameViewModel.CreateLobby();
+			_connectToGameViewModel.SetInteractableToButtons(connectToGameButton, createGameButton);
 		}
 
-		private async void OnConnectToGameClickAsync()
-		{
-			PlayButtonClickSound();
-
-			await _connectToGameViewModel.ConnectToLobby();
-		}
-
-		private async void OnEnable()
-		{
-			if (_connectToGameViewModel is null) return;
-
-			await _connectToGameViewModel.StopHub();
-
-            SetInteractableToButtons();
-
-            OnUpdateButtonClick();
-		}
+		#endregion
 
 		protected override void OnBind(ConnectToGameViewModel connectToGameViewModel)
 		{

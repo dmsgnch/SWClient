@@ -32,7 +32,8 @@ namespace Assets.Scripts.LocalManagers._0_RegisterLoginRequests.ResponseHandlers
 			Lobby lobby = requestForm.GetResponseResult<CreateLobbyResponse>().Lobby;
 
 			GameManager.Instance.LobbyDataStore.LobbyId = lobby.Id;
-			GameManager.Instance.LobbyDataStore.IsLobbyLeader = lobby.LobbyInfos.First().LobbyLeader;
+			GameManager.Instance.LobbyDataStore.IsLobbyLeader = lobby.LobbyInfos.First(l => l.UserId.Equals(
+				GameManager.Instance.MainDataStore.UserId)).LobbyLeader;
 
 			GameManager.Instance.ChangeState(GameState.Lobby);
 

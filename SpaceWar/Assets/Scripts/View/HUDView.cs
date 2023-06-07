@@ -26,8 +26,8 @@ namespace Assets.Scripts.View
 		[SerializeField] private Button MenuButton;
 		[SerializeField] private Button NextTurnButton;
         [SerializeField] private GameObject playerList;
-
         [SerializeField] private GameObject playerName_Prefab;
+
         [SerializeField] private GameObject ResourcesInfoPanelPrefab;
 		[SerializeField] private GameObject SoldiersInfoPanelPrefab;
 		[SerializeField] private GameObject ResearchShipInfoPanelPrefab;
@@ -37,6 +37,8 @@ namespace Assets.Scripts.View
 		private bool firstValuesSet = true;
 
         private HUDViewModel _hudViewModel;
+
+		#region Unity methods
 
 		private void Awake()
 		{
@@ -48,6 +50,27 @@ namespace Assets.Scripts.View
 			AddHoverListeners(ColonizeShipPanel, OnColonizeShipPanelHoverEnter, OnColonizeShipPanelHoverExit);
 		}
 
+		private void OnEnable()
+		{
+			if (_hudViewModel is null || transform.childCount.Equals(0)) return;
+
+			UpdateSessionRequest();
+		}
+
+		private void Update()
+		{	
+			if (Input.GetKeyDown(KeyCode.Escape))
+				_hudViewModel.ToMenu();
+
+			if (_hudViewModel is null) return;
+
+			_hudViewModel.ReduceTimerValue(TurnPanel);
+		}
+
+		#endregion
+
+		#region Buttons handlers
+
 		private void OnMenuButtonClick()
 		{
 			PlayButtonClickSound();
@@ -56,19 +79,22 @@ namespace Assets.Scripts.View
 		}
 
 		private void OnNextTurnButtonClick()
-		{
-			PlayButtonClickSound();
+        {
+            Guid turnId = GameManager.Instance.SessionDataStore.CurrentHeroTurnId;
+            Guid heroId = GameManager.Instance.HeroDataStore.HeroId;
+            if (!turnId.Equals(heroId))
+            {
+                return;
+            }
+
+            PlayButtonClickSound();
 
 			_hudViewModel.SendNextTurnRequest();
 		}
 
-		private void Update()
-		{
-			if (Input.GetKeyDown(KeyCode.Escape))			
-				_hudViewModel.ToMenu();
-			
-			_hudViewModel.ReduceTurnPanelTime(TurnPanel, Time.deltaTime);
-		}
+		#endregion
+
+		#region Helpers
 
 		private void AddHoverListeners(GameObject panel, UnityAction<PointerEventData> onEnter, UnityAction<PointerEventData> onExit)
 		{
@@ -89,7 +115,9 @@ namespace Assets.Scripts.View
 			trigger.triggers.Add(exitEntry);
 		}
 
-		#region Event handlers
+		#endregion
+
+		#region Triggers setters
 
 		public void OnResourcesPanelHoverEnter(PointerEventData eventData)
 		{
@@ -132,12 +160,17 @@ namespace Assets.Scripts.View
 		}
 
 		#endregion
-		
+
+		#region Show changed panels
+
 		public void callResourcesChangedPanel(string value) {
-            if (firstValuesSet) return;
+			if (firstValuesSet) return;
+
             _hudViewModel.ShowChangePanel(value, ChangeMessagePrefab, ResourcesPanel);
+
             UpdateHeroHudValues();
         }
+
         public void callSoldiersChangedPanel(string value)
         {
             if (firstValuesSet) return;
@@ -156,23 +189,23 @@ namespace Assets.Scripts.View
             _hudViewModel.ShowChangePanel(value, ChangeMessagePrefab, ColonizeShipPanel);
             UpdateHeroHudValues();
         }
-        
-        public void UpdatePlayerList()
-        {
-			while(playerList.transform.childCount > 0)
-			{
-				DestroyImmediate(playerList.transform.GetChild(0).gameObject);
-			}
-            var sessionDataStore = GameManager.Instance.SessionDataStore;
-            foreach (var player in sessionDataStore.PanelHeroForms)
-            {
-                GameObject playerPanel = Instantiate(playerName_Prefab, playerList.transform);
-                playerPanel.GetComponent<TMP_Text>().text = player.HeroName;
-            }
-        }
-        #region Requests senders
 
-        public void UpdateSessionRequest()
+		#endregion
+
+		#region Commands
+
+		public void UpdatePlayersListPanelValues()
+        {
+			_hudViewModel.UpdatePlayersInHUDPanel(playerList, playerName_Prefab);
+
+			_hudViewModel.SetNextTurnPanelValues(TurnPanel);
+        }
+
+		#endregion
+
+		#region Requests senders
+
+		public void UpdateSessionRequest()
 		{
 			_hudViewModel.GetSessionRequestCreate();
 
@@ -214,19 +247,7 @@ namespace Assets.Scripts.View
 			_hudViewModel.SetHeroNewValues(hero);
 		}
 
-		public void SetTurnPanelTimer(int time)
-		{
-			_hudViewModel.SetTurnPanelTimer(TurnPanel, time);
-		}
-
 		#endregion
-
-		private void OnEnable()
-		{
-			if (_hudViewModel is null || transform.childCount.Equals(0)) return;
-
-			UpdateSessionRequest();
-		}
 
 		protected override void OnBind(HUDViewModel hudViewModel)
 		{

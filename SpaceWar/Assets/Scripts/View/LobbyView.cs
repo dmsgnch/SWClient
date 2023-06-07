@@ -26,16 +26,11 @@ namespace Assets.Scripts.View
 
 		private LobbyViewModel _lobbyViewModel;
 
+		#region Unity methods
+
 		private void Awake()
 		{
 			quitButton.onClick.AddListener(OnQuitButtonClick);
-		}
-
-		private async void OnQuitButtonClick()
-		{
-			PlayButtonClickSound();
-
-			await _lobbyViewModel.ExitFromLobby();
 		}
 
 		private void OnEnable()
@@ -45,7 +40,22 @@ namespace Assets.Scripts.View
 			_lobbyViewModel.DefineButton(this, startButton, readyButton);
 
 			SetInteractableStartButton();
-        }
+		}
+
+		#endregion
+
+		#region Buttons handlers
+
+		private async void OnQuitButtonClick()
+		{
+			PlayButtonClickSound();
+
+			await _lobbyViewModel.SendExitFromLobbyRequest();
+		}
+
+		#endregion
+
+		#region Commands
 
 		public void UpdatePlayersListInLobby(Lobby lobby)
 		{
@@ -54,10 +64,16 @@ namespace Assets.Scripts.View
 			SetInteractableStartButton();
 		}
 
+		#endregion
+
+		#region Ui controllers
+
 		public void SetInteractableStartButton()
 		{
 			if(startButton.activeInHierarchy) _lobbyViewModel.SetInteractableStartButton(startButton);
-        }
+		}
+		
+		#endregion
 
 		protected override void OnBind(LobbyViewModel lobbyViewModel)
 		{

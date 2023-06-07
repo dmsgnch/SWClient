@@ -22,34 +22,12 @@ namespace Assets.Scripts.View
 
 		private RegisterViewModel _registerViewModel;
 
+		#region Unity methods
+
 		private void Awake()
 		{
 			registerButton.onClick.AddListener(OnRegisterButtonClick);
 			toLogin.onClick.AddListener(OnToLoginButtonClick);
-		}
-
-		private void OnRegisterButtonClick()
-		{
-			PlayButtonClickSound();
-
-			if (_registerViewModel.ValidateName(usernameInput.text) &&
-				_registerViewModel.ValidateEmail(emailInput.text) &&
-				_registerViewModel.ValidatePassword(passwordInput.text, confirmPasswordInput.text))
-			{
-				_registerViewModel.Register(usernameInput.text, emailInput.text, passwordInput.text);
-			}
-		}
-
-		private void OnToLoginButtonClick()
-		{
-			PlayButtonClickSound();
-
-			_registerViewModel.ToLogin();
-		}
-
-		protected override void OnBind(RegisterViewModel registerViewModel)
-		{
-			_registerViewModel = registerViewModel;
 		}
 
 		private void Update()
@@ -60,6 +38,36 @@ namespace Assets.Scripts.View
 
 				_registerViewModel.CloseApplication();
 			}
+		}
+
+		#endregion
+
+		#region Button handlers
+
+		private void OnRegisterButtonClick()
+		{
+			PlayButtonClickSound();
+
+			if (_registerViewModel.ValidateName(usernameInput.text) &&
+				_registerViewModel.ValidateEmail(emailInput.text) &&
+				_registerViewModel.ValidatePassword(passwordInput.text, confirmPasswordInput.text))
+			{
+				_registerViewModel.SendRegisterRequest(usernameInput.text, emailInput.text, passwordInput.text);
+			}
+		}
+
+		private void OnToLoginButtonClick()
+		{
+			PlayButtonClickSound();
+
+			_registerViewModel.ToLogin();
+		}
+
+		#endregion
+
+		protected override void OnBind(RegisterViewModel registerViewModel)
+		{
+			_registerViewModel = registerViewModel;
 		}
 	}
 }

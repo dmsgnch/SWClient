@@ -16,16 +16,7 @@ namespace Assets.Scripts.View
 
 		[SerializeField] private Text _text;
 
-		private void SetTextField()
-		{
-			_fpsViewModel.Text = _text;
-		}
-
-		protected override void OnBind(FPSViewModel fpsViewModel)
-		{
-			_fpsViewModel = fpsViewModel;
-			SetTextField();
-		}
+		#region Unity methods
 
 		void Awake()
 		{
@@ -41,6 +32,23 @@ namespace Assets.Scripts.View
 			{
 				_fpsViewModel.UpdateValue();
 			}
+		}
+
+		#endregion
+
+		#region Commands
+
+		private void SetTextField()
+		{
+			_fpsViewModel.Text = _text;
+		}
+
+		#endregion
+
+		protected override void OnBind(FPSViewModel fpsViewModel)
+		{
+			_fpsViewModel = fpsViewModel;
+			SetTextField();
 		}
 	}
 }

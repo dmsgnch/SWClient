@@ -24,33 +24,12 @@ namespace Assets.Scripts.View
 
 		private LoginViewModel _loginViewModel;
 
+		#region Unity methods
+
 		private void Awake()
 		{
 			loginButton.onClick.AddListener(OnLoginButtonClick);
 			toRegister.onClick.AddListener(OnToRegisterButtonClick);
-		}
-
-		private void OnLoginButtonClick()
-		{
-			PlayButtonClickSound();
-
-			if (_loginViewModel.ValidateEmail(emailInput.text) &&
-			_loginViewModel.ValidatePassword(passwordInput.text))
-			{
-				_loginViewModel.Login(emailInput.text, passwordInput.text);
-			}			
-		}
-
-		private void OnToRegisterButtonClick()
-		{
-			PlayButtonClickSound();
-
-			_loginViewModel.ToRegister();
-		}
-
-		protected override void OnBind(LoginViewModel loginViewModel)
-		{
-			_loginViewModel = loginViewModel;
 		}
 
 		private void Update()
@@ -61,6 +40,35 @@ namespace Assets.Scripts.View
 
 				_loginViewModel.CloseApplication();
 			}
+		}
+
+		#endregion
+
+		#region Buttons handlers
+
+		private void OnLoginButtonClick()
+		{
+			PlayButtonClickSound();
+
+			if (_loginViewModel.ValidateEmail(emailInput.text) &&
+			_loginViewModel.ValidatePassword(passwordInput.text))
+			{
+				_loginViewModel.SendLoginRequest(emailInput.text, passwordInput.text);
+			}			
+		}
+
+		private void OnToRegisterButtonClick()
+		{
+			PlayButtonClickSound();
+
+			_loginViewModel.ToRegister();
+		}
+
+		#endregion
+
+		protected override void OnBind(LoginViewModel loginViewModel)
+		{
+			_loginViewModel = loginViewModel;
 		}		
 	}
 }

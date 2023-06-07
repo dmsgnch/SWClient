@@ -27,10 +27,12 @@ namespace Assets.Scripts.View
         [SerializeField] private GameObject healthbarPrefab;
         [SerializeField] private GameObject PlanetInfoPanelPrefab;
 
-        public async void GeneratePlanetsWithConnections()
+		#region Commands
+
+		public void GeneratePlanetsWithConnections()
         {
             _planetsViewModel.GeneratePlanets(GetPlanetsGenerationForm());
-            await Task.Delay((int)Time.deltaTime*1000);
+
             _planetsViewModel.CreateConnections(connectionsParent);
         }
 
@@ -70,7 +72,11 @@ namespace Assets.Scripts.View
 			await _planetsViewModel.BuildDefence(planet);
         }
 
-        private PlanetsGenerationForm GetPlanetsGenerationForm()
+		#endregion
+
+		#region Helpers
+
+		private PlanetsGenerationForm GetPlanetsGenerationForm()
         {
             return new PlanetsGenerationForm
             {
@@ -84,7 +90,9 @@ namespace Assets.Scripts.View
             };
         }
 
-		protected override void OnBind(PlanetsViewModel model)
+        #endregion
+
+        protected override void OnBind(PlanetsViewModel model)
         {
 			_planetsViewModel = model;
         }
