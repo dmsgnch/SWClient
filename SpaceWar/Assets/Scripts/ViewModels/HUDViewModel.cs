@@ -283,7 +283,8 @@ namespace Assets.Scripts.ViewModels
 
 		#region Creating
 
-		private void InstantiateResourceInfoPanel(GameObject panelStore, GameObject infoPanelPrefab, Transform parent)
+		private void InstantiateResourceInfoPanel(ref GameObject panelStore, 
+			GameObject infoPanelPrefab, Transform parent)
 		{
 			if (panelStore is null)
 			{
@@ -291,49 +292,56 @@ namespace Assets.Scripts.ViewModels
 			}
 		}
 
-		private TMP_Text GetTextComponentByChildObjectName(GameObject panelStore, string objectName)
+		private TMP_Text GetTextComponentByChildObjectName(Transform panelStore, string objectName)
 		{
-			return panelStore.transform.Find(objectName)?.GetComponent<TMP_Text>() ?? throw new NullReferenceException();
+            return panelStore.transform.Find(objectName)?.gameObject.GetComponent<TMP_Text>() 
+				?? throw new NullReferenceException();
 		}
 
 		public void CreateResourcePanel(GameObject resourcesInfoPanelPrefab, Transform parent)
 		{
-			InstantiateResourceInfoPanel(_resourcesInfoPanel, resourcesInfoPanelPrefab, parent);
+			InstantiateResourceInfoPanel(ref _resourcesInfoPanel, resourcesInfoPanelPrefab, parent);
 
-			GetTextComponentByChildObjectName(_resourcesInfoPanel, "txt_resourcesValue").text = 
+			GetTextComponentByChildObjectName(_resourcesInfoPanel.transform.GetChild(0), 
+				"txt_resourcesValue").text = 
 				GameManager.Instance.HeroDataStore.Resourses.ToString();
 		}
 
 		public void CreateSoldiersPanel(GameObject soldiersInfoPanelPrefab, Transform parent)
 		{
-			InstantiateResourceInfoPanel(_soldiersInfoPanel, soldiersInfoPanelPrefab, parent);
+			InstantiateResourceInfoPanel(ref _soldiersInfoPanel, soldiersInfoPanelPrefab, parent);
 
-			GetTextComponentByChildObjectName(_soldiersInfoPanel , "txt_totalSoldiersValue").text =
+			GetTextComponentByChildObjectName(_soldiersInfoPanel.transform.GetChild(0), 
+				"txt_totalSoldiersValue").text =
 				GameManager.Instance.HeroDataStore.SoldiersLimit.ToString();
 
-			GetTextComponentByChildObjectName(_soldiersInfoPanel, "txt_usedSoldiersValue").text =
+			GetTextComponentByChildObjectName(_soldiersInfoPanel.transform.GetChild(1), 
+				"txt_usedSoldiersValue").text =
 				GameManager.Instance.HeroDataStore.AvailableSoldiers.ToString();
 		}
 
 		public void CreateResearchShipPanel(GameObject researchShipInfoPanelPrefab, Transform parent)
 		{
-			InstantiateResourceInfoPanel(_researchShipInfoPanel, researchShipInfoPanelPrefab, parent);
+			InstantiateResourceInfoPanel(ref _researchShipInfoPanel, researchShipInfoPanelPrefab, parent);
 
-			GetTextComponentByChildObjectName(_researchShipInfoPanel, "txt_totalShipsValue").text =
+			GetTextComponentByChildObjectName(_researchShipInfoPanel.transform.GetChild(0), 
+				"txt_totalShipsValue").text =
 				GameManager.Instance.HeroDataStore.ResearchShipLimit.ToString();
 
-			GetTextComponentByChildObjectName(_researchShipInfoPanel, "txt_usedShipsValue").text =
+			GetTextComponentByChildObjectName(_researchShipInfoPanel.transform.GetChild(1), 
+				"txt_usedShipsValue").text =
 				GameManager.Instance.HeroDataStore.AvailableResearchShips.ToString();
 		}
 
 		public void CreateColonizeShipPanel(GameObject colonizeShipInfoPanelPrefab, Transform parent)
 		{
-			InstantiateResourceInfoPanel(_colonizeShipInfoPanel, colonizeShipInfoPanelPrefab, parent);
+			InstantiateResourceInfoPanel(ref _colonizeShipInfoPanel, colonizeShipInfoPanelPrefab, parent);
 
-			GetTextComponentByChildObjectName(_colonizeShipInfoPanel, "txt_totalShipsValue").text =
+			GetTextComponentByChildObjectName(_colonizeShipInfoPanel.transform.GetChild(0), 
+				"txt_totalShipsValue").text = 
 				GameManager.Instance.HeroDataStore.ColonizationShipLimit.ToString();
-
-			GetTextComponentByChildObjectName(_colonizeShipInfoPanel, "txt_usedShipsValue").text =
+            GetTextComponentByChildObjectName(_colonizeShipInfoPanel.transform.GetChild(1), 
+				"txt_usedShipsValue").text = 
 				GameManager.Instance.HeroDataStore.AvailableColonizationShips.ToString(); 
 		}
 
@@ -344,22 +352,26 @@ namespace Assets.Scripts.ViewModels
 		public void DeleteResourcePanel()
 		{
 			Object.Destroy(_resourcesInfoPanel);
-		}
+			_resourcesInfoPanel = null;
+        }
 
 		public void DeleteSoldiersPanel()
 		{
 			Object.Destroy(_soldiersInfoPanel);
+			_soldiersInfoPanel = null;
 		}
 
 		public void DeleteResearchShipPanel()
 		{
 			Object.Destroy(_researchShipInfoPanel);
-		}
+            _researchShipInfoPanel = null;
+        }
 
 		public void DeleteColonizeShipPanel()
 		{
 			Object.Destroy(_colonizeShipInfoPanel);
-		}
+            _colonizeShipInfoPanel = null;
+        }
 
 		#endregion
 

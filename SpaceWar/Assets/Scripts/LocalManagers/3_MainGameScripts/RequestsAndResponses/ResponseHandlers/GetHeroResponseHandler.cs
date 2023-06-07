@@ -32,15 +32,12 @@ namespace Assets.Scripts.LocalManagers._2_MainGameScripts.RequestsAndResponses.R
 
 			GameManager.Instance.HeroDataStore.HeroId = hero.HeroId;
 			GameManager.Instance.HeroDataStore.Color = ColorParser.GetColor((ColorStatus)hero.ColorStatus);
+            GameManager.Instance.HeroDataStore.HeroMapView = response.Map;
+            GameManager.Instance.HeroDataStore.CapitalPlanetId = hero.HomePlanetId;
 
-			HUDView hudView = UnityEngine.Object.FindAnyObjectByType<HUDView>() ?? throw new Exception();
-
-			hudView.SetHeroNewValues(hero);
-
-			GameManager.Instance.HeroDataStore.HeroMapView = response.Map;
-			GameManager.Instance.HeroDataStore.CapitalPlanetId = hero.HomePlanetId;
-
+            HUDView hudView = UnityEngine.Object.FindAnyObjectByType<HUDView>();
 			if (hudView is null) throw new InvalidOperationException();
+			hudView.SetHeroNewValues(hero);
 			hudView.UpdateHUDValues();
 
 			PlanetsView planetsView = UnityEngine.Object.FindAnyObjectByType<PlanetsView>();
