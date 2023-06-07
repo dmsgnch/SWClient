@@ -220,9 +220,11 @@ namespace Assets.Scripts.ViewModels
         #endregion
 
         #region Add size text to planet
+
         private void AddSizeTextToPlanet(PlanetCreationForm planetCreationForm)
         {
-            bool isVisible = planetCreationForm.Planet.Status == PlanetStatus.Colonized;
+            bool isVisible = planetCreationForm.Planet.Status >= PlanetStatus.Researched
+                && !planetCreationForm.Planet.IsEnemy;
             if (!isVisible) return;
 
 			GameObject sizeText = CreateSizeText(planetCreationForm);
@@ -242,24 +244,27 @@ namespace Assets.Scripts.ViewModels
 
 			return sizeText;
         }
+
         #endregion
 
         #region Add resources text to planet
         private void AddResourceTextToPlanet(PlanetCreationForm planetCreationForm)
 		{
-			bool isResourceVisible = planetCreationForm.Planet.Status >= PlanetStatus.Colonized &&
-				!planetCreationForm.Planet.IsEnemy;
+			bool isResourceVisible = planetCreationForm.Planet.Status >= PlanetStatus.Researched
+                && !planetCreationForm.Planet.IsEnemy;
 			if (!isResourceVisible) return;
 
 			GameObject rightDownText = CreateResourceText(planetCreationForm);
 
             Vector3 offset = (Vector3.down * planetCreationForm.Diameter / 2f)
-                + (Vector3.left * planetCreationForm.Diameter / 1.5f);
+                + (Vector3.right * planetCreationForm.Diameter / 3f);
             PlaceObjectNearPlanet(rightDownText, planetCreationForm, offset);
         }
 
 		private GameObject CreateResourceText(PlanetCreationForm planetCreationForm)
         {
+            bool isResourceVisible = planetCreationForm.Planet.Status >= PlanetStatus.Researched
+				&& !planetCreationForm.Planet.IsEnemy;
             GameObject rightDownText = Object.Instantiate(
                 planetCreationForm.PlanetGenerationForm.PlanetTextPrefab);
             rightDownText.name = "resourceText";
@@ -268,6 +273,12 @@ namespace Assets.Scripts.ViewModels
             rightDownText.GetComponent<TextMesh>().color = Color.white;
 
             Planet planet = planetCreationForm.Planet;
+			if(planet.Status is PlanetStatus.Colonized)
+			{
+                rightDownText.GetComponent<TextMesh>().color = 
+					GameManager.Instance.HeroDataStore.Color;
+            }
+
             if (planet.ResourceType is ResourceType.OnlyResources)
             {
                 rightDownText.GetComponent<TextMesh>().text = $"R:{planet.ResourceCount}";
