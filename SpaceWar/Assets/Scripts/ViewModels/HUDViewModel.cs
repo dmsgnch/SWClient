@@ -161,7 +161,7 @@ namespace Assets.Scripts.ViewModels
 				soldiersLimit - availableSoldiers :	soldiersLimit / 5;
 
 			soldiersPanel.GetComponentInChildren<TMP_Text>().text = $"{GameManager.Instance.HeroDataStore.AvailableSoldiers}" +
-				$"(+{(addindSoldiersValues.Equals(0) ? "" : addindSoldiersValues)})";
+				$"{(addindSoldiersValues.Equals(0) ? "" : $"(+{addindSoldiersValues})")}";
 
 			researchShipsPanel.GetComponentInChildren<TMP_Text>().text = $"{GameManager.Instance.HeroDataStore.AvailableResearchShips}/" +
 				$"{GameManager.Instance.HeroDataStore.ResearchShipLimit}";
