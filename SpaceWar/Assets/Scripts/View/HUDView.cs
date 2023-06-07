@@ -58,9 +58,11 @@ namespace Assets.Scripts.View
 		}
 
 		private void Update()
-		{
+		{	
 			if (Input.GetKeyDown(KeyCode.Escape))
 				_hudViewModel.ToMenu();
+
+			if (_hudViewModel is null) return;
 
 			_hudViewModel.ReduceTimerValue(TurnPanel);
 		}
@@ -192,9 +194,11 @@ namespace Assets.Scripts.View
 
 		#region Commands
 
-		public void UpdatePlayerList()
+		public void UpdatePlayersListPanelValues()
         {
-			_hudViewModel.UpdatePlayerList(playerList,playerName_Prefab);
+			_hudViewModel.UpdatePlayersInHUDPanel(playerList, playerName_Prefab);
+
+			_hudViewModel.SetNextTurnPanelValues(TurnPanel);
         }
 
 		#endregion
@@ -241,11 +245,6 @@ namespace Assets.Scripts.View
 		public void SetHeroNewValues(Hero hero)
 		{
 			_hudViewModel.SetHeroNewValues(hero);
-		}
-
-		public void SetTurnPanelTimer(int time)
-		{
-			_hudViewModel.SetTimerNewValue(time);
 		}
 
 		#endregion

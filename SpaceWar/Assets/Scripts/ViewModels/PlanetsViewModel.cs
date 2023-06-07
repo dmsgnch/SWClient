@@ -205,6 +205,7 @@ namespace Assets.Scripts.ViewModels
         #endregion
 
         #region Add fortification icon to planet
+
         private void AddFortIconToPlanet(PlanetCreationForm planetCreationForm)
 		{
 			GameObject fortPrefab = GetFortificationPrefab(planetCreationForm.Planet.FortificationLevel,
@@ -217,9 +218,11 @@ namespace Assets.Scripts.ViewModels
 				+ (Vector3.right * planetCreationForm.Diameter / 2f);
             SetPlanetIconPosition(fortificationIcon, planetCreationForm,offset);
         }
+
         #endregion
 
         #region Add size text to planet
+
         private void AddSizeTextToPlanet(PlanetCreationForm planetCreationForm)
         {
             bool isVisible = planetCreationForm.Planet.Status == PlanetStatus.Colonized;
@@ -242,9 +245,11 @@ namespace Assets.Scripts.ViewModels
 
 			return sizeText;
         }
+
         #endregion
 
         #region Add resources text to planet
+
         private void AddResourceTextToPlanet(PlanetCreationForm planetCreationForm)
 		{
 			bool isResourceVisible = planetCreationForm.Planet.Status >= PlanetStatus.Colonized &&
@@ -283,6 +288,7 @@ namespace Assets.Scripts.ViewModels
 
             return rightDownText;
         }
+
         #endregion
 
         #region Common functions
@@ -324,7 +330,8 @@ namespace Assets.Scripts.ViewModels
 
         #endregion
 
-        #region Connection Building
+        #region Connection building
+
         private void CreateConnection(Edge connection, GameObject connectionsParent, GameObject[] planets)
         {
             GameObject fromPlanet = planets.FirstOrDefault(
@@ -347,6 +354,7 @@ namespace Assets.Scripts.ViewModels
             connectionController.toPlanet = toPlanet;
             connectionController.thickness = ConnectionThickness;
         }
+
         #endregion
 
         #region SignalR

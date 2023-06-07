@@ -168,10 +168,8 @@ namespace Scripts.RegisterLoginScripts
 					}).ToList();
 
                     hudView.UpdateSessionHudValues();
-	
-					hudView.SetTurnPanelTimer(session.TurnTimeLimit);
 
-					hudView.UpdatePlayerList();
+					hudView.UpdatePlayersListPanelValues();
 				});
 			});
 
@@ -287,8 +285,7 @@ namespace Scripts.RegisterLoginScripts
 					hudView.UpdateHeroHudValues();
 					hudView.UpdateSessionHudValues();
                     hudView.UpdateHeroRequest();
-                    hudView.UpdatePlayerList();
-                    hudView.SetTurnPanelTimer(data.Session.TurnTimeLimit);
+                    hudView.UpdatePlayersListPanelValues();
 
                     //recreate map
                     planetsView.GeneratePlanetsWithConnections();

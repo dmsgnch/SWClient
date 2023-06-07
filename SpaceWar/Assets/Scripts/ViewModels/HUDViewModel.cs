@@ -36,7 +36,7 @@ namespace Assets.Scripts.ViewModels
 
 		#region Timer
 
-		private float timer = 60f;
+		private float timer = 0f;
 
 		public void SetTimerNewValue(float value)
 		{
@@ -58,20 +58,30 @@ namespace Assets.Scripts.ViewModels
             }
         }
 
-        private void SetTimerValueOnHUD(GameObject turnPanel)
-        {
-            TMP_Text[] turnTexts = turnPanel.GetComponentsInChildren<TMP_Text>();
-            foreach (TMP_Text tmpText in turnTexts)
-            {
-                if (tmpText.gameObject.name == "txt_leftTimeValue")
-                {
-                    tmpText.text = ((int)timer).ToString();
-                    break;
-                }
-            }
+        private void SetTimerValueOnHUD(GameObject turnPanel, string value = null)
+		{
+            TMP_Text timerText = FindChildRecursive(turnPanel.transform, "txt_leftTimeValue").GetComponent<TMP_Text>();
+
+			timerText.text = value ?? ((int)timer).ToString();   
         }
 
-        private void PostTimerTimeOutAction(GameObject turnPanel)
+		public static Transform FindChildRecursive(Transform parent, string name)
+		{
+			Transform result = parent.Find(name);
+			if (result != null)
+				return result;
+
+			foreach (Transform child in parent)
+			{
+				result = FindChildRecursive(child, name);
+				if (result != null)
+					return result;
+			}
+
+			return null;
+		}
+
+		private void PostTimerTimeOutAction(GameObject turnPanel)
         {
             TMP_Text timeLeftText = turnPanel.GetComponentsInChildren<TMP_Text>()?.FirstOrDefault(
 				t => t.gameObject.name.Equals("txt_leftTimeValue"));
@@ -219,11 +229,11 @@ namespace Assets.Scripts.ViewModels
 
 		#endregion
 
-		#region PlayersListPanel and NextTurn button activity
+		#region Players list panel
 
 		private static Color heroTurnColor = new Color((float)163 / 256, (float)8 / 256, (float)166 / 256);
 
-		public void UpdatePlayerList(GameObject playerList, GameObject playerName_Prefab)
+		public void UpdatePlayersInHUDPanel(GameObject playerList, GameObject playerName_Prefab)
         {
 			DestroyChildrenImmediately(playerList);
 
@@ -252,6 +262,26 @@ namespace Assets.Scripts.ViewModels
 			while (playerList.transform.childCount > 0)
 			{
 				Object.DestroyImmediate(playerList.transform.GetChild(0).gameObject);
+			}
+		}
+
+		#endregion
+
+		#region NextTurn panel
+
+		public void SetNextTurnPanelValues(GameObject turnPanel)
+		{
+			if(GameManager.Instance.SessionDataStore.CurrentHeroTurnId.Equals(GameManager.Instance.HeroDataStore.HeroId))
+			{
+				SetTurnButtonInteractableStatus(turnPanel);
+
+				SetTimerNewValue(GameManager.Instance.SessionDataStore.TurnTimeLimit);
+			}
+			else
+			{
+				SetTurnButtonUninteractableStatus(turnPanel);
+
+				SetTimerValueOnHUD(turnPanel, "---");
 			}
 		}
 
