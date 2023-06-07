@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.031442195, g: 0.009468702, b: 0.013107872, a: 1}
+  m_IndirectSpecularColor: {r: 0.031483587, g: 0.009458372, b: 0.013140744, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -958,9 +958,7 @@ MonoBehaviour:
   - {fileID: 6549255697755675864, guid: 0eccaa2bcbd2ab54e9eb6b0fe46c475c, type: 3}
   - {fileID: 2664042884964684233, guid: 8b48ae359da1b7b468dc91b2a66678b1, type: 3}
   - {fileID: 6235378423234536116, guid: 3d155b8dc6d2ffd4380f75a9ac95713c, type: 3}
-  - {fileID: 3342198344076745029, guid: c735419d60e6a4346ab558a7ea5dadaa, type: 3}
-  - {fileID: 6294140438394090346, guid: e7d5ca0d9073a2145a28f1e5e17f851a, type: 3}
-  - {fileID: 3195767920298191521, guid: e4e9b1a64d4083147821101273b3a153, type: 3}
+  - {fileID: 5962916345185636851, guid: 64bdd3c279f0f8f4b8b14729615b09df, type: 3}
   ButtonPrefab: {fileID: 4030092777037534551, guid: 74a69d20f30ad6e409cec72aa0dafa9a, type: 3}
   textPrefab: {fileID: 5653605300139628338, guid: 98ece849cb71f3b47bb90205fa57e051, type: 3}
   healthbarPrefab: {fileID: 1796562122291600629, guid: 85c0edce866200b4e893d53e59a3f90e, type: 3}
@@ -1936,7 +1934,7 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 2030184101}
-  m_RootOrder: 4
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.8132084, y: 0.2498889}
   m_AnchorMax: {x: 0.99578065, y: 0.91051847}
