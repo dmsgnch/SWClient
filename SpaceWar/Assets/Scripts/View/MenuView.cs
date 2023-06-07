@@ -17,9 +17,6 @@ namespace Assets.Scripts.View
 	public class MenuView : AbstractScreen<MenuViewModel>
 	{
 		[SerializeField] private UnityEngine.UI.Button btn_Continue;
-		[SerializeField] private UnityEngine.UI.Button btn_SaveGame;
-		[SerializeField] private UnityEngine.UI.Button btn_LoadGame;
-		[SerializeField] private UnityEngine.UI.Button btn_Settings;
 		[SerializeField] private UnityEngine.UI.Button btn_QuitApplication;
 		[SerializeField] private UnityEngine.UI.Button btn_LeaveTheGame;
 		[SerializeField] private GameObject confirmationPanel;
@@ -31,9 +28,6 @@ namespace Assets.Scripts.View
 		private void Awake()
 		{
 			btn_Continue.onClick.AddListener(bt_Continue_Click);
-			btn_SaveGame.onClick.AddListener(bt_SaveGame_Click);
-			btn_LoadGame.onClick.AddListener(bt_LoadGame_Click);
-			btn_Settings.onClick.AddListener(bt_Settings_Click);
 			btn_LeaveTheGame.onClick.AddListener(bt_LeaveTheGame_Click);
 			btn_QuitApplication.onClick.AddListener(bt_QuitApplication_Click);
 		}
