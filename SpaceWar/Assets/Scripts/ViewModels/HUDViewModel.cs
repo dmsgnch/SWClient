@@ -19,6 +19,8 @@ using Scripts.RegisterLoginScripts;
 using SharedLibrary.Contracts.Hubs;
 using System;
 using SharedLibrary.Requests;
+using ColorUtility = UnityEngine.ColorUtility;
+using Color = UnityEngine.Color;
 
 namespace Assets.Scripts.ViewModels
 {
@@ -186,12 +188,15 @@ namespace Assets.Scripts.ViewModels
 
 		#endregion
 
+		#region Ui controllers
+
 		public async void ShowChangePanel(string message, GameObject changePanelPrefab, GameObject parentPanel)
         {
             GameObject changePanelGO = null;
+
             string panelName = parentPanel.name + "_message";
 
-			for (int i = 1; i <= 10; i++)
+			for (int i = 1; i <= 2; i++)
 			{
 				if (!GameObject.Find(panelName + $"_{i}"))
 				{
@@ -211,58 +216,65 @@ namespace Assets.Scripts.ViewModels
                 }
 			}
         }
-		
+
+		#endregion
 
 		#region PlayersListPanel and NextTurn button activity
 
-		public void UpdatePlayerList(GameObject playerList,GameObject playerName_Prefab)
+		private static Color heroTurnColor = new Color((float)163 / 256, (float)8 / 256, (float)166 / 256);
+
+		public void UpdatePlayerList(GameObject playerList, GameObject playerName_Prefab)
         {
-            while (playerList.transform.childCount > 0)
-            {
-                GameObject.DestroyImmediate(playerList.transform.GetChild(0).gameObject);
-            }
-            var sessionDataStore = GameManager.Instance.SessionDataStore;
+			DestroyChildrenImmediately(playerList);
+
+			var sessionDataStore = GameManager.Instance.SessionDataStore;
 
 			Vector3 panelPosition = Vector3.zero;
-            foreach (var player in sessionDataStore.PanelHeroForms)
+
+            foreach (var hero in sessionDataStore.PanelHeroForms)
             {
-                GameObject playerPanel = GameObject.Instantiate(playerName_Prefab, playerList.transform);
-				if (player.HeroId.Equals(GameManager.Instance.SessionDataStore.CurrentHeroTurnId))
+                GameObject playerPanel = Object.Instantiate(playerName_Prefab, playerList.transform);
+
+				if (hero.HeroId.Equals(GameManager.Instance.SessionDataStore.CurrentHeroTurnId))
 				{
-					playerPanel.GetComponent<Image>().color = 
-						new UnityEngine.Color((float)163/256, (float)8/256, (float)166/256);
-                }
-                if(!panelPosition.Equals(Vector3.zero))
-					playerPanel.transform.position = playerPanel.transform.position + panelPosition;
-                panelPosition = panelPosition + Vector3.down * 80;
-                playerPanel.transform.GetChild(0).gameObject.GetComponent<TMP_Text>().text = player.HeroName;
+					playerPanel.GetComponent<Image>().color = heroTurnColor;
+				}
+
+				playerPanel.transform.position += panelPosition;
+                panelPosition += Vector3.down * 80;
+
+                playerPanel.transform.GetChild(0).gameObject.GetComponent<TMP_Text>().text = hero.HeroName;
             }
         }
 
-		public void SetTurnButtonUnactiveStatus(GameObject turnPanel)
+		private void DestroyChildrenImmediately(GameObject playerList)
 		{
-			var buttonGO = turnPanel.transform.GetChild(0);
-			var buttonImage = buttonGO.GetComponent<Image>();
-			var buttonText = buttonGO.GetComponentInChildren<TMP_Text>();
-			var button = buttonGO.GetComponent<Button>();
-			UnityEngine.Color color;
-			UnityEngine.ColorUtility.TryParseHtmlString("#CD393F", out color);
-			buttonImage.color = color;
-			buttonText.text = "Wait for other player";
-			button.interactable = false;
+			while (playerList.transform.childCount > 0)
+			{
+				Object.DestroyImmediate(playerList.transform.GetChild(0).gameObject);
+			}
 		}
 
-		public void SetTurnButtonActiveStatus(GameObject turnPanel)
+		public void SetTurnButtonUninteractableStatus(GameObject turnPanel)
 		{
 			var buttonGO = turnPanel.transform.GetChild(0);
-			var buttonImage = buttonGO.GetComponent<Image>();
-			var buttonText = buttonGO.GetComponentInChildren<TMP_Text>();
-			var button = buttonGO.GetComponent<Button>();
-			UnityEngine.Color color;
-			UnityEngine.ColorUtility.TryParseHtmlString("#539F61", out color);
-			buttonImage.color = color; ;
-			buttonText.text = "Next Turn";
-			button.interactable = true;
+
+			ColorUtility.TryParseHtmlString("#CD393F", out UnityEngine.Color color);
+
+			buttonGO.GetComponentInChildren<TMP_Text>().text = "Wait for other player";
+			buttonGO.GetComponent<Button>().interactable = false;
+			buttonGO.GetComponent<Image>().color = color;
+		}
+
+		public void SetTurnButtonInteractableStatus(GameObject turnPanel)
+		{
+			var buttonGO = turnPanel.transform.GetChild(0);
+
+			ColorUtility.TryParseHtmlString("#539F61", out UnityEngine.Color color);
+
+			buttonGO.GetComponent<Image>().color = color;
+			buttonGO.GetComponentInChildren<TMP_Text>().text = "Next Turn";
+			buttonGO.GetComponent<Button>().interactable = true;
 		}
 
 		#endregion
@@ -273,7 +285,7 @@ namespace Assets.Scripts.ViewModels
 
 		private void InstantiateResourceInfoPanel(GameObject panelStore, GameObject infoPanelPrefab, Transform parent)
 		{
-			if (infoPanelPrefab is null)
+			if (panelStore is null)
 			{
 				panelStore = Object.Instantiate(infoPanelPrefab, parent);
 			}

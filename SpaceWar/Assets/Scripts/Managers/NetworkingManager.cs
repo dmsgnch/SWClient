@@ -168,8 +168,10 @@ namespace Scripts.RegisterLoginScripts
 					}).ToList();
 
                     hudView.UpdateSessionHudValues();
-					hudView.UpdatePlayerList();
+	
 					hudView.SetTurnPanelTimer(session.TurnTimeLimit);
+
+					hudView.UpdatePlayerList();
 				});
 			});
 
@@ -224,6 +226,7 @@ namespace Scripts.RegisterLoginScripts
 				UnityMainThreadDispatcher.Instance().Enqueue(() =>
 				{
 					var planetsView = GetView<PlanetsView>();
+					var hudView = GetView<HUDView>();
 
                     Planet updatedPlanet = GameManager.Instance
                     .HeroDataStore.HeroMapView.Planets

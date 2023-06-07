@@ -158,6 +158,8 @@ namespace Assets.Scripts.ViewModels
 		{
 			GameObject iconPrefab = SelectIconPrefab(planetCreationForm.Planet, planetCreationForm.PlanetGenerationForm);
 
+			if (iconPrefab is null) return;
+
 			GameObject statusIconObject = CreateIconPrefabWithParams(iconPrefab, planetCreationForm.PlanetGO, planetCreationForm.Planet);
 
 			SetPlanetPosition(statusIconObject, planetCreationForm.PlanetGO, planetCreationForm.Diameter);
@@ -177,7 +179,7 @@ namespace Assets.Scripts.ViewModels
 
 		private GameObject CreateIconPrefabWithParams(GameObject iconPrefab, GameObject planetGO, Planet planet)
 		{
-			GameObject statusIcon = Object.Instantiate(iconPrefab, planetGO.transform);
+			GameObject statusIcon = Object.Instantiate(iconPrefab, planetGO.transform);						
 
 			statusIcon.transform.GetComponent<SpriteRenderer>().color = GameManager.Instance.HeroDataStore.Color;
 
