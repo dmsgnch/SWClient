@@ -245,7 +245,7 @@ namespace Assets.Scripts.View
 
 		public void SetTurnPanelTimer(int time)
 		{
-			_hudViewModel.SetTimerNewValue(TurnPanel, time);
+			_hudViewModel.SetTimerNewValue(time);
 		}
 
 		#endregion

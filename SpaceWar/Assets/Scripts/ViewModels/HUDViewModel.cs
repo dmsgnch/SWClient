@@ -80,12 +80,14 @@ namespace Assets.Scripts.ViewModels
 
 		#endregion
 
-		#region
+		#region Commands
 
 		public void ToMenu()
 		{
             GameManager.Instance.ChangeState(GameState.MainGameMenu);
         }
+
+		#endregion
 
 		#region Requests
 
