@@ -22,6 +22,7 @@ using static SharedLibrary.Routes.ApiRoutes;
 using SharedLibrary.Models.Enums;
 using Random = UnityEngine.Random;
 using Components;
+using System.Text.Json.Nodes;
 
 namespace Assets.Scripts.ViewModels
 {
@@ -156,14 +157,18 @@ namespace Assets.Scripts.ViewModels
 
 		private void AddStatusIconToPlanet(PlanetCreationForm planetCreationForm)
 		{
-			GameObject iconPrefab = SelectIconPrefab(planetCreationForm.Planet, planetCreationForm.PlanetGenerationForm);
+			GameObject iconPrefab = SelectStatusIconPrefab(planetCreationForm.Planet, 
+				planetCreationForm.PlanetGenerationForm);
+			if (iconPrefab is null) return;
 
-			GameObject statusIconObject = CreateIconPrefabWithParams(iconPrefab, planetCreationForm.PlanetGO, planetCreationForm.Planet);
+			GameObject statusIconObject = CreateIconPrefabWithParams(iconPrefab, planetCreationForm);
 
-			SetPlanetPosition(statusIconObject, planetCreationForm.PlanetGO, planetCreationForm.Diameter);
+			Vector3 offset = (Vector3.up * planetCreationForm.Diameter / 1.1f)
+				+ (Vector3.left * planetCreationForm.Diameter / 2f);
+            SetPlanetIconPosition(statusIconObject, planetCreationForm, offset);
 		}
 
-		private GameObject SelectIconPrefab(Planet planet, PlanetsGenerationForm planetsGenerationForm)
+		private GameObject SelectStatusIconPrefab(Planet planet, PlanetsGenerationForm planetsGenerationForm)
 		{
 			if (planet.IsCapital)
 			{
@@ -175,134 +180,133 @@ namespace Assets.Scripts.ViewModels
 				planetsGenerationForm.PlanetIconsPrefabs);
 		}
 
-		private GameObject CreateIconPrefabWithParams(GameObject iconPrefab, GameObject planetGO, Planet planet)
+		private GameObject CreateIconPrefabWithParams(GameObject iconPrefab, 
+			PlanetCreationForm planetCreationForm)
 		{
-			GameObject statusIcon = Object.Instantiate(iconPrefab, planetGO.transform);
+			GameObject statusIcon = InstantiateIcon(iconPrefab, planetCreationForm);
+			if (!planetCreationForm.Planet.IsEnemy)
+            {
+                statusIcon.transform.GetComponent<SpriteRenderer>().color =
+					GameManager.Instance.HeroDataStore.Color;
+            }
 
-			statusIcon.transform.GetComponent<SpriteRenderer>().color = GameManager.Instance.HeroDataStore.Color;
-
-			TMP_Text text = statusIcon.transform.GetComponentInChildren<TMP_Text>() ?? throw new Exception();
-			text.text = planet.IterationsLeftToNextStatus.ToString();
+			TMP_Text text = statusIcon.transform.GetComponentInChildren<TMP_Text>();
+			if(text is not null)
+            {
+                text.text = planetCreationForm.Planet.IterationsLeftToNextStatus.ToString();
+            }
 
 			return statusIcon;
 		}
 
-		private void SetPlanetPosition(GameObject statusIconObject, GameObject planetGO, float diameter)
+        #endregion
+
+        #region Add fortification icon to planet
+        private void AddFortIconToPlanet(PlanetCreationForm planetCreationForm)
 		{
-			GameObject planetSphere = planetGO.transform.GetChild(0).gameObject;
-
-			statusIconObject.transform.position = planetSphere.transform.position
-				+ (Vector3.up * diameter / 1.1f)
-				+ (Vector3.left * diameter / 2f);
-
-			statusIconObject.transform.localScale = Vector3.one * diameter / 12;
-		}
-
-		#endregion
-
-		private void AddFortIconToPlanet(PlanetCreationForm planetCreationForm)
-		{
-
 			GameObject fortPrefab = GetFortificationPrefab(planetCreationForm.Planet.FortificationLevel,
 				planetCreationForm.PlanetGenerationForm.PlanetIconsPrefabs);
-			if (fortPrefab is not null)
-			{
-				GameObject fortificationIcon = Object.Instantiate(fortPrefab);
-				fortificationIcon.transform.SetParent(planetCreationForm.PlanetGO.transform);
-				fortificationIcon.transform.GetComponent<SpriteRenderer>().color =
-					ColorParser.GetColor(planetCreationForm.Planet.ColorStatus);
+			if (fortPrefab is null) return;
 
-				GameObject planetSphere = planetCreationForm.PlanetGO.transform.GetChild(0).gameObject;
+			GameObject fortificationIcon = InstantiateIcon(fortPrefab,planetCreationForm);
 
-				fortificationIcon.transform.position = planetSphere.transform.position
-					+ (Vector3.up * planetCreationForm.Diameter / 1.1f)
-					+ (Vector3.right * planetCreationForm.Diameter / 2f);
-				fortificationIcon.transform.localScale = Vector3.one * planetCreationForm.Diameter / 12;
-			}
+			Vector3 offset = (Vector3.up * planetCreationForm.Diameter / 1.1f)
+				+ (Vector3.right * planetCreationForm.Diameter / 2f);
+            SetPlanetIconPosition(fortificationIcon, planetCreationForm,offset);
+        }
+        #endregion
+
+        #region Add size text to planet
+        private void AddSizeTextToPlanet(PlanetCreationForm planetCreationForm)
+        {
+            bool isVisible = planetCreationForm.Planet.Status == PlanetStatus.Colonized;
+            if (!isVisible) return;
+
+			GameObject sizeText = CreateSizeText(planetCreationForm);
+
+			Vector3 offset = (Vector3.down * planetCreationForm.Diameter / 2f)
+                + (Vector3.left * planetCreationForm.Diameter / 1.5f);
+            PlaceObjectNearPlanet(sizeText,planetCreationForm,offset);
 		}
 
-		private void AddSizeTextToPlanet(PlanetCreationForm planetCreationForm)
-		{
-			bool isSizeVisible = planetCreationForm.Planet.Status >= PlanetStatus.Colonized &&
-				planetCreationForm.Planet.Status < PlanetStatus.Enemy;
+		private GameObject CreateSizeText(PlanetCreationForm planetCreationForm)
+        {
+            GameObject sizeText = Object.Instantiate(planetCreationForm.PlanetGenerationForm.PlanetTextPrefab);
+            sizeText.name = "sizeText";
+            sizeText.GetComponent<TextMesh>().text = $"S:{planetCreationForm.Planet.Size}";
+            sizeText.transform.SetParent(planetCreationForm.PlanetGO.transform);
+            sizeText.GetComponent<TextMesh>().color = Color.white;
 
-			if (!isSizeVisible) return;
+			return sizeText;
+        }
+        #endregion
 
-			GameObject sizeText = Object.Instantiate(planetCreationForm.PlanetGenerationForm.PlanetTextPrefab);
-			sizeText.GetComponent<TextMesh>().text = $"S:{planetCreationForm.Planet.Size}";
-			sizeText.transform.SetParent(planetCreationForm.PlanetGO.transform);
-			sizeText.GetComponent<TextMesh>().color = Color.white;
-
-			GameObject planetSphere = planetCreationForm.PlanetGO.transform.GetChild(0).gameObject;
-
-			sizeText.transform.position = planetSphere.transform.position
-				+ (Vector3.down * planetCreationForm.Diameter / 2f)
-				+ (Vector3.left * planetCreationForm.Diameter / 1.5f);
-			sizeText.name = "sizeText";
-		}
-
-		private void AddResourceTextToPlanet(PlanetCreationForm planetCreationForm)
+        #region Add resources text to planet
+        private void AddResourceTextToPlanet(PlanetCreationForm planetCreationForm)
 		{
 			bool isResourceVisible = planetCreationForm.Planet.Status >= PlanetStatus.Colonized &&
-				planetCreationForm.Planet.Status < PlanetStatus.Enemy;
-			Planet planet = planetCreationForm.Planet;
-
+				!planetCreationForm.Planet.IsEnemy;
 			if (!isResourceVisible) return;
 
-			GameObject rightDownText = Object.Instantiate(
-				planetCreationForm.PlanetGenerationForm.PlanetTextPrefab);
-			rightDownText.GetComponent<TextMesh>().text = "";
-			rightDownText.transform.SetParent(planetCreationForm.PlanetGO.transform);
-			rightDownText.GetComponent<TextMesh>().color = Color.white;
+			GameObject rightDownText = CreateResourceText(planetCreationForm);
 
-			GameObject planetSphere = planetCreationForm.PlanetGO.transform.GetChild(0).gameObject;
+            Vector3 offset = (Vector3.down * planetCreationForm.Diameter / 2f)
+                + (Vector3.left * planetCreationForm.Diameter / 1.5f);
+            PlaceObjectNearPlanet(rightDownText, planetCreationForm, offset);
+        }
 
-			rightDownText.transform.position = planetSphere.transform.position
-				+ (Vector3.down * planetCreationForm.Diameter / 2f)
-				+ (Vector3.right * planetCreationForm.Diameter / 3f);
-			rightDownText.name = "resourceText";
+		private GameObject CreateResourceText(PlanetCreationForm planetCreationForm)
+        {
+            GameObject rightDownText = Object.Instantiate(
+                planetCreationForm.PlanetGenerationForm.PlanetTextPrefab);
+            rightDownText.name = "resourceText";
+            rightDownText.GetComponent<TextMesh>().text = "";
+            rightDownText.transform.SetParent(planetCreationForm.PlanetGO.transform);
+            rightDownText.GetComponent<TextMesh>().color = Color.white;
 
-			if (planet.Status is PlanetStatus.Colonized)
-			{
-				rightDownText.GetComponent<TextMesh>().color = ColorParser.GetColor(planet.ColorStatus);
-			}
+            Planet planet = planetCreationForm.Planet;
+            if (planet.ResourceType is ResourceType.OnlyResources)
+            {
+                rightDownText.GetComponent<TextMesh>().text = $"R:{planet.ResourceCount}";
+            }
+            else if (planet.ResourceType is ResourceType.ColonizationShip)
+            {
+                rightDownText.GetComponent<TextMesh>().text = $"CS:{planet.ResourceCount}";
+            }
+            else if (planet.ResourceType is ResourceType.ResearchShip)
+            {
+                rightDownText.GetComponent<TextMesh>().text = $"RS:{planet.ResourceCount}";
+            }
 
-			if (planet.ResourceType is ResourceType.OnlyResources)
-			{
-				rightDownText.GetComponent<TextMesh>().text = $"R:{planet.ResourceCount}";
-			}
-			else if (planet.ResourceType is ResourceType.ColonizationShip)
-			{
-				rightDownText.GetComponent<TextMesh>().text = $"CS:{planet.ResourceCount}";
-			}
-			else if (planet.ResourceType is ResourceType.ResearchShip)
-			{
-				rightDownText.GetComponent<TextMesh>().text = $"RS:{planet.ResourceCount}";
-			}
-		}
+            return rightDownText;
+        }
+        #endregion
 
-		private void CreateConnection(Edge connection, GameObject connectionsParent, GameObject[] planets)
+        #region Common functions
+        private void SetPlanetIconPosition(GameObject iconObject, PlanetCreationForm planetCreationForm, 
+			Vector3 offset)
+        {
+			PlaceObjectNearPlanet(iconObject, planetCreationForm, offset);
+
+            iconObject.transform.localScale = Vector3.one * planetCreationForm.Diameter / 12;
+        }
+
+		private void PlaceObjectNearPlanet(GameObject objectToPlace, PlanetCreationForm planetCreationForm,
+            Vector3 offset)
+        {
+            GameObject planetSphere = planetCreationForm.PlanetGO.transform.GetChild(0).gameObject;
+            objectToPlace.transform.position = planetSphere.transform.position + offset;
+        }
+
+		private GameObject InstantiateIcon(GameObject iconPrefab, PlanetCreationForm planetCreationForm)
 		{
-			GameObject fromPlanet = planets.FirstOrDefault(
-				p => p.name.Equals(connection.FromPlanetId.ToString()));
-			GameObject toPlanet = planets.FirstOrDefault(
-				p => p.name.Equals(connection.ToPlanetId.ToString()));
+            GameObject iconObject = Object.Instantiate(iconPrefab, planetCreationForm.PlanetGO.transform);
 
-			if (fromPlanet is null || toPlanet is null)
-			{
-				throw new ArgumentException("connection contains planet that does not exist!");
-			}
+            iconObject.transform.GetComponent<SpriteRenderer>().color =
+                ColorParser.GetColor(planetCreationForm.Planet.ColorStatus);
 
-			var cylinder = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
-			cylinder.transform.SetParent(connectionsParent.transform);
-			cylinder.name = connection.Id.ToString();
-			// TODO: search by name instestead of id
-
-			var connectionController = cylinder.AddComponent<ConnectionController>();
-			connectionController.fromPlanet = fromPlanet;
-			connectionController.toPlanet = toPlanet;
-			connectionController.thickness = ConnectionThickness;
-		}
+			return iconObject;
+        }
 
 		private GameObject[] GetPlanets()
 		{
@@ -313,10 +317,37 @@ namespace Assets.Scripts.ViewModels
 			}
 			return planets.ToArray();
 		}
-		#endregion
+        #endregion
 
-		#region SignalR
-		public async Task Attack(Planet planetToAttack)
+        #endregion
+
+        #region Connection Building
+        private void CreateConnection(Edge connection, GameObject connectionsParent, GameObject[] planets)
+        {
+            GameObject fromPlanet = planets.FirstOrDefault(
+                p => p.name.Equals(connection.FromPlanetId.ToString()));
+            GameObject toPlanet = planets.FirstOrDefault(
+                p => p.name.Equals(connection.ToPlanetId.ToString()));
+
+            if (fromPlanet is null || toPlanet is null)
+            {
+                throw new ArgumentException("connection contains planet that does not exist!");
+            }
+
+            var cylinder = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
+            cylinder.transform.SetParent(connectionsParent.transform);
+            cylinder.name = connection.Id.ToString();
+            // TODO: search by name instestead of id
+
+            var connectionController = cylinder.AddComponent<ConnectionController>();
+            connectionController.fromPlanet = fromPlanet;
+            connectionController.toPlanet = toPlanet;
+            connectionController.thickness = ConnectionThickness;
+        }
+        #endregion
+
+        #region SignalR
+        public async Task Attack(Planet planetToAttack)
 		{
 			Edge[] connections = GameManager.Instance.HeroDataStore.HeroMapView.Connections.ToArray();
 			Planet[] planets = GameManager.Instance.HeroDataStore.HeroMapView.Planets.ToArray();
