@@ -125,11 +125,11 @@ namespace Scripts.RegisterLoginScripts
 
 			hubConnection.On<Guid>(ClientHandlers.Lobby.CreatedSessionHandler, (sessionId) =>
 			{
-				UnityMainThreadDispatcher.Instance().Enqueue(() =>
+				UnityMainThreadDispatcher.Instance().Enqueue(async () =>
 				{
 					GameManager.Instance.SessionDataStore.SessionId = sessionId;
 
-                    StopHub();
+                    await StopHub();
 					GameManager.Instance.ChangeState(GameState.LoadMainGameScene);
                 });
 			});

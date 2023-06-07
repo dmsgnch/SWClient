@@ -156,21 +156,28 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 'Cosmic Conguest
+  m_Text: 'Credits
 
 
-    Created by Govno Team Incorporated
+    Cosmic Conguest
 
 
-    Producer:
-    Dmitry Gonchar
+    Created by Capibared Team Interactive
 
-    Game Designer: Dmirty Gonchar
 
-    Sound Designer: Dmitry
-    Gonchar
+    Dmytro
+    Honchar
 
-'
+    Vitaliy Bezugliy
+
+    Yevhenii Zolotaiko
+
+    Vladislav Bulakh
+
+    Elizaveta
+    Kol
+
+    Bogdan Avramenko'
 --- !u!1 &6701225925291244092
 GameObject:
   m_ObjectHideFlags: 0
