@@ -160,7 +160,7 @@ namespace Assets.Scripts.ViewModels
 		private void AddStatusIconToPlanet(PlanetCreationForm planetCreationForm)
 		{
 			GameObject iconPrefab = SelectStatusIconPrefab(planetCreationForm.Planet, 
-				planetCreationForm.PlanetGenerationForm);
+				planetCreationForm);
 
 			if (iconPrefab is null) return;
 			
@@ -171,7 +171,7 @@ namespace Assets.Scripts.ViewModels
             SetPlanetIconPosition(statusIconObject, planetCreationForm, offset);
 		}
 
-		private GameObject SelectStatusIconPrefab(Planet planet, PlanetsGenerationForm planetsGenerationForm)
+		private GameObject SelectStatusIconPrefab(Planet planet, PlanetCreationForm planetCreationForm)
 		{
 			if (planetCreationForm.Planet.IsCapital)
             {
@@ -185,7 +185,7 @@ namespace Assets.Scripts.ViewModels
             else
             {
                 return GetIconPrefabByPlanetStatus(planetCreationForm.Planet.Status,
-                    planetCreationForm.PlanetGenerationForm.PlanetIconsPrefabs);
+					planetCreationForm.PlanetGenerationForm.PlanetIconsPrefabs);
             }
 		}
 
@@ -210,22 +210,26 @@ namespace Assets.Scripts.ViewModels
 			return statusIcon;
 		}
 		
-        private void PaintConnection(Edge connection, Color color) {
+        private void PaintConnection(Edge connection, Color color) 
+		{
             var connectionGO = GameObject.Find(connection.Id.ToString());
             connectionGO.GetComponent<ConnectionController>().Paint(color);
         }
 		
-        private void AddBattles(PlanetsGenerationForm planetsGenerationForm) {
-
+        private void AddBattles(PlanetsGenerationForm planetsGenerationForm) 
+		{
             var Battles = GameManager.Instance.BattleDataStore.Battles;
+
             if (Battles is null) return;
-            foreach (var battle in Battles) {
+
+            foreach (var battle in Battles) 
+			{
                 AddBattleToPlanet(planetsGenerationForm, battle);
             }
-
         }
 
-        private void AddBattleIcon(PlanetCreationForm planetCreationForm, Battle battle, Color attackerColor) {
+        private void AddBattleIcon(PlanetCreationForm planetCreationForm, Battle battle, Color attackerColor) 
+		{
             GameObject iconPrefab = GetIconPrefabByBattleStatus(battle.Status, planetCreationForm.PlanetGenerationForm.PlanetIconsPrefabs);
            
             GameObject BattleIcon = Object.Instantiate(iconPrefab);

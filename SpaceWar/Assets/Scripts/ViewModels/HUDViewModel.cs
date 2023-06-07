@@ -154,15 +154,20 @@ namespace Assets.Scripts.ViewModels
 			resourcesPanel.GetComponentInChildren<TMP_Text>().text = $"{GameManager.Instance.HeroDataStore.Resourses}" +
 				$"(+{GameManager.Instance.HeroDataStore.HeroMapView.Planets.Where(p => p.ResourceType.Equals(ResourceType.OnlyResources) && p.Status.Equals(PlanetStatus.Colonized)).Select(p =>p.ResourceCount).Sum()})";
 
+			int soldiersLimit = GameManager.Instance.HeroDataStore.SoldiersLimit;
+			int availableSoldiers = GameManager.Instance.HeroDataStore.AvailableSoldiers;
+
+			int addindSoldiersValues = soldiersLimit / 5 > soldiersLimit - availableSoldiers ? 
+				soldiersLimit - availableSoldiers :	soldiersLimit / 5;
+
 			soldiersPanel.GetComponentInChildren<TMP_Text>().text = $"{GameManager.Instance.HeroDataStore.AvailableSoldiers}" +
-				$"(+{(int)(GameManager.Instance.HeroDataStore.SoldiersLimit*0.2)})";
+				$"(+{(addindSoldiersValues.Equals(0) ? "" : addindSoldiersValues)})";
 
 			researchShipsPanel.GetComponentInChildren<TMP_Text>().text = $"{GameManager.Instance.HeroDataStore.AvailableResearchShips}/" +
 				$"{GameManager.Instance.HeroDataStore.ResearchShipLimit}";
 
             colonizationShipsPanel.GetComponentInChildren<TMP_Text>().text = $"{GameManager.Instance.HeroDataStore.AvailableColonizationShips}/" +
             $"{GameManager.Instance.HeroDataStore.ColonizationShipLimit}";
-
 		}
 
 		public void UpdateSessionDataPanelTexts(GameObject turnPanel)
