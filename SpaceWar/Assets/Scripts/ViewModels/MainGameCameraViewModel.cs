@@ -26,15 +26,20 @@ namespace Assets.Scripts.ViewModels
 		private float minDistance = -450.0f;
 		private float maxDistance = -200.0f;
 
+        private bool isCentered = false;
+
 		public void CenterCameraOnCapital(GameObject camera)
         {
+            if (isCentered) return;
+            isCentered = true;
+
             Planet[] planets = GameManager.Instance.HeroDataStore.HeroMapView.Planets.ToArray();
             Guid homePlanetId = GameManager.Instance.HeroDataStore.CapitalPlanetId;
 
             Planet homePlanet = planets.FirstOrDefault(p => p.Id.Equals(homePlanetId));
 
-            camera.transform.position = new Vector3(homePlanet.X, homePlanet.Y, 
-				Mathf.Clamp(camera.transform.position.z, minDistance, maxDistance));
+            camera.transform.position = new Vector3(homePlanet.X, homePlanet.Y,
+                Mathf.Clamp(camera.transform.position.z, minDistance, maxDistance));
         }
 
 		public void OnBorderMove(GameObject camera, ref Vector3 mousePosition)
