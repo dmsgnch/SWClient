@@ -28,6 +28,8 @@ namespace Assets.Scripts.View
 
 		private MainMenuViewModel _mainMenuViewModel;
 
+		#region Unity methods
+
 		private void Awake()
 		{
 			continueButton.onClick.AddListener(OnContinueButtonClick);
@@ -37,6 +39,18 @@ namespace Assets.Scripts.View
 			aboutButton.onClick.AddListener(OnAboutButtonClick);
 			quitButton.onClick.AddListener(OnQuitGameButtonClick);
 		}
+
+		private void Update()
+		{
+			if (Input.GetKey(KeyCode.Escape))
+			{
+				_mainMenuViewModel.CloseApplication(this, confirmationPrefab, gameObject);
+			}
+		}
+
+		#endregion
+
+		#region Buttons handlers
 
 		private void OnContinueButtonClick()
 		{
@@ -80,13 +94,7 @@ namespace Assets.Scripts.View
 			_mainMenuViewModel.CloseApplication(this, confirmationPrefab, gameObject);
 		}
 
-		private void Update()
-		{
-			if (Input.GetKey(KeyCode.Escape))
-			{
-				_mainMenuViewModel.CloseApplication(this, confirmationPrefab, gameObject);
-			}
-		}
+		#endregion
 
 		protected override void OnBind(MainMenuViewModel mainMenuViewModel)
 		{

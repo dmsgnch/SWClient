@@ -80,6 +80,8 @@ namespace Assets.Scripts.ViewModels
 
 		#endregion
 
+		#region
+
 		public void ToMenu()
 		{
             GameManager.Instance.ChangeState(GameState.MainGameMenu);
@@ -186,6 +188,7 @@ namespace Assets.Scripts.ViewModels
         {
             GameObject changePanelGO = null;
             string panelName = parentPanel.name + "_message";
+
 			for (int i = 1; i <= 10; i++)
 			{
 				if (!GameObject.Find(panelName + $"_{i}"))
@@ -274,16 +277,16 @@ namespace Assets.Scripts.ViewModels
 			}
 		}
 
-		private TMP_Text GetTextComponentByChildObjectName(string objectName)
+		private TMP_Text GetTextComponentByChildObjectName(GameObject panelStore, string objectName)
 		{
-			return _soldiersInfoPanel.transform.Find(objectName)?.GetComponent<TMP_Text>() ?? throw new NullReferenceException();
+			return panelStore.transform.Find(objectName)?.GetComponent<TMP_Text>() ?? throw new NullReferenceException();
 		}
 
 		public void CreateResourcePanel(GameObject resourcesInfoPanelPrefab, Transform parent)
 		{
 			InstantiateResourceInfoPanel(_resourcesInfoPanel, resourcesInfoPanelPrefab, parent);
 
-			GetTextComponentByChildObjectName("txt_resourcesValue").text = 
+			GetTextComponentByChildObjectName(_resourcesInfoPanel, "txt_resourcesValue").text = 
 				GameManager.Instance.HeroDataStore.Resourses.ToString();
 		}
 
@@ -291,10 +294,10 @@ namespace Assets.Scripts.ViewModels
 		{
 			InstantiateResourceInfoPanel(_soldiersInfoPanel, soldiersInfoPanelPrefab, parent);
 
-			GetTextComponentByChildObjectName("txt_totalSoldiersValue").text =
+			GetTextComponentByChildObjectName(_soldiersInfoPanel , "txt_totalSoldiersValue").text =
 				GameManager.Instance.HeroDataStore.SoldiersLimit.ToString();
 
-			GetTextComponentByChildObjectName("txt_usedSoldiersValue").text =
+			GetTextComponentByChildObjectName(_soldiersInfoPanel, "txt_usedSoldiersValue").text =
 				GameManager.Instance.HeroDataStore.AvailableSoldiers.ToString();
 		}
 
@@ -302,10 +305,10 @@ namespace Assets.Scripts.ViewModels
 		{
 			InstantiateResourceInfoPanel(_researchShipInfoPanel, researchShipInfoPanelPrefab, parent);
 
-			GetTextComponentByChildObjectName("txt_totalShipsValue").text =
+			GetTextComponentByChildObjectName(_researchShipInfoPanel, "txt_totalShipsValue").text =
 				GameManager.Instance.HeroDataStore.ResearchShipLimit.ToString();
 
-			GetTextComponentByChildObjectName("txt_usedShipsValue").text =
+			GetTextComponentByChildObjectName(_researchShipInfoPanel, "txt_usedShipsValue").text =
 				GameManager.Instance.HeroDataStore.AvailableResearchShips.ToString();
 		}
 
@@ -313,10 +316,10 @@ namespace Assets.Scripts.ViewModels
 		{
 			InstantiateResourceInfoPanel(_colonizeShipInfoPanel, colonizeShipInfoPanelPrefab, parent);
 
-			GetTextComponentByChildObjectName("txt_totalShipsValue").text =
+			GetTextComponentByChildObjectName(_colonizeShipInfoPanel, "txt_totalShipsValue").text =
 				GameManager.Instance.HeroDataStore.ColonizationShipLimit.ToString();
 
-			GetTextComponentByChildObjectName("txt_usedShipsValue").text =
+			GetTextComponentByChildObjectName(_colonizeShipInfoPanel, "txt_usedShipsValue").text =
 				GameManager.Instance.HeroDataStore.AvailableColonizationShips.ToString(); 
 		}
 

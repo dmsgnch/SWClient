@@ -25,17 +25,14 @@ namespace Assets.Scripts.ViewModels
 {
 	public class ConnectToGameViewModel : ViewModelBase
 	{
+		#region Requests
+
+		#region Rest requests
+
 		public static GameObject GetLobbiesListRequestObject { get; set; }
 		public static GameObject CreateLobbyRequestSenderObject { get; set; }
 
-		public ConnectToGameViewModel()
-		{
-			
-		}
-
-		#region Rest Requests
-
-		public void UpdateLobbiesList()
+		public void SendUpdateLobbiesListRequest()
 		{
 			GetLobbiesListRequestObject = new GameObject("GetLobbiesRequest");
 
@@ -44,7 +41,7 @@ namespace Assets.Scripts.ViewModels
 			getLobbiesListRequest.GetLobbyList();
 		}
 
-		public void CreateLobby()
+		public void SendCreateLobbyRequest()
 		{
 			CreateLobbyRequestSenderObject = new GameObject("CreateLobbyRequest");
 
@@ -55,7 +52,28 @@ namespace Assets.Scripts.ViewModels
 
 		#endregion
 
-		#region Other
+		#region SignalR 
+
+		public async Task SendConnectToLobbyRequest()
+		{
+			await NetworkingManager.Instance.StartHub("lobby");
+
+			HubConnection connection = NetworkingManager.Instance.HubConnection;
+			Guid lobbyId = GameManager.Instance.ConnectToGameDataStore.SelectedLobbyId;
+
+			await connection.InvokeAsync(ServerHandlers.Lobby.ConnectToLobby, lobbyId);
+		}
+
+		public async Task StopHub()
+		{
+			await NetworkingManager.Instance.StopHub();
+		}
+
+		#endregion
+
+		#endregion
+
+		#region Ui controllers
 
 		public void SetInteractableToButtons(Button connectToGameButton, Button CreateGameButton)
 		{
@@ -72,6 +90,10 @@ namespace Assets.Scripts.ViewModels
 			}
 		}
 
+		#endregion
+
+		#region Buttons handlers
+
 		public void ToMainMenu()
 		{
 			GameManager.Instance.ChangeState(GameState.LoadMainMenuScene);
@@ -79,26 +101,7 @@ namespace Assets.Scripts.ViewModels
 
 		#endregion
 
-		#region SignalR 
-
-		public async Task ConnectToLobby()
-        {
-			await NetworkingManager.Instance.StartHub("lobby");
-
-			HubConnection connection = NetworkingManager.Instance.HubConnection;
-			Guid lobbyId = GameManager.Instance.ConnectToGameDataStore.SelectedLobbyId;
-
-			await connection.InvokeAsync(ServerHandlers.Lobby.ConnectToLobby, lobbyId);
-        }
-
-		public async Task StopHub()
-        {
-			await NetworkingManager.Instance.StopHub();
-        }
-
-		#endregion
-
-		#region Changed Handlers
+		#region Input fields values change handlers
 
 		protected Color BaseColor { get; set; } = new Color(205, 205, 205, 255);
 

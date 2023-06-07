@@ -18,6 +18,8 @@ namespace Assets.Scripts.ViewModels
 {
 	public class MenuViewModel : ViewModelBase
 	{
+		#region Buttons handlers
+
 		public void ContinueGame()
 		{
 			Debug.Log("Continue");
@@ -62,5 +64,7 @@ namespace Assets.Scripts.ViewModels
 			panel.transform.GetChild(2).gameObject.
 				GetComponent<Button>().onClick.AddListener(() => menuView.PlayButtonClickSound());
 		}
+
+		#endregion
 	}
 }

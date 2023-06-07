@@ -22,11 +22,27 @@ namespace Assets.Scripts.View
 
 		private RegisterViewModel _registerViewModel;
 
+		#region Unity methods
+
 		private void Awake()
 		{
 			registerButton.onClick.AddListener(OnRegisterButtonClick);
 			toLogin.onClick.AddListener(OnToLoginButtonClick);
 		}
+
+		private void Update()
+		{
+			if (Input.GetKey(KeyCode.Escape))
+			{
+				//TODO: Add confirm window			 
+
+				_registerViewModel.CloseApplication();
+			}
+		}
+
+		#endregion
+
+		#region Button handlers
 
 		private void OnRegisterButtonClick()
 		{
@@ -47,19 +63,11 @@ namespace Assets.Scripts.View
 			_registerViewModel.ToLogin();
 		}
 
+		#endregion
+
 		protected override void OnBind(RegisterViewModel registerViewModel)
 		{
 			_registerViewModel = registerViewModel;
-		}
-
-		private void Update()
-		{
-			if (Input.GetKey(KeyCode.Escape))
-			{
-				//TODO: Add confirm window			 
-
-				_registerViewModel.CloseApplication();
-			}
 		}
 	}
 }

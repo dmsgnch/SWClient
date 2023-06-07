@@ -38,6 +38,8 @@ namespace Assets.Scripts.View
 
         private HUDViewModel _hudViewModel;
 
+		#region Unity methods
+
 		private void Awake()
 		{
 			MenuButton.onClick.AddListener(OnMenuButtonClick);
@@ -47,6 +49,25 @@ namespace Assets.Scripts.View
 			AddHoverListeners(ResearchShipPanel, OnResearchShipPanelHoverEnter, OnResearchShipPanelHoverExit);
 			AddHoverListeners(ColonizeShipPanel, OnColonizeShipPanelHoverEnter, OnColonizeShipPanelHoverExit);
 		}
+
+		private void OnEnable()
+		{
+			if (_hudViewModel is null || transform.childCount.Equals(0)) return;
+
+			UpdateSessionRequest();
+		}
+
+		private void Update()
+		{
+			if (Input.GetKeyDown(KeyCode.Escape))
+				_hudViewModel.ToMenu();
+
+			_hudViewModel.ReduceTimerValue(TurnPanel);
+		}
+
+		#endregion
+
+		#region Buttons handlers
 
 		private void OnMenuButtonClick()
 		{
@@ -69,13 +90,9 @@ namespace Assets.Scripts.View
 			_hudViewModel.SendNextTurnRequest();
 		}
 
-		private void Update()
-		{
-			if (Input.GetKeyDown(KeyCode.Escape))			
-				_hudViewModel.ToMenu();
-			
-			_hudViewModel.ReduceTimerValue(TurnPanel);
-		}
+		#endregion
+
+		#region Helpers
 
 		private void AddHoverListeners(GameObject panel, UnityAction<PointerEventData> onEnter, UnityAction<PointerEventData> onExit)
 		{
@@ -96,7 +113,9 @@ namespace Assets.Scripts.View
 			trigger.triggers.Add(exitEntry);
 		}
 
-		#region Event handlers
+		#endregion
+
+		#region Triggers setters
 
 		public void OnResourcesPanelHoverEnter(PointerEventData eventData)
 		{
@@ -139,12 +158,17 @@ namespace Assets.Scripts.View
 		}
 
 		#endregion
-		
+
+		#region Show changed panels
+
 		public void callResourcesChangedPanel(string value) {
-            if (firstValuesSet) return;
+			if (firstValuesSet) return;
+
             _hudViewModel.ShowChangePanel(value, ChangeMessagePrefab, ResourcesPanel);
+
             UpdateHeroHudValues();
         }
+
         public void callSoldiersChangedPanel(string value)
         {
             if (firstValuesSet) return;
@@ -163,14 +187,21 @@ namespace Assets.Scripts.View
             _hudViewModel.ShowChangePanel(value, ChangeMessagePrefab, ColonizeShipPanel);
             UpdateHeroHudValues();
         }
-        
-        public void UpdatePlayerList()
+
+		#endregion
+
+		#region Commands
+
+		public void UpdatePlayerList()
         {
 			_hudViewModel.UpdatePlayerList(playerList,playerName_Prefab);
         }
-        #region Requests senders
 
-        public void UpdateSessionRequest()
+		#endregion
+
+		#region Requests senders
+
+		public void UpdateSessionRequest()
 		{
 			_hudViewModel.GetSessionRequestCreate();
 
@@ -218,13 +249,6 @@ namespace Assets.Scripts.View
 		}
 
 		#endregion
-
-		private void OnEnable()
-		{
-			if (_hudViewModel is null || transform.childCount.Equals(0)) return;
-
-			UpdateSessionRequest();
-		}
 
 		protected override void OnBind(HUDViewModel hudViewModel)
 		{

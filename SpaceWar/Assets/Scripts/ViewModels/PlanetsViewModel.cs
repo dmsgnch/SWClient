@@ -477,13 +477,6 @@ namespace Assets.Scripts.ViewModels
 
 		#endregion
 
-		//private Planet GetPlanetById(Guid id)
-		//{
-		//	List<Planet> planets = GameManager.Instance.HeroDataStore.HeroMapView.Planets;
-		//	return planets.FirstOrDefault(p => p.Id.Equals(id)) ??
-		//		throw new ArgumentException($"planet with id {id} was not found");
-		//}
-
 		#region Helpers
 
 		/// <summary>

@@ -14,27 +14,16 @@ namespace Assets.Scripts.View
 {
 	public class MainGameCameraView : AbstractScreen<MainGameCameraViewModel>
 	{
-		//[SerializeField]
-		//private GameObject _camera;
-
-
 		private bool MouseMove { get; set; } = false;
 		private Vector3 MousePosition;
 		private float ScrollInput;
 		private float CurrentDistance = -200;
 
-
 		private MainGameCameraViewModel _mainGameCameraViewModel;
 
-        public void Awake()
-        {
-        }
+		#region Unity methods
 
-        private void OnEnable()
-        {
-        }
-
-        private void Update()
+		private void Update()
 		{
 			if (_mainGameCameraViewModel is null) return;
 
@@ -60,12 +49,18 @@ namespace Assets.Scripts.View
 			_mainGameCameraViewModel.OnZoom(ref ScrollInput, ref CurrentDistance, gameObject);
 		}
 
-        public void CenterCameraOnCapital()
+		#endregion
+
+		#region Commands
+
+		public void CenterCameraOnCapital()
         {
 			_mainGameCameraViewModel.CenterCameraOnCapital(gameObject);
         }
 
-        protected override void OnBind(MainGameCameraViewModel mainGameCameraViewModel)
+		#endregion
+
+		protected override void OnBind(MainGameCameraViewModel mainGameCameraViewModel)
 		{
 			_mainGameCameraViewModel = mainGameCameraViewModel;
         }

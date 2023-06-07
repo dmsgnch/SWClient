@@ -22,9 +22,11 @@ namespace Assets.Scripts.View
 		[SerializeField] private UnityEngine.UI.Button btn_Settings;
 		[SerializeField] private UnityEngine.UI.Button btn_QuitApplication;
 		[SerializeField] private UnityEngine.UI.Button btn_LeaveTheGame;
-        [SerializeField] private GameObject confirmationPanel;
+		[SerializeField] private GameObject confirmationPanel;
 
-        private MenuViewModel _menuViewModel;
+		private MenuViewModel _menuViewModel;
+
+		#region Unity methods
 
 		private void Awake()
 		{
@@ -41,6 +43,10 @@ namespace Assets.Scripts.View
 			if (Input.GetKeyDown(KeyCode.Escape))
 				bt_Continue_Click();
 		}
+
+		#endregion
+
+		#region Buttons handlers
 
 		void bt_Continue_Click()
 		{
@@ -83,6 +89,8 @@ namespace Assets.Scripts.View
 
 			_menuViewModel.CloseApplication(this, confirmationPanel, gameObject);
 		}
+
+		#endregion
 
 		protected override void OnBind(MenuViewModel menuViewModel)
 		{
