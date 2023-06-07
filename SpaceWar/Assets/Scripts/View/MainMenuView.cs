@@ -17,10 +17,7 @@ namespace Assets.Scripts.View
 {
 	public class MainMenuView : AbstractScreen<MainMenuViewModel>
 	{
-		[SerializeField] private Button continueButton;
-		[SerializeField] private Button loadButton;
 		[SerializeField] private Button newGameButton;
-		[SerializeField] private Button settingsButton;
 		[SerializeField] private Button aboutButton;
 		[SerializeField] private Button quitButton;
 
@@ -34,10 +31,7 @@ namespace Assets.Scripts.View
 
 		private void Awake()
 		{
-			continueButton.onClick.AddListener(OnContinueButtonClick);
-			loadButton.onClick.AddListener(OnLoadButtonClick);
 			newGameButton.onClick.AddListener(OnNewGameButtonClick);
-			settingsButton.onClick.AddListener(OnSettingsButtonClick);
 			aboutButton.onClick.AddListener(OnAboutButtonClick);
 			quitButton.onClick.AddListener(OnQuitGameButtonClick);
 		}
