@@ -153,47 +153,58 @@ public class PlanetController : MonoBehaviour
         switch (planet.Status)
         {
             case PlanetStatus.Known:
-                CreateActMenu("Research (R: 10)", out Button researchButton);
-                researchButton.onClick.AddListener(() =>
+				if (!planet.IsEnemy)
+				{
+					CreateActMenu("Research (R: 10)", out Button researchButton);
+					researchButton.onClick.AddListener(() =>
+					{
+						planetsView.Research(planet);
+						DestroyActMenu();
+						DestroyInfoPanels();
+					});					
+				}
+				else if (IsAvaibleToAttack())
                 {
-                    planetsView.Research(planet);
-                    DestroyActMenu();
-                    DestroyInfoPanels();
-                });
-                break;
+					CreateActMenu("Attack", out Button attackButton);
+					attackButton.onClick.AddListener(() =>
+					{
+						planetsView.Attack(planet);
+						DestroyActMenu();
+						DestroyInfoPanels();
+					});
+                }
+				break;
 
             case PlanetStatus.Researched:
-                CreateActMenu("Colonize (R: 30)", out Button colonizeButton);
-                colonizeButton.onClick.AddListener(() =>
+				if (!planet.IsEnemy)
+				{
+					CreateActMenu("Colonize (R: 30)", out Button colonizeButton);
+					colonizeButton.onClick.AddListener(() =>
+					{
+						planetsView.Colonize(planet);
+						DestroyActMenu();
+						DestroyInfoPanels();
+					});
+					colonizeButton.onClick.AddListener(DestroyActMenu);
+				}
+				else if (IsAvaibleToAttack())
                 {
-                    planetsView.Colonize(planet);
-                    DestroyActMenu();
-                    DestroyInfoPanels();
-                });
-                colonizeButton.onClick.AddListener(DestroyActMenu);
-                break;
+					CreateActMenu("Attack", out Button attackButton);
+					attackButton.onClick.AddListener(() =>
+					{
+						planetsView.Attack(planet);
+						DestroyActMenu();
+						DestroyInfoPanels();
+					});
+                }
+				break;
 
-            case PlanetStatus.Colonized:
-                if (planet.IsEnemy)
-                {
-                    if (IsAvaibleToAttack())
-                    {
-                        CreateActMenu("Attack", out Button attackButton);
-                        attackButton.onClick.AddListener(() =>
-                        {
-                            planetsView.Attack(planet);
-                            DestroyActMenu();
-                            DestroyInfoPanels();
-                        });
-                    }
-                }
-                else
-                {
-                    DefenceLevelChoosing(planetsView);
-                }
+            case PlanetStatus.Colonized:               
+                DefenceLevelChoosing(planetsView);                
                 break;
 
             case PlanetStatus.Colonizing:
+				break;
             case PlanetStatus.Researching:
                 break;
 
@@ -206,7 +217,6 @@ public class PlanetController : MonoBehaviour
             CreateActMenu("Send soldiers to defend", out Button defenceButton);
 
             //TODO: Add sound
-            defenceButton.onClick.AddListener(DestroyActMenu);
             defenceButton.onClick.AddListener(() =>
             {
                 planetsView.Defence(planet);
@@ -295,10 +305,8 @@ public class PlanetController : MonoBehaviour
 	{
 		float maxWidth = 0f;
 
-		// Ќайти максимальную ширину текста среди всех кнопок
 		maxWidth = ActionsButtons.Max(b => b.GetComponentInChildren<TMP_Text>().preferredWidth);
 
-		// ”становить одинаковую ширину дл€ всех кнопок
 		foreach (Button button in ActionsButtons)
 		{
 			RectTransform buttonRect = button.GetComponent<RectTransform>();
@@ -336,9 +344,15 @@ public class PlanetController : MonoBehaviour
 			GameManager.Instance.HeroDataStore.HeroMapView.Connections.Where(c =>
 			c.FromPlanetId.Equals(planet.Id) || c.ToPlanetId.Equals(planet.Id));
 
-		var result = connections.Where(c => c.From.OwnerId.Value.Equals(GameManager.Instance.HeroDataStore.HeroId) ||
-		c.To.OwnerId.Value.Equals(GameManager.Instance.HeroDataStore.HeroId)).Any();
+		var result = connections.Where(c => GetPlanetById(c.FromPlanetId).OwnerId.Equals(GameManager.Instance.HeroDataStore.HeroId) ||
+        GetPlanetById(c.ToPlanetId).OwnerId.Equals(GameManager.Instance.HeroDataStore.HeroId)).Any();
+	
 		return result;
+	}
+
+	private Planet GetPlanetById(Guid id) {
+
+		return GameManager.Instance.HeroDataStore.HeroMapView.Planets.First(p => p.Id.Equals(id));
 	}
 
 	void DestroyActMenu()

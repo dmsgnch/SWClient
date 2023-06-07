@@ -211,8 +211,9 @@ namespace Scripts.RegisterLoginScripts
 						(c.FromPlanetId.Equals(battle.AttackedPlanetId) || c.FromPlanetId.Equals(battle.AttackedFromId)) &&
 						(c.ToPlanetId.Equals(battle.AttackedFromId) || c.ToPlanetId.Equals(battle.AttackedPlanetId))
 					);
-
+					
                     planetsView.UpdateConnection(battleConnection);
+					planetsView.AddBattle(battle);
                 });
 			});
 

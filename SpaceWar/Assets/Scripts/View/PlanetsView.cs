@@ -46,6 +46,10 @@ namespace Assets.Scripts.View
             _planetsViewModel.UpdateConnection(connection, connectionsParent);
         }
 
+        public void AddBattle(Battle battle) {
+            _planetsViewModel.AddBattleToPlanet(GetPlanetsGenerationForm(), battle);
+        }
+
         public async void Attack(Planet planet)
 		{
 			await _planetsViewModel.Attack(planet);

@@ -1,15 +1,29 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Runtime.CompilerServices;
 using UnityEngine;
+using Color = UnityEngine.Color;
 
 public class ConnectionController : MonoBehaviour
 {
     public GameObject fromPlanet;
     public GameObject toPlanet;
     public float thickness;
+ 
 
+    public void Paint(Color color)
+    {
+        MeshRenderer renderer = GetComponent<MeshRenderer>();
+
+        Material material = new Material(Shader.Find("Standard"));
+        material.color = color;
+
+        renderer.material = material;
+
+
+    }
     private void Update(){
         Vector3 direction = toPlanet.transform.position - fromPlanet.transform.position;
         float distance = direction.magnitude;
