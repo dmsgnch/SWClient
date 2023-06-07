@@ -25,8 +25,10 @@ namespace Assets.Scripts.View
 		[SerializeField] private Button quitButton;
 
 		[SerializeField] private GameObject confirmationPrefab;
+        [SerializeField] private GameObject aboutPrefab;
+		private GameObject _about;
 
-		private MainMenuViewModel _mainMenuViewModel;
+        private MainMenuViewModel _mainMenuViewModel;
 
 		private void Awake()
 		{
@@ -69,7 +71,7 @@ namespace Assets.Scripts.View
 		private void OnAboutButtonClick()
 		{
 			PlayButtonClickSound();
-
+			_about = Instantiate(aboutPrefab,gameObject.transform);
 			Debug.Log("About");
 		}
 
@@ -84,7 +86,14 @@ namespace Assets.Scripts.View
 		{
 			if (Input.GetKey(KeyCode.Escape))
 			{
-				_mainMenuViewModel.CloseApplication(this, confirmationPrefab, gameObject);
+				if (_about is not null)
+				{
+					Destroy(_about);
+				}
+				else
+				{
+					_mainMenuViewModel.CloseApplication(this, confirmationPrefab, gameObject);
+				}
 			}
 		}
 
