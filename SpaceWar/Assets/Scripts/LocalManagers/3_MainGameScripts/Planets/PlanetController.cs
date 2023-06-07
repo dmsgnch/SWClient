@@ -256,21 +256,21 @@ public class PlanetController : MonoBehaviour
 		{
 			case Fortification.None:
             {
-                CreateActMenu("Build light defence (R: later)", out Button defButton);
+                CreateActMenu("Build light defence (R: 60)", out Button defButton);
                 AddDefendListener(defButton);
                 break;
             }
 
 			case Fortification.Weak:
             {
-                CreateActMenu("Build medium defence (R: later)", out Button defButton);
+                CreateActMenu("Build medium defence (R: 150)", out Button defButton);
                 AddDefendListener(defButton);
                 break;
             }
 
 			case Fortification.Reliable:
             {
-                CreateActMenu("Build strong defence (R: later)", out Button defButton);
+                CreateActMenu("Build strong defence (R: 300)", out Button defButton);
                 AddDefendListener(defButton);
                 break;
             }
