@@ -1,9 +1,11 @@
 ﻿using Assets.Scripts.Components;
 using Assets.Scripts.Managers;
+using Assets.Scripts.View;
 using Components;
 using Components.Abstract;
 using LocalManagers.RegisterLoginRequests;
 using UnityEngine;
+using UnityEngine.UI;
 using ViewModels.Abstract;
 
 namespace Assets.Scripts.ViewModels
@@ -30,14 +32,6 @@ namespace Assets.Scripts.ViewModels
 		public void ToLogin()
 		{
 			GameManager.Instance.ChangeState(GameState.Login);
-		}
-
-		public void CloseApplication()
-		{
-			if (Debug.isDebugBuild)
-				Debug.Log("Application quiting");
-
-			Application.Quit();
 		}
 
 		#endregion
@@ -75,6 +69,27 @@ namespace Assets.Scripts.ViewModels
 		{
 			InformationPanelController.Instance.CreateMessage(
 					InformationPanelController.MessageType.ERROR, message);
+		}
+
+		#endregion
+
+		#region Commands
+
+		public void CloseApplication(RegisterView registerView, GameObject confirmPrefab)
+		{
+			var panel = Object.Instantiate(confirmPrefab, registerView.gameObject.transform);
+
+			panel.SetActive(true);
+			panel.transform.GetChild(0).GetComponent<Text>().text = "Are you sure you want to quit?";
+			panel.transform.GetChild(1).gameObject.
+				GetComponent<Button>().onClick.AddListener(() => Application.Quit());
+			panel.transform.GetChild(1).gameObject.
+				GetComponent<Button>().onClick.AddListener(() => registerView.PlayButtonClickSound());
+
+			panel.transform.GetChild(2).gameObject.
+				GetComponent<Button>().onClick.AddListener(() => Object.Destroy(panel));
+			panel.transform.GetChild(2).gameObject.
+				GetComponent<Button>().onClick.AddListener(() => registerView.PlayButtonClickSound());
 		}
 
 		#endregion

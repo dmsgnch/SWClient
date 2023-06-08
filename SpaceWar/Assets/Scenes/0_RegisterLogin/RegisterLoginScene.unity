@@ -1527,6 +1527,7 @@ MonoBehaviour:
   passwordInput: {fileID: 861657062}
   loginButton: {fileID: 1125209969}
   toRegister: {fileID: 1760819071}
+  confirmationPrefab: {fileID: 8060920602974212901, guid: ef72c6470d4cb6d4384c18fe55fc65f6, type: 3}
 --- !u!1 &841608905
 GameObject:
   m_ObjectHideFlags: 0
@@ -1981,6 +1982,7 @@ MonoBehaviour:
   confirmPasswordInput: {fileID: 1918014702}
   registerButton: {fileID: 1081408466}
   toLogin: {fileID: 1736120028}
+  confirmationPrefab: {fileID: 8060920602974212901, guid: ef72c6470d4cb6d4384c18fe55fc65f6, type: 3}
 --- !u!1 &946765230
 GameObject:
   m_ObjectHideFlags: 0

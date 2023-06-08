@@ -14,10 +14,10 @@ namespace Assets.Scripts.ViewModels
 {
 	public class MainMenuViewModel : ViewModelBase
 	{
-		public void CloseApplication(MainMenuView mainMenuView, GameObject confirmPrefab, GameObject parent)
+		public void CloseApplication(MainMenuView mainMenuView, GameObject confirmPrefab)
 		{
-			var panel = MonoBehaviour.Instantiate(confirmPrefab, parent.transform);
-			//panel.transform.SetParent(parent.transform);
+			var panel = Object.Instantiate(confirmPrefab, mainMenuView.gameObject.transform);
+
 			panel.SetActive(true);
 			panel.transform.GetChild(0).GetComponent<Text>().text = "Are you sure you want to quit?";
 			panel.transform.GetChild(1).gameObject.

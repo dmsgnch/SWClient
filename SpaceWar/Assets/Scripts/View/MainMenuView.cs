@@ -46,7 +46,7 @@ namespace Assets.Scripts.View
 				}
 				else
 				{
-					_mainMenuViewModel.CloseApplication(this, confirmationPrefab, gameObject);
+					_mainMenuViewModel.CloseApplication(this, confirmationPrefab);
 				}
 			}
 		}
@@ -55,32 +55,11 @@ namespace Assets.Scripts.View
 
 		#region Buttons handlers
 
-		private void OnContinueButtonClick()
-		{
-			PlayButtonClickSound();
-
-			Debug.Log("Continue");
-		}
-
-		private void OnLoadButtonClick()
-		{
-			PlayButtonClickSound();
-
-			Debug.Log("Load");
-		}
-
 		private void OnNewGameButtonClick()
 		{
 			PlayButtonClickSound();
 
 			GameManager.Instance.ChangeState(GameState.LoadConnectToGameScene);
-		}
-
-		private void OnSettingsButtonClick()
-		{
-			PlayButtonClickSound();
-
-			Debug.Log("Settings");
 		}
 
 		private void OnAboutButtonClick()
@@ -94,7 +73,7 @@ namespace Assets.Scripts.View
 		{
 			PlayButtonClickSound();
 
-			_mainMenuViewModel.CloseApplication(this, confirmationPrefab, gameObject);
+			_mainMenuViewModel.CloseApplication(this, confirmationPrefab);
 		}
 		
 		#endregion

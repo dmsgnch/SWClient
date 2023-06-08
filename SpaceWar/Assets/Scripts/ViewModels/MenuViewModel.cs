@@ -26,32 +26,31 @@ namespace Assets.Scripts.ViewModels
 			GameManager.Instance.ChangeState(GameState.MainGame);
 		}
 
-		public void SaveGame()
+		public void LeaveTheGame(MenuView menuView, GameObject confirmPrefab)
 		{
-			Debug.Log("Save Game");
+			var panel = Object.Instantiate(confirmPrefab, menuView.gameObject.transform);
+
+			panel.SetActive(true);
+			panel.transform.GetChild(0).GetComponent<Text>().text = "Are you sure you want to leave the game?";
+			panel.transform.GetChild(1).gameObject.
+				GetComponent<Button>().onClick.AddListener(() =>
+				{
+					NetworkingManager.Instance.StopHub().Wait();
+					GameManager.Instance.ChangeState(GameState.LoadConnectToGameScene);
+				});
+			panel.transform.GetChild(1).gameObject.
+				GetComponent<Button>().onClick.AddListener(() => menuView.PlayButtonClickSound());
+
+			panel.transform.GetChild(2).gameObject.
+				GetComponent<Button>().onClick.AddListener(() => Object.Destroy(panel));
+			panel.transform.GetChild(2).gameObject.
+				GetComponent<Button>().onClick.AddListener(() => menuView.PlayButtonClickSound());
 		}
 
-		public void LoadGame()
+		public void CloseApplication(MenuView menuView, GameObject confirmPrefab)
 		{
-			Debug.Log("Load Game");
-		}
+			var panel = Object.Instantiate(confirmPrefab, menuView.gameObject.transform);
 
-		public void Settings()
-		{
-			Debug.Log("Settings");
-		}
-
-		public async Task LeaveTheGame()
-		{
-			Debug.Log("LeaveTheGame");
-			await NetworkingManager.Instance.StopHub();
-			GameManager.Instance.ChangeState(GameState.LoadConnectToGameScene);
-		}
-
-		public void CloseApplication(MenuView menuView, GameObject confirmPrefab, GameObject parent)
-		{
-			var panel = MonoBehaviour.Instantiate(confirmPrefab, parent.transform);
-			//panel.transform.SetParent(parent.transform);
 			panel.SetActive(true);
 			panel.transform.GetChild(0).GetComponent<Text>().text = "Are you sure you want to quit?";
 			panel.transform.GetChild(1).gameObject.

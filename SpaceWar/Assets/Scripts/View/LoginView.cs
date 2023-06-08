@@ -12,6 +12,7 @@ using Assets.View.Abstract;
 using Assets.Scripts.ViewModels;
 using Unity.VisualScripting;
 using UnityEngine.UIElements;
+using Button = UnityEngine.UI.Button;
 
 namespace Assets.Scripts.View
 {
@@ -19,8 +20,9 @@ namespace Assets.Scripts.View
 	{
 		[SerializeField] private InputField emailInput;
 		[SerializeField] private InputField passwordInput;
-		[SerializeField] private UnityEngine.UI.Button loginButton;
-		[SerializeField] private UnityEngine.UI.Button toRegister;
+		[SerializeField] private Button loginButton;
+		[SerializeField] private Button toRegister;
+		[SerializeField] private GameObject confirmationPrefab;
 
 		private LoginViewModel _loginViewModel;
 
@@ -35,10 +37,8 @@ namespace Assets.Scripts.View
 		private void Update()
 		{
 			if (Input.GetKey(KeyCode.Escape))
-			{
-				//TODO: Add confirm window			 
-
-				_loginViewModel.CloseApplication();
+			{	
+				_loginViewModel.CloseApplication(this, confirmationPrefab);
 			}
 		}
 

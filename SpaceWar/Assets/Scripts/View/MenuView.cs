@@ -49,39 +49,18 @@ namespace Assets.Scripts.View
 			_menuViewModel.ContinueGame();
 		}
 
-		void bt_SaveGame_Click()
+		void bt_LeaveTheGame_Click()
 		{
 			PlayButtonClickSound();
 
-			_menuViewModel.SaveGame();
-		}
-
-		void bt_LoadGame_Click()
-		{
-			PlayButtonClickSound();
-
-			_menuViewModel.LoadGame();
-		}
-
-		void bt_Settings_Click()
-		{
-			PlayButtonClickSound();
-
-			_menuViewModel.Settings();
-		}
-
-		async void bt_LeaveTheGame_Click()
-		{
-			PlayButtonClickSound();
-
-			await _menuViewModel.LeaveTheGame();
+			_menuViewModel.LeaveTheGame(this, confirmationPanel);
 		}
 
 		void bt_QuitApplication_Click()
 		{
 			PlayButtonClickSound();
 
-			_menuViewModel.CloseApplication(this, confirmationPanel, gameObject);
+			_menuViewModel.CloseApplication(this, confirmationPanel);
 		}
 
 		#endregion

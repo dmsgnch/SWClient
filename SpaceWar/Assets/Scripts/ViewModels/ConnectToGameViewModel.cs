@@ -60,8 +60,9 @@ namespace Assets.Scripts.ViewModels
 
 			HubConnection connection = NetworkingManager.Instance.HubConnection;
 			Guid lobbyId = GameManager.Instance.ConnectToGameDataStore.SelectedLobbyId;
+			string heroName = GameManager.Instance.HeroDataStore.Name;
 
-			await connection.InvokeAsync(ServerHandlers.Lobby.ConnectToLobby, lobbyId);
+			await connection.InvokeAsync(ServerHandlers.Lobby.ConnectToLobby, lobbyId, heroName);
 		}
 
 		public async Task StopHub()

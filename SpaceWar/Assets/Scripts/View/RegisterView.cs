@@ -20,6 +20,8 @@ namespace Assets.Scripts.View
 		[SerializeField] private Button registerButton;
 		[SerializeField] private Button toLogin;
 
+		[SerializeField] private GameObject confirmationPrefab;
+
 		private RegisterViewModel _registerViewModel;
 
 		#region Unity methods
@@ -33,10 +35,8 @@ namespace Assets.Scripts.View
 		private void Update()
 		{
 			if (Input.GetKey(KeyCode.Escape))
-			{
-				//TODO: Add confirm window			 
-
-				_registerViewModel.CloseApplication();
+			{ 
+				_registerViewModel.CloseApplication(this, confirmationPrefab);
 			}
 		}
 

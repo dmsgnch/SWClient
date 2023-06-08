@@ -1529,7 +1529,7 @@ MonoBehaviour:
   btn_Continue: {fileID: 1804810106}
   btn_QuitApplication: {fileID: 1674315491}
   btn_LeaveTheGame: {fileID: 1307658004}
-  confirmationPanel: {fileID: 8060920602974212901, guid: a7f2cfd68a79477498c291ec1786477c, type: 3}
+  confirmationPanel: {fileID: 8060920602974212901, guid: ef72c6470d4cb6d4384c18fe55fc65f6, type: 3}
 --- !u!1 &647666214
 GameObject:
   m_ObjectHideFlags: 0

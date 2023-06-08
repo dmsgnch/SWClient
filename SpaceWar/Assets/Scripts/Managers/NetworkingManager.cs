@@ -74,8 +74,8 @@ namespace Scripts.RegisterLoginScripts
 					{
 						Debug.Log($"State is changing to lobby");
 						GameManager.Instance.LobbyDataStore.LobbyId = lobby.Id;
-                        GameManager.Instance.LobbyDataStore.IsLobbyLeader = false;
-                        GameManager.Instance.ChangeState(GameState.Lobby);
+						GameManager.Instance.LobbyDataStore.IsLobbyLeader = false;
+						GameManager.Instance.ChangeState(GameState.Lobby);
 					}
 
 					Debug.Log($"Game state before updating: {GameManager.Instance.State}");
@@ -130,9 +130,9 @@ namespace Scripts.RegisterLoginScripts
 				{
 					GameManager.Instance.SessionDataStore.SessionId = sessionId;
 
-                    await StopHub();
+					await StopHub();
 					GameManager.Instance.ChangeState(GameState.LoadMainGameScene);
-                });
+				});
 			});
 
 			hubConnection.On<string>(ClientHandlers.Lobby.Error, HandleStringMessageOutput());
@@ -160,16 +160,16 @@ namespace Scripts.RegisterLoginScripts
 
 					GameManager.Instance.SessionDataStore.TurnNumber = session.TurnNumber;
 					GameManager.Instance.SessionDataStore.TurnTimeLimit = session.TurnTimeLimit;
-                    GameManager.Instance.SessionDataStore.CurrentHeroTurnId = session.HeroTurnId;
-                    GameManager.Instance.SessionDataStore.PanelHeroForms = 
+					GameManager.Instance.SessionDataStore.CurrentHeroTurnId = session.HeroTurnId;
+					GameManager.Instance.SessionDataStore.PanelHeroForms =
 					session.Heroes.Select(
 					h => new PanelHeroForm()
 					{
-					    HeroId = h.HeroId,
-					    HeroName = h.Name
+						HeroId = h.HeroId,
+						HeroName = h.Name
 					}).ToList();
 
-                    hudView.UpdateSessionHudValues();
+					hudView.UpdateSessionHudValues();
 
 					hudView.UpdatePlayersListPanelValues();
 				});
@@ -188,7 +188,7 @@ namespace Scripts.RegisterLoginScripts
 					updatedPlanet.FortificationLevel = fortificationResponse.Fortification;
 					updatedPlanet.IterationsLeftToNextStatus = fortificationResponse.IterationsToTheNextStatus;
 
-                    GameManager.Instance.HeroDataStore.Resourses = fortificationResponse.Resources;
+					GameManager.Instance.HeroDataStore.Resourses = fortificationResponse.Resources;
 					GameManager.Instance.HeroDataStore.AvailableColonizationShips = fortificationResponse.AvailableColonizationShips;
 					GameManager.Instance.HeroDataStore.AvailableResearchShips = fortificationResponse.AvailableResearchShips;
 
@@ -212,41 +212,58 @@ namespace Scripts.RegisterLoginScripts
 						(c.FromPlanetId.Equals(battle.AttackedPlanetId) || c.FromPlanetId.Equals(battle.AttackedFromId)) &&
 						(c.ToPlanetId.Equals(battle.AttackedFromId) || c.ToPlanetId.Equals(battle.AttackedPlanetId))
 					);
-					
-                    planetsView.UpdateConnection(battleConnection);
+
+					planetsView.UpdateConnection(battleConnection);
 					planetsView.AddBattle(battle);
-                });
+				});
 			});
 
 			hubConnection.On<NextTurnResponse>(ClientHandlers.Session.NextTurnHandler, HandleUpdateAllParams());
 
 			hubConnection.On<UpdatedPlanetStatusResponse>(
-				ClientHandlers.Session.StartPlanetResearchingOrColonization, 
-				(newPlanetStatus) =>
+				ClientHandlers.Session.StartPlanetResearchingOrColonization, (newPlanetStatus) =>
 			{
 				UnityMainThreadDispatcher.Instance().Enqueue(() =>
 				{
 					var planetsView = GetView<PlanetsView>();
 					var hudView = GetView<HUDView>();
 
-                    Planet updatedPlanet = GameManager.Instance
-                    .HeroDataStore.HeroMapView.Planets
-                    .FirstOrDefault(p => p.Id.Equals(newPlanetStatus.PlanetId));
+					Planet updatedPlanet = GameManager.Instance
+					.HeroDataStore.HeroMapView.Planets
+					.FirstOrDefault(p => p.Id.Equals(newPlanetStatus.PlanetId));
 					updatedPlanet.Status = newPlanetStatus.RelationStatus;
 					updatedPlanet.IterationsLeftToNextStatus = newPlanetStatus.IterationsToTheNextStatus;
 
 					GameManager.Instance.HeroDataStore.Resourses = newPlanetStatus.Resources;
-					GameManager.Instance.HeroDataStore.AvailableColonizationShips = 
+					GameManager.Instance.HeroDataStore.AvailableColonizationShips =
 					newPlanetStatus.AvailableColonizationShips;
-					GameManager.Instance.HeroDataStore.AvailableResearchShips = 
+					GameManager.Instance.HeroDataStore.AvailableResearchShips =
 					newPlanetStatus.AvailableResearchShips;
 
 					planetsView.UpdatePlanet(updatedPlanet);
 				});
 			});
 
-			hubConnection.On<NextTurnResponse>(ClientHandlers.Session.GetHeroDataHandler, 
-				HandleUpdateAllParams());
+			hubConnection.On<UpdatedPlanetStatusResponse>(
+				ClientHandlers.Session.GameEnded, (newPlanetStatus) =>
+			{
+				UnityMainThreadDispatcher.Instance().Enqueue(() =>
+				{
+					
+				});
+			});
+
+			hubConnection.On<UpdatedPlanetStatusResponse>(
+				ClientHandlers.Session.ExitFromSessionHandler, (newPlanetStatus) =>
+			{
+				UnityMainThreadDispatcher.Instance().Enqueue(() =>
+				{
+					
+				});
+			});
+
+			hubConnection.On<NextTurnResponse>(ClientHandlers.Session.GetHeroDataHandler,
+					HandleUpdateAllParams());
 
 			hubConnection.On<string>(ClientHandlers.Session.PostResearchOrColonizeErrorHandler,
 				HandleStringMessageOutput());
@@ -274,20 +291,20 @@ namespace Scripts.RegisterLoginScripts
 				UnityMainThreadDispatcher.Instance().Enqueue(() =>
 				{
 					GameManager.Instance.HeroDataStore.HeroMapView = data.HeroMapView;
-                    GameManager.Instance.SessionDataStore.TurnNumber = data.Session.TurnNumber;
-                    GameManager.Instance.SessionDataStore.TurnTimeLimit = data.Session.TurnTimeLimit;
-                    GameManager.Instance.SessionDataStore.CurrentHeroTurnId = data.Session.HeroTurnId;
-                    GameManager.Instance.BattleDataStore.Battles = data.Battles;
+					GameManager.Instance.SessionDataStore.TurnNumber = data.Session.TurnNumber;
+					GameManager.Instance.SessionDataStore.TurnTimeLimit = data.Session.TurnTimeLimit;
+					GameManager.Instance.SessionDataStore.CurrentHeroTurnId = data.Session.HeroTurnId;
+					GameManager.Instance.BattleDataStore.Battles = data.Battles;
 
-                    var hudView = GetView<HUDView>();
+					var hudView = GetView<HUDView>();
 					hudView.SetHeroNewValues(data.Hero);
 					hudView.UpdateHeroHudValues();
 					hudView.UpdateSessionHudValues();
-                    hudView.UpdatePlayersListPanelValues();
+					hudView.UpdatePlayersListPanelValues();
 
-                    //recreate map
+					//recreate map
 					var planetsView = GetView<PlanetsView>();
-                    planetsView.GeneratePlanetsWithConnections();
+					planetsView.GeneratePlanetsWithConnections();
 				});
 			};
 		}
