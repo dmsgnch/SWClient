@@ -601,13 +601,11 @@ namespace Assets.Scripts.ViewModels
 		private GameObject GetIconPrefabByBattleStatus(BattleStatus battleStatus,
 			GameObject[] planetsIconsPrefabs)
 		{
-			Debug.Log(battleStatus);
 			switch (battleStatus)
 			{
 				case BattleStatus.InProcess:
 					return planetsIconsPrefabs.First(i => i.name.Equals("BattleIcon"));
 				case BattleStatus.AttackerWon:
-					return planetsIconsPrefabs.First(i => i.name.Equals("BattleEndedIcon"));
 				case BattleStatus.DefenderWon:
 					return planetsIconsPrefabs.First(i => i.name.Equals("BattleEndedIcon"));
 				default:
@@ -620,7 +618,6 @@ namespace Assets.Scripts.ViewModels
 			switch (fortStatus)
 			{
 				case Fortification.None:
-					//return fortPrefabs.First(p => p.name.Equals("LightDefenceIcon"));
 					return null;
 				case Fortification.Weak:
 					return fortPrefabs.First(p => p.name.Equals("LightDefenceIcon"));
