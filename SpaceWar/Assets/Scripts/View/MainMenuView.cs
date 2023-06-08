@@ -38,7 +38,7 @@ namespace Assets.Scripts.View
 
 		private void Update()
 		{
-			if (Input.GetKey(KeyCode.Escape))
+			if (Input.GetKeyDown(KeyCode.Escape))
 			{
 				if (_about is not null)
 				{

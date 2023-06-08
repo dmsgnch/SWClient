@@ -9,6 +9,7 @@ using UnityEngine;
 using ViewModels.Abstract;
 using Assets.Scripts.View;
 using UnityEngine.UI;
+using Unity.VisualScripting;
 
 namespace Assets.Scripts.ViewModels
 {
@@ -68,21 +69,29 @@ namespace Assets.Scripts.ViewModels
 
 		#region Commands
 
+		private GameObject ConfirmationPanel { get; set; }
+
 		public void CloseApplication(LoginView loginView, GameObject confirmPrefab)
 		{
-			var panel = Object.Instantiate(confirmPrefab, loginView.gameObject.transform);
+			if (!ConfirmationPanel.IsDestroyed() && ConfirmationPanel is not null) return;
 
-			panel.SetActive(true);
-			panel.transform.GetChild(0).GetComponent<Text>().text = "Are you sure you want to quit?";
-			panel.transform.GetChild(1).gameObject.
-				GetComponent<Button>().onClick.AddListener(() => Application.Quit());
-			panel.transform.GetChild(1).gameObject.
-				GetComponent<Button>().onClick.AddListener(() => loginView.PlayButtonClickSound());
+			ConfirmationPanel = Object.Instantiate(confirmPrefab, loginView.gameObject.transform);
 
-			panel.transform.GetChild(2).gameObject.
-				GetComponent<Button>().onClick.AddListener(() => Object.Destroy(panel));
-			panel.transform.GetChild(2).gameObject.
-				GetComponent<Button>().onClick.AddListener(() => loginView.PlayButtonClickSound());
+			ConfirmationPanel.SetActive(true);
+			ConfirmationPanel.transform.GetChild(0).GetComponent<Text>().text = "Are you sure you want to quit?";
+			ConfirmationPanel.transform.GetChild(1).gameObject.
+				GetComponent<Button>().onClick.AddListener(() =>
+				{
+					loginView.PlayButtonClickSound();
+					Application.Quit();
+				});
+
+			ConfirmationPanel.transform.GetChild(2).gameObject.
+				GetComponent<Button>().onClick.AddListener(() =>
+				{
+					loginView.PlayButtonClickSound();
+					Object.Destroy(ConfirmationPanel);
+				});
 		}
 
 		#endregion
