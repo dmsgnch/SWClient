@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Unity.VisualScripting;
 using UnityEngine;
 
 namespace Assets.Scripts.Components.DataStores
@@ -118,7 +119,18 @@ namespace Assets.Scripts.Components.DataStores
             }
         }
         public Color Color { get; set; }
-        public HeroMapView HeroMapView { get; set; }
+
+        private HeroMapView _heroMapView;
+        public HeroMapView HeroMapView 
+        {
+            get => _heroMapView;
+            set
+            {
+                _heroMapView = value;
+                _heroMapView.Planets = _heroMapView.Planets.DistinctBy(p => p.Id).ToList();
+                _heroMapView.Connections = _heroMapView.Connections.DistinctBy(p => p.Id).ToList();
+            }
+        }
 
         public Guid CapitalPlanetId { get; set; }
         private T GetView<T>() where T : Component

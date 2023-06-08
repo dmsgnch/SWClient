@@ -96,8 +96,13 @@ namespace Assets.Scripts.ViewModels
 
 		#region Planet building
 
-		private GameObject CreatePlanetGameObject(Planet planet, PlanetsGenerationForm planetGenerationForm)
+		private void CreatePlanetGameObject(Planet planet, PlanetsGenerationForm planetGenerationForm)
 		{
+			//if (GameObject.Find(planet.PlanetName) is not null)
+			//{
+			//	return;
+			//}
+
 			//Create main planet Object that will be contain planet and image objects
 			var planetGO = new GameObject(planet.PlanetName);
 			planetGO.transform.SetParent(planetGenerationForm.PlanetsParent.transform);
@@ -126,8 +131,6 @@ namespace Assets.Scripts.ViewModels
 			AddSizeTextToPlanet(planetCreationForm);
 
 			AddResourceTextToPlanet(planetCreationForm);
-
-			return newPlanet;
 		}
 
 		private GameObject CreatePlanetSphere(Planet planet, PlanetsGenerationForm planetGenerationForm)
@@ -244,23 +247,29 @@ namespace Assets.Scripts.ViewModels
             Vector3 size = sphereRenderer.bounds.size;
             float diameter = Mathf.Max(size.x, size.y, size.z);
 
-            BattleIcon.transform.position = planetSphere.transform.position;
+            BattleIcon.transform.position = planetSphere.transform.position + Vector3.back * size.z / 2;
             BattleIcon.transform.localScale = Vector3.one * diameter / 12;
         }
 
         public void AddBattleToPlanet(PlanetsGenerationForm planetsGenerationForm, Battle battle)
         {
+            var planet = GameManager.Instance.HeroDataStore.HeroMapView.Planets
+				.First(p => p.Id.Equals(battle.AttackedPlanetId));
+            var planetGO = planetsGenerationForm.PlanetsParent.transform.Find(planet.PlanetName).gameObject;
+
             var planetCreationForm = new PlanetCreationForm
             {
-                Planet = battle.AttackedPlanet,
+                Planet = planet ?? throw new DataException("Planet was not found"),
                 PlanetGenerationForm = planetsGenerationForm,
-                PlanetGO = planetsGenerationForm.PlanetsParent.transform.Find(battle.AttackedPlanet.PlanetName).gameObject,
+                PlanetGO = planetGO ?? throw new DataException("Planet object was not found"),
                 Diameter = 0f,
             };
 
             var battleConnection = GameManager.Instance.HeroDataStore.HeroMapView.Connections.FirstOrDefault(c =>
-                                     (c.FromPlanetId.Equals(battle.AttackedPlanetId) || c.FromPlanetId.Equals(battle.AttackedFromId)) &&
-                                     (c.ToPlanetId.Equals(battle.AttackedFromId) || c.ToPlanetId.Equals(battle.AttackedPlanetId))
+                                     (c.FromPlanetId.Equals(battle.AttackedPlanetId) 
+									 || c.FromPlanetId.Equals(battle.AttackedFromId)) &&
+                                     (c.ToPlanetId.Equals(battle.AttackedFromId) 
+									 || c.ToPlanetId.Equals(battle.AttackedPlanetId))
                                  );
 
             var attackerColor = ColorParser.GetColor(battle.AttackerHero.ColorStatus);
@@ -423,6 +432,11 @@ namespace Assets.Scripts.ViewModels
 
         private void CreateConnection(Edge connection, GameObject connectionsParent, GameObject[] planets)
         {
+            //if (GameObject.Find(connection.Id.ToString()) is not null)
+            //{
+            //    return;
+            //}
+
             GameObject fromPlanet = planets.FirstOrDefault(
                 p => p.name.Equals(connection.FromPlanetId.ToString()));
             GameObject toPlanet = planets.FirstOrDefault(

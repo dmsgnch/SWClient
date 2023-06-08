@@ -74,7 +74,8 @@ namespace Scripts.RegisterLoginScripts
 					{
 						Debug.Log($"State is changing to lobby");
 						GameManager.Instance.LobbyDataStore.LobbyId = lobby.Id;
-						GameManager.Instance.ChangeState(GameState.Lobby);
+                        GameManager.Instance.LobbyDataStore.IsLobbyLeader = false;
+                        GameManager.Instance.ChangeState(GameState.Lobby);
 					}
 
 					Debug.Log($"Game state before updating: {GameManager.Instance.State}");
@@ -272,24 +273,20 @@ namespace Scripts.RegisterLoginScripts
 			{
 				UnityMainThreadDispatcher.Instance().Enqueue(() =>
 				{
-					var hudView = GetView<HUDView>();
-					var planetsView = GetView<PlanetsView>();
-
 					GameManager.Instance.HeroDataStore.HeroMapView = data.HeroMapView;
+                    GameManager.Instance.SessionDataStore.TurnNumber = data.Session.TurnNumber;
+                    GameManager.Instance.SessionDataStore.TurnTimeLimit = data.Session.TurnTimeLimit;
+                    GameManager.Instance.SessionDataStore.CurrentHeroTurnId = data.Session.HeroTurnId;
+                    GameManager.Instance.BattleDataStore.Battles = data.Battles;
 
+                    var hudView = GetView<HUDView>();
 					hudView.SetHeroNewValues(data.Hero);
-
-					GameManager.Instance.SessionDataStore.TurnNumber = data.Session.TurnNumber;
-					GameManager.Instance.SessionDataStore.TurnTimeLimit = data.Session.TurnTimeLimit;
-					GameManager.Instance.SessionDataStore.CurrentHeroTurnId = data.Session.HeroTurnId;
-					GameManager.Instance.BattleDataStore.Battles = data.Battles;
-
 					hudView.UpdateHeroHudValues();
 					hudView.UpdateSessionHudValues();
-                    hudView.UpdateHeroRequest();
                     hudView.UpdatePlayersListPanelValues();
 
                     //recreate map
+					var planetsView = GetView<PlanetsView>();
                     planetsView.GeneratePlanetsWithConnections();
 				});
 			};

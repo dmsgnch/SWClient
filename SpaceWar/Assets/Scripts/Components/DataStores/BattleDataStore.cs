@@ -15,7 +15,7 @@ namespace Assets.Scripts.Components.DataStores
 		/// <summary>
 		/// List of battles
 		/// </summary>
-		public List<Battle> Battles { get; set; }
+		public List<Battle> Battles { get; set; } = new List<Battle>();
 
 	}
 }
