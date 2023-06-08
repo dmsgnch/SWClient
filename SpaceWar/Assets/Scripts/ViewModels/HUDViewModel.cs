@@ -21,6 +21,8 @@ using System;
 using SharedLibrary.Requests;
 using ColorUtility = UnityEngine.ColorUtility;
 using Color = UnityEngine.Color;
+using Assets.Scripts.View;
+using UnityEngine.Events;
 
 namespace Assets.Scripts.ViewModels
 {
@@ -232,6 +234,81 @@ namespace Assets.Scripts.ViewModels
 			}
         }
 
+		private GameObject InfoPanel { get; set; }
+
+		public void CreateConfirmationInfoPanel(HUDView HUDView, GameObject confirmInfoPrefab, string text, UnityAction postAction)
+		{
+			if (!InfoPanel.IsDestroyed() && InfoPanel is not null) return;
+
+			InfoPanel = Object.Instantiate(confirmInfoPrefab, HUDView.gameObject.transform);
+
+			InfoPanel.SetActive(true);
+			InfoPanel.transform.GetChild(0).GetComponent<Text>().text = text;
+			InfoPanel.transform.GetChild(1).gameObject.
+				GetComponent<Button>().onClick.AddListener(() =>
+				{
+					HUDView.PlayButtonClickSound();
+					Object.Destroy(InfoPanel);
+				});
+			InfoPanel.transform.GetChild(1).gameObject.
+				GetComponent<Button>().onClick.AddListener(postAction);
+		}
+
+		private GameObject ConfirmationPanel { get; set; }
+
+		public void CreateCloseAppOrContinueConfPanel(HUDView HUDView, GameObject confirmPrefab)
+		{
+			if (!ConfirmationPanel.IsDestroyed() && ConfirmationPanel is not null) return;
+
+			ConfirmationPanel = Object.Instantiate(confirmPrefab, HUDView.gameObject.transform);
+
+			ConfirmationPanel.SetActive(true);
+			ConfirmationPanel.transform.GetChild(0).GetComponent<Text>().text = 
+				"Quit the game or continue playing alone?";
+
+			SetValuesToFirstButton(HUDView);
+
+			SetValuesToSecondButton(HUDView);
+		}
+
+		private void SetValuesToFirstButton(HUDView registerView)
+		{
+			var firstButtonObj = ConfirmationPanel.transform.GetChild(1).gameObject ??
+				throw new Exception();
+
+			SetTextValueToChildComponent(firstButtonObj, "Quit");
+
+			firstButtonObj.GetComponent<Button>()?.onClick.AddListener(() =>
+			{
+				registerView.PlayButtonClickSound();
+
+				NetworkingManager.Instance.StopHub().Wait();
+				GameManager.Instance.ChangeState(GameState.LoadConnectToGameScene);
+			});
+		}
+
+		private void SetValuesToSecondButton(HUDView HUDView)
+		{
+			var secondButtonObj = ConfirmationPanel.transform.GetChild(2).gameObject ??
+				throw new Exception();
+
+			SetTextValueToChildComponent(secondButtonObj, "Continue");
+
+			secondButtonObj.GetComponent<Button>()?.onClick.AddListener(() =>
+			{
+				HUDView.PlayButtonClickSound();
+				Object.Destroy(ConfirmationPanel);
+				HUDView.DeleteHeroFromPanel();
+			});
+		}
+
+		private void SetTextValueToChildComponent(GameObject firstButtonObj, string text)
+		{
+			var textComponent = firstButtonObj.transform.GetComponentInChildren<Text>() ?? throw new Exception();
+
+			textComponent.text = text;
+		}
+
 		#endregion
 
 		#region Players list panel
@@ -261,6 +338,21 @@ namespace Assets.Scripts.ViewModels
                 playerPanel.transform.GetChild(0).gameObject.GetComponent<TMP_Text>().text = hero.HeroName;
             }
         }
+
+		public void DeleteHeroFromPanel(GameObject playerList, Hero hero)
+		{
+			GameObject player = null;
+
+			foreach (Transform child in playerList.transform)
+			{
+				if (child.GetChild(0).gameObject.GetComponent<TMP_Text>().text.Equals(hero.Name))
+					player = child.gameObject;
+			}
+
+			if (player is null) throw new Exception();
+
+			Object.Destroy(player);
+		}
 
 		private void DestroyChildrenImmediately(GameObject playerList)
 		{

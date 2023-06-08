@@ -3,6 +3,7 @@ using Assets.Scripts.ViewModels;
 using Assets.View.Abstract;
 using Components;
 using SharedLibrary.Models;
+using SharedLibrary.Responses;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,18 +26,23 @@ namespace Assets.Scripts.View
 		[SerializeField] private GameObject ColonizeShipPanel;
 		[SerializeField] private Button MenuButton;
 		[SerializeField] private Button NextTurnButton;
-        [SerializeField] private GameObject playerList;
-        [SerializeField] private GameObject playerName_Prefab;
+		[SerializeField] private GameObject playerList;
+		[SerializeField] private GameObject playerName_Prefab;
 
-        [SerializeField] private GameObject ResourcesInfoPanelPrefab;
+		[SerializeField] private GameObject ResourcesInfoPanelPrefab;
 		[SerializeField] private GameObject SoldiersInfoPanelPrefab;
 		[SerializeField] private GameObject ResearchShipInfoPanelPrefab;
 		[SerializeField] private GameObject ColonizeShipInfoPanelPrefab;
-        [SerializeField] private GameObject ChangeMessagePrefab;
+		[SerializeField] private GameObject ChangeMessagePrefab;
+
+		[SerializeField] private GameObject confirmationInfoPrefab;
+		[SerializeField] private GameObject confirmationPrefab;
 
 		private bool firstValuesSet = true;
 
-        private HUDViewModel _hudViewModel;
+		private HUDViewModel _hudViewModel;
+
+		private Hero _exitedHero;
 
 		#region Unity methods
 
@@ -58,7 +64,7 @@ namespace Assets.Scripts.View
 		}
 
 		private void Update()
-		{	
+		{
 			if (Input.GetKeyDown(KeyCode.Escape))
 				_hudViewModel.ToMenu();
 
@@ -79,15 +85,15 @@ namespace Assets.Scripts.View
 		}
 
 		private void OnNextTurnButtonClick()
-        {
-            Guid turnId = GameManager.Instance.SessionDataStore.CurrentHeroTurnId;
-            Guid heroId = GameManager.Instance.HeroDataStore.HeroId;
-            if (!turnId.Equals(heroId))
-            {
-                return;
-            }
+		{
+			Guid turnId = GameManager.Instance.SessionDataStore.CurrentHeroTurnId;
+			Guid heroId = GameManager.Instance.HeroDataStore.HeroId;
+			if (!turnId.Equals(heroId))
+			{
+				return;
+			}
 
-            PlayButtonClickSound();
+			PlayButtonClickSound();
 
 			_hudViewModel.SendNextTurnRequest();
 		}
@@ -163,43 +169,84 @@ namespace Assets.Scripts.View
 
 		#region Show changed panels
 
-		public void callResourcesChangedPanel(string value) {
+		public void callResourcesChangedPanel(string value)
+		{
 			if (firstValuesSet) return;
 
-            _hudViewModel.ShowChangePanel(value, ChangeMessagePrefab, ResourcesPanel);
+			_hudViewModel.ShowChangePanel(value, ChangeMessagePrefab, ResourcesPanel);
 
-            UpdateHeroHudValues();
-        }
+			UpdateHeroHudValues();
+		}
 
-        public void callSoldiersChangedPanel(string value)
-        {
-            if (firstValuesSet) return;
-            _hudViewModel.ShowChangePanel(value, ChangeMessagePrefab, SoldiersPanel);
-            UpdateHeroHudValues();
-        }
-        public void callResearchShipsChangedPanel(string value)
-        {
+		public void callSoldiersChangedPanel(string value)
+		{
 			if (firstValuesSet) return;
-            _hudViewModel.ShowChangePanel(value, ChangeMessagePrefab, ResearchShipPanel);
-            UpdateHeroHudValues();
-        }
-        public void callColonizeShipsChangedPanel(string value)
-        {
-            if (firstValuesSet) return;
-            _hudViewModel.ShowChangePanel(value, ChangeMessagePrefab, ColonizeShipPanel);
-            UpdateHeroHudValues();
-        }
+			_hudViewModel.ShowChangePanel(value, ChangeMessagePrefab, SoldiersPanel);
+			UpdateHeroHudValues();
+		}
+		public void callResearchShipsChangedPanel(string value)
+		{
+			if (firstValuesSet) return;
+			_hudViewModel.ShowChangePanel(value, ChangeMessagePrefab, ResearchShipPanel);
+			UpdateHeroHudValues();
+		}
+		public void callColonizeShipsChangedPanel(string value)
+		{
+			if (firstValuesSet) return;
+			_hudViewModel.ShowChangePanel(value, ChangeMessagePrefab, ColonizeShipPanel);
+			UpdateHeroHudValues();
+		}
 
 		#endregion
 
 		#region Commands
 
 		public void UpdatePlayersListPanelValues()
-        {
+		{
 			_hudViewModel.UpdatePlayersInHUDPanel(playerList, playerName_Prefab);
 
 			_hudViewModel.SetNextTurnPanelValues(TurnPanel);
-        }
+		}
+
+		public void ShowWinPanel(GameEndedResponse gameEndedResponse)
+		{
+			_hudViewModel.CreateConfirmationInfoPanel(this,
+				confirmationInfoPrefab,
+				$"{gameEndedResponse.GameWinner.Name} player wins on turn {gameEndedResponse.CountOfTurns}!",
+				GetPostWinAction());
+		}
+
+		public void ShowHeroExitFromGamePanel(ExitFromSessionResponse exitFromSessionResponse)
+		{
+			_exitedHero = exitFromSessionResponse.Hero;
+
+			_hudViewModel.CreateConfirmationInfoPanel(this,
+				confirmationInfoPrefab,
+				$"{exitFromSessionResponse.Hero.Name} player leave the game!",
+				GetPostWinAction());
+		}
+
+		private UnityAction GetPostWinAction()
+		{
+			return () =>
+			{
+				Application.Quit();
+			};
+		}
+
+		private UnityAction GetPostHeroExitAction()
+		{
+			return () =>
+			{
+				_hudViewModel.CreateCloseAppOrContinueConfPanel(this,
+					confirmationPrefab);
+			};
+		}
+
+		public void DeleteHeroFromPanel()
+		{
+			_hudViewModel.DeleteHeroFromPanel(playerList, _exitedHero);
+		}
 
 		#endregion
 

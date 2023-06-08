@@ -244,21 +244,25 @@ namespace Scripts.RegisterLoginScripts
 				});
 			});
 
-			hubConnection.On<UpdatedPlanetStatusResponse>(
-				ClientHandlers.Session.GameEnded, (newPlanetStatus) =>
+			hubConnection.On<GameEndedResponse>(
+				ClientHandlers.Session.GameEnded, (gameEndedResponse) =>
 			{
 				UnityMainThreadDispatcher.Instance().Enqueue(() =>
 				{
-					
+					var hudView = GetView<HUDView>();
+
+					hudView.ShowWinPanel(gameEndedResponse);
 				});
 			});
 
-			hubConnection.On<UpdatedPlanetStatusResponse>(
-				ClientHandlers.Session.ExitFromSessionHandler, (newPlanetStatus) =>
+			hubConnection.On<ExitFromSessionResponse>(
+				ClientHandlers.Session.ExitFromSessionHandler, (exitFromSessionResponse) =>
 			{
 				UnityMainThreadDispatcher.Instance().Enqueue(() =>
 				{
-					
+					var hudView = GetView<HUDView>();
+
+					hudView.ShowHeroExitFromGamePanel(exitFromSessionResponse);
 				});
 			});
 
