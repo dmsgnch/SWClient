@@ -40,6 +40,8 @@ public class PlanetController : MonoBehaviour
 
     private List<Button> ActionsButtons = new List<Button>();
 
+	#region Unity methods
+
 	private void Start()
 	{
 		cameraScripts = GameObject.Find("Look_Camera").GetComponents<MonoBehaviour>();
@@ -49,6 +51,7 @@ public class PlanetController : MonoBehaviour
 		CreateHealthBar();
 		slider.transform.localScale = Vector3.one * 0.7f;
 	}
+
 	private void Update()
 	{
 		if (Input.GetMouseButtonDown(0)&& !EventSystem.current.IsPointerOverGameObject())
@@ -64,6 +67,62 @@ public class PlanetController : MonoBehaviour
         transform.Rotate(Vector3.up, rotationSpeed * Time.deltaTime);
 	}
 
+	#region Mouse triggers
+
+	private void OnMouseEnter()
+	{
+		if (!actMenuEnabled) hoverTime = Time.time;
+		createNewPlanetInfoPanel = false;
+	}
+
+	private void OnMouseExit()
+	{
+		hoverTime = 0f;
+		DestroyInfoPanels();
+		createNewPlanetInfoPanel = false;
+	}
+
+	private void OnMouseOver()
+	{
+		if (!createNewPlanetInfoPanel && Time.time - hoverTime >= timeThreshold)
+		{
+			createNewPlanetInfoPanel = true;
+		}
+		if (Input.GetMouseButtonDown(1))
+		{
+			if (!actMenuEnabled)
+			{
+				GenerateActMenus();
+				DestroyInfoPanels();
+			}
+			else
+			{
+				DestroyActMenu();
+			}
+		}
+		if (createNewPlanetInfoPanel && PlanetInfoPanel is null && !actMenuEnabled)
+		{
+			CreatePlanetInfoPanel();
+			createNewPlanetInfoPanel = false;
+		}
+
+	}
+
+	#endregion
+
+	#endregion
+
+	#region HealthBar
+
+	private void CreateHealthBar()
+	{
+		var sliderGO = Instantiate(HealthBarPrefab, transform.parent);
+
+		if (planet.Health >= planet.HealthLimit) sliderGO.SetActive(false);
+		slider = sliderGO.GetComponent<UnityEngine.UI.Slider>();
+		slider.value = planet.Health / planet.HealthLimit * 100;
+	}
+
 	private void UpdateHealthBar()
 	{
 		Vector3 planetPosition = transform.position;
@@ -73,12 +132,10 @@ public class PlanetController : MonoBehaviour
 		sliderPosition.y += slider.GetComponent<RectTransform>().rect.height;
 		slider.transform.position = sliderPosition + Vector3.up * planet.Size;
 	}
-	private void CreateHealthBar()
-	{
-		var sliderGO = Instantiate(HealthBarPrefab, transform.parent);
-		if (planet.Health >= planet.HealthLimit) sliderGO.SetActive(false);
-		slider = sliderGO.GetComponent<UnityEngine.UI.Slider>();
-	}
+
+	#endregion
+
+	#region Creating planet info panel
 
 	void CreatePlanetInfoPanel()
 	{
@@ -129,12 +186,16 @@ public class PlanetController : MonoBehaviour
 			}
 		}
 	}
-	
+
+	#endregion
+
+	#region Creating planet act menu
+
 	/// <summary>
-    /// Perform sugery and binding according to planet status
-    /// </summary>
-    /// <exception cref="DataException"></exception>
-    private void GenerateActMenus()
+	/// Perform sugery and binding according to planet status
+	/// </summary>
+	/// <exception cref="DataException"></exception>
+	private void GenerateActMenus()
     {
 		Guid turnId = GameManager.Instance.SessionDataStore.CurrentHeroTurnId;
 		Guid heroId = GameManager.Instance.HeroDataStore.HeroId;
@@ -227,35 +288,6 @@ public class PlanetController : MonoBehaviour
         if (ActionsButtons.Any()) ResizeButtons();
     }
 
-    /// <summary>
-    /// Create ActionsButtons one uder the other
-    /// </summary>
-    /// <param name="buttonName"></param>
-    /// <param name="onClick"></param>
-    private void CreateActMenu(string buttonName, out Button onClick)
-	{
-		if (ActionsButtons.Count.Equals(0))
-			actMenu.transform.position = Input.mousePosition;
-
-
-		GameObject buttonObject = Instantiate(ButtonPrefab, actMenu.transform);
-		Button button = buttonObject.GetComponent<Button>();
-
-		TMP_Text buttonText = buttonObject.GetComponentInChildren<TMP_Text>();
-		buttonText.text = buttonName;
-
-		buttonObject.transform.localPosition = new Vector3(0f, (-ActionsButtons.Count * 33f) - 30f, 0f);
-
-		onClick = button;
-
-		ActionsButtons.Add(button);
-		if (ActionsButtons.Count.Equals(1))
-		{
-			actMenuEnabled = true;
-			DisableScripts();
-		}
-	}
-
 	/// <summary>
 	/// Perform sugery and binding according to planet defence status
 	/// </summary>
@@ -300,6 +332,37 @@ public class PlanetController : MonoBehaviour
             });
         }
 	}
+
+	/// <summary>
+	/// Create ActionsButtons one uder the other
+	/// </summary>
+	/// <param name="buttonName"></param>
+	/// <param name="onClick"></param>
+	private void CreateActMenu(string buttonName, out Button onClick)
+	{
+		if (ActionsButtons.Count.Equals(0))
+			actMenu.transform.position = Input.mousePosition;
+
+
+		GameObject buttonObject = Instantiate(ButtonPrefab, actMenu.transform);
+		Button button = buttonObject.GetComponent<Button>();
+
+		TMP_Text buttonText = buttonObject.GetComponentInChildren<TMP_Text>();
+		buttonText.text = buttonName;
+
+		buttonObject.transform.localPosition = new Vector3(0f, (-ActionsButtons.Count * 33f) - 30f, 0f);
+
+		onClick = button;
+
+		ActionsButtons.Add(button);
+		if (ActionsButtons.Count.Equals(1))
+		{
+			actMenuEnabled = true;
+			DisableScripts();
+		}
+	}
+
+	#region Creating helpers
 
 	private void ResizeButtons()
 	{
@@ -355,12 +418,11 @@ public class PlanetController : MonoBehaviour
 		return GameManager.Instance.HeroDataStore.HeroMapView.Planets.First(p => p.Id.Equals(id));
 	}
 
-	void DestroyActMenu()
+	private void DestroyInfoPanels()
 	{
-		actMenu.transform.DestroyChildren();
-		EnableScripts();
-		actMenuEnabled = false;
-		ActionsButtons.Clear();
+		PlanetInfoPanelParent.transform.DestroyChildren();
+		PlanetInfoPanel = null;
+		createNewPlanetInfoPanel = false;
 	}
 
 	void DisableScripts()
@@ -371,7 +433,21 @@ public class PlanetController : MonoBehaviour
 		}
 	}
 
-	void EnableScripts()
+	#endregion
+
+	#endregion
+
+	#region Destroying act menu
+
+	void DestroyActMenu()
+	{
+		actMenu.transform.DestroyChildren();
+		EnableScripts();
+		actMenuEnabled = false;
+		ActionsButtons.Clear();
+	}
+
+	private void EnableScripts()
 	{
 		foreach (var script in cameraScripts)
 		{
@@ -379,49 +455,5 @@ public class PlanetController : MonoBehaviour
 		}
 	}
 
-	private void DestroyInfoPanels()
-    {
-		PlanetInfoPanelParent.transform.DestroyChildren();
-        PlanetInfoPanel = null;
-        createNewPlanetInfoPanel = false;
-    }
-
-	private void OnMouseEnter()
-	{
-		if(!actMenuEnabled) hoverTime = Time.time;
-        createNewPlanetInfoPanel = false;
-	}
-
-	private void OnMouseExit()
-	{
-		hoverTime = 0f;
-        DestroyInfoPanels();
-        createNewPlanetInfoPanel = false;
-    }
-
-    private void OnMouseOver()
-	{
-        if (!createNewPlanetInfoPanel && Time.time - hoverTime >= timeThreshold)
-        {
-            createNewPlanetInfoPanel = true;
-        }
-        if (Input.GetMouseButtonDown(1))
-        {
-            if (!actMenuEnabled)
-            {
-                GenerateActMenus();
-                DestroyInfoPanels();
-            }
-            else
-            {
-                DestroyActMenu();
-            }
-        }
-        if (createNewPlanetInfoPanel && PlanetInfoPanel is null && !actMenuEnabled)
-        {
-            CreatePlanetInfoPanel();
-            createNewPlanetInfoPanel = false;
-        }
-
-	}
+	#endregion
 }

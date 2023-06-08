@@ -11,20 +11,17 @@ public class ConnectionController : MonoBehaviour
     public GameObject fromPlanet;
     public GameObject toPlanet;
     public float thickness;
- 
-
+    
     public void Paint(Color color)
     {
-        MeshRenderer renderer = GetComponent<MeshRenderer>();
-
         Material material = new Material(Shader.Find("Standard"));
-        material.color = color;
+		material.color = color;
 
-        renderer.material = material;
-
-
+		GetComponent<MeshRenderer>().material = material;
     }
-    private void Update(){
+
+    private void Update()
+    {
         Vector3 direction = toPlanet.transform.position - fromPlanet.transform.position;
         float distance = direction.magnitude;
         gameObject.transform.localScale = new Vector3(thickness, distance / 2, thickness);
