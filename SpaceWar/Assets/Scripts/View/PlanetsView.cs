@@ -31,9 +31,15 @@ namespace Assets.Scripts.View
 
 		public void GeneratePlanetsWithConnections()
         {
-            _planetsViewModel.GeneratePlanets(GetPlanetsGenerationForm());
+            _planetsViewModel.ClearPlanetsAndConnections(planetsParent,connectionsParent);
+
+            var planetsGenerationForm = GetPlanetsGenerationForm();
+
+            _planetsViewModel.GeneratePlanets(planetsGenerationForm);
 
             _planetsViewModel.CreateConnections(connectionsParent);
+
+            _planetsViewModel.AddBattles(planetsGenerationForm);
         }
 
         public void UpdatePlanet(Planet planet)

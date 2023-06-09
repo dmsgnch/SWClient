@@ -27,7 +27,10 @@ namespace LocalManagers.ConnectToGame.Requests
 
 		public void CreateLobby()
 		{
-			CreateLobbyRequest request = new CreateLobbyRequest(GameManager.Instance.ConnectToGameDataStore.LobbyName);
+			CreateLobbyRequest request = new CreateLobbyRequest(GameManager.Instance.ConnectToGameDataStore.LobbyName)
+			{
+				FutureHeroName = GameManager.Instance.ConnectToGameDataStore.HeroName
+			};
 
 			RestRequestForm<CreateLobbyResponse> requestForm =
 				new RestRequestForm<CreateLobbyResponse>(ConnectionEndpoint,

@@ -23,6 +23,9 @@ using SharedLibrary.Models.Enums;
 using Random = UnityEngine.Random;
 using Components;
 using System.Text.Json.Nodes;
+using Unity.VisualScripting;
+using JetBrains.Annotations;
+using Edge = SharedLibrary.Models.Edge;
 
 namespace Assets.Scripts.ViewModels
 {
@@ -43,7 +46,7 @@ namespace Assets.Scripts.ViewModels
 				CreatePlanetGameObject(planet, planetGenerationForm);
 			}
 
-			AddBattles(planetGenerationForm);
+			//AddBattles(planetGenerationForm);
 		}
 
 		public void CreateConnections(GameObject connectionsParent)
@@ -58,13 +61,23 @@ namespace Assets.Scripts.ViewModels
 			{
 				CreateConnection(connection, connectionsParent, planets);
 			}
-		}
+        }
 
-		#endregion
+        private GameObject[] GetPlanets()
+        {
+            List<GameObject> planets = new List<GameObject>();
+            foreach (Transform planetGO in GameObject.Find("Planets").transform)
+            {
+                planets.Add(planetGO.GetChild(0).gameObject);
+            }
+            return planets.ToArray();
+        }
 
-		#region Update the planet or update the connection
+        #endregion
 
-		public void UpdatePlanet(Planet planet, PlanetsGenerationForm planetsGenerationForm,
+        #region Update the planet or update the connection
+
+        public void UpdatePlanet(Planet planet, PlanetsGenerationForm planetsGenerationForm,
 			GameObject connectionsParent)
 		{
 			//TODO: find planet on scene by name
@@ -162,7 +175,7 @@ namespace Assets.Scripts.ViewModels
 
 			if (iconPrefab is null) return;
 
-			GameObject statusIconObject = CreateIconPrefabWithParams(iconPrefab, planetCreationForm);
+			GameObject statusIconObject = CreateStatusIconPrefabWithParams(iconPrefab, planetCreationForm);
 
 			Vector3 offset = (Vector3.up * planetCreationForm.Diameter / 1.1f)
 				+ (Vector3.left * planetCreationForm.Diameter / 2f);
@@ -188,7 +201,7 @@ namespace Assets.Scripts.ViewModels
 			}
 		}
 
-		private GameObject CreateIconPrefabWithParams(GameObject iconPrefab,
+		private GameObject CreateStatusIconPrefabWithParams(GameObject iconPrefab,
 			PlanetCreationForm planetCreationForm)
 		{
 			GameObject statusIcon = InstantiateIcon(iconPrefab, planetCreationForm);
@@ -333,15 +346,6 @@ namespace Assets.Scripts.ViewModels
 			return iconObject;
 		}
 
-		private GameObject[] GetPlanets()
-		{
-			List<GameObject> planets = new List<GameObject>();
-			foreach (Transform planetGO in GameObject.Find("Planets").transform)
-			{
-				planets.Add(planetGO.GetChild(0).gameObject);
-			}
-			return planets.ToArray();
-		}
 		#endregion
 
 		#endregion
@@ -375,7 +379,7 @@ namespace Assets.Scripts.ViewModels
 
 		#region Battle building
 
-		private void AddBattles(PlanetsGenerationForm planetsGenerationForm)
+		public void AddBattles(PlanetsGenerationForm planetsGenerationForm)
 		{
 			GameManager.Instance.BattleDataStore.Battles?.ForEach(b => AddBattleToPlanet(planetsGenerationForm, b));
 		}
@@ -434,8 +438,9 @@ namespace Assets.Scripts.ViewModels
 			GameObject battleIcon = Object.Instantiate(iconPrefab, planetGOTransform);
 	
 			battleIcon.transform.GetComponent<SpriteRenderer>().color = statusColor;
-			var TMPtext = battleIcon.transform.GetComponentInChildren<TMP_Text>() ?? throw new Exception();
-			TMPtext.text = battle.BattleTurnNumber.ToString();
+			var TMPtext = battleIcon.transform.GetComponentInChildren<TMP_Text>();
+			if(TMPtext is not null) 
+				TMPtext.text = battle.BattleTurnNumber.ToString();
 
 			GameObject planetSphere = planetGOTransform.GetChild(0).gameObject;
 
@@ -633,6 +638,12 @@ namespace Assets.Scripts.ViewModels
 		#endregion
 
 		#region Helpers
+
+		public void ClearPlanetsAndConnections(GameObject planetsParent, GameObject connectionsParent)
+		{
+			ClearChildren(planetsParent);
+            ClearChildren(connectionsParent);
+        }
 
 		/// <summary>
 		/// clearing children of parent object

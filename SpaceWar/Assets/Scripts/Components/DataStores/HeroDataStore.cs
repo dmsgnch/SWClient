@@ -127,8 +127,8 @@ namespace Assets.Scripts.Components.DataStores
             set
             {
                 _heroMapView = value;
-                _heroMapView.Planets = _heroMapView.Planets.DistinctBy(p => p.Id).ToList();
-                _heroMapView.Connections = _heroMapView.Connections.DistinctBy(p => p.Id).ToList();
+                //_heroMapView.Planets = _heroMapView.Planets.DistinctBy(p => p.Id).ToList();
+                //_heroMapView.Connections = _heroMapView.Connections.DistinctBy(p => p.Id).ToList();
             }
         }
 
